@@ -7,4 +7,4 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 
 sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
 
-cat alias4zshrc >> ~/.zshrc
+cat zshrc/alias >> ~/.zshrc
