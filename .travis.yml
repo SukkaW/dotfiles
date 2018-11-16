@@ -8,6 +8,6 @@ install:
   - echo " "
   - echo " "
   - echo " "
-  - cd ~
+  - cd $HOME
 script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/main.sh | bash
