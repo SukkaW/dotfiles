@@ -5,9 +5,8 @@ before_install:
   - echo "Start Sukka dotfiles test"
   - echo "==========================================================="
 install:
-  - echo " "
-  - echo " "
-  - echo " "
+  - echo $HOME
+  - echo $PATH
   - cd $HOME
 script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/main.sh | bash
