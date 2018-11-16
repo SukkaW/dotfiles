@@ -3,3 +3,6 @@ alias gitcm "git commit -m"
 alias gitp "git push"
 alias gita "git add -a"
 alias gitall "git add ."
+alias lg='lazygit'
+alias git gui='lazygit'
+alias rezsh="source ~/.zshrc"

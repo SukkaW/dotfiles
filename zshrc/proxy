@@ -1,0 +1,37 @@
+proxy () {
+  export ALL_PROXY="socks5://127.0.0.1:7891"
+  echo -e "Acquire::http::Proxy \"http://127.0.0.1:7890\";" | sudo tee -a /etc/apt/apt.conf
+  echo -e "Acquire::https::Proxy \"http://127.0.0.1:7890\";" | sudo tee -a /etc/apt/apt.conf
+  echo "====================="
+  echo "Proxy enabled."
+  echo "====================="
+  echo "Check /etc/apt/apt.conf"
+  echo "---------------------"
+  sudo cat /etc/apt/apt.conf
+  echo "====================="
+   echo "Check your IP"
+  echo "---------------------"
+  curl https://ip.cn
+  echo "---------------------"
+  curl https://ip.gs
+  echo "====================="
+}
+
+noproxy () {
+  unset ALL_PROXY
+  sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
+  sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
+  echo "====================="
+  echo "Proxy disabled."
+  echo "====================="
+  echo "Check /etc/apt/apt.conf"
+  echo "---------------------"
+  sudo cat /etc/apt/apt.conf
+  echo "====================="
+  echo "Check your IP"
+  echo "---------------------"
+  curl https://ip.cn
+  echo "---------------------"
+  curl https://ip.gs
+  echo "====================="
+}
