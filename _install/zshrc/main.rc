@@ -1,2 +1,2 @@
-alias rezsh="source ~/.zshrc"
+alias rezsh="source $HOME/.zshrc"
 alias nodejs=node

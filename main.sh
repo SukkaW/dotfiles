@@ -120,7 +120,7 @@ echo "-----------------------------------------------------------"
 
 cat ./_install/zshrc/main.rc >> $HOME/.zshrc
 
-source ~/.zshrc
+source $HOME/.zshrc
 
 echo "-----------------------------------------------------------"
 echo "Test command: rezsh"
