@@ -1,0 +1,14 @@
+language: c
+dist: trusty
+sudo: required
+before_install:
+  - echo "==========================================================="
+install:
+  - echo "Start Sukka dotfiles test"
+  - echo "==========================================================="
+script:
+  - gulp build
+cache:
+  yarn: true
+  directories:
+    - node_modules
