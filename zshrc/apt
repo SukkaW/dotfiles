@@ -1,0 +1,8 @@
+aptupdate () {
+  sudo apt update
+  sudo apt list --upgradable
+}
+
+aptupgrade () {
+  sudo apt upgrade -y
+}
