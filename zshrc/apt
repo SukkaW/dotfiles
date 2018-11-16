@@ -1,19 +1,15 @@
-aptupdate () {
-  echo -n "
-=====================
-sudo apt update
----------------------
-"
+aptupd () {
+  echo "====================="
+  echo "sudo apt update"
+  echo "---------------------"
   sudo apt update
-  echo -n "
----------------------
-sudo apt list --upgradable
----------------------
-"
+  echo "---------------------"
+  echo "sudo apt list --upgradable"
+  echo "---------------------"
   sudo apt list --upgradable
   echo "====================="
 }
 
-aptupgrade () {
+aptupg () {
   sudo apt upgrade -y
 }

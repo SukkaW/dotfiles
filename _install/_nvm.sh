@@ -6,6 +6,8 @@ echo "-----------------------------------------------------------"
 echo "Import _install/zshrc/nvm.rc"
 echo "-----------------------------------------------------------"
 
+cat ./_install/zshrc/nvm.rc
+
 cat ./_install/zshrc/nvm.rc >> $HOME/.zshrc
 
 rezsh
