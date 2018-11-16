@@ -21,7 +21,7 @@ echo "-----------------------------------------------------------"
 echo "Import _install/zshrc/main.rc"
 echo "-----------------------------------------------------------"
 
-cat ./zshrc/main.rc >> $HOME/.zshrc
+cat ./_install/zshrc/main.rc >> $HOME/.zshrc
 
 source $HOME/.zshrc
 

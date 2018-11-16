@@ -1,11 +1,15 @@
 aptupdate () {
-  echo "====================="
-  echo "sudo apt update"
-  echo "---------------------"
+  echo -n "
+=====================
+sudo apt update
+---------------------
+"
   sudo apt update
-  echo "---------------------"
-  echo "sudo apt list --upgradable"
-  echo "---------------------"
+  echo -n "
+---------------------
+sudo apt list --upgradable
+---------------------
+"
   sudo apt list --upgradable
   echo "====================="
 }
