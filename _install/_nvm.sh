@@ -10,6 +10,8 @@ cat ./_install/zshrc/nvm.rc
 
 cat ./_install/zshrc/nvm.rc >> $HOME/.zshrc
 
+cat $HOME/.zshrc
+
 rezsh
 
 echo "-----------------------------------------------------------"

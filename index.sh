@@ -99,8 +99,7 @@ Set permission of all scripts...
 
 find ./_install -type f -name "*.sh" | xargs chmod +x
 
-echo -n "
-Done!
+echo -n "Done!
 ===========================================================
 "
 
