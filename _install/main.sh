@@ -59,7 +59,7 @@ Load more zshrc
 -----------------------------------------------------------
 "
 
-find ../_zshrc -type f -name "*.rc" | xargs cat >> $HOME/.zshrc
+find ./_zshrc -type f -name "*.rc" | xargs cat >> $HOME/.zshrc
 
 source $HOME/.zshrc
 

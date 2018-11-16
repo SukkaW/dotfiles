@@ -4,5 +4,6 @@ alias gitp "git push"
 alias gita "git add -a"
 alias gitall "git add ."
 alias lg='lazygit'
+alias apti='sudo apt install'
 alias 'git gui'='lazygit'
 

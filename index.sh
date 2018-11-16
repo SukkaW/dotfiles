@@ -76,13 +76,14 @@ echo -n "
 ----------
 Here we start...
 ===========================================================
-Install packages: zsh | curl | git | fonts-powerline
+Install packages: zsh | curl | git | fonts-powerline | tree
 -----------------------------------------------------------
 "
 sudo apt update
 sudo apt install zsh -y
 sudo apt install curl -y
 sudo apt install git -y
+sudo apt install tree -y
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"

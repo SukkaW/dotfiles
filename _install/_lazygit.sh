@@ -4,11 +4,11 @@ sudo add-apt-repository ppa:lazygit-team/release
 
 echo -n "
 -----------------------------------------------------------
-Using Moruy PPA Proxy ...
+Using USTC PPA Proxy ...
 ----------------------------------------------------------
 "
 
-sudo sed -i "s/ppa\.launchpad\.net/lanuchpad.moruy.cn/g" /etc/apt/sources.list.d/*.list
+sudo sed -i "s/http:\/\/ppa\.launchpad\.net/https:\/\/launchpad.proxy.ustclug.org/g" /etc/apt/sources.list.d/*.list
 
-sudo apt-get update
-sudo apt-get install lazygit
+sudo apt update
+sudo apt install lazygit
