@@ -23,21 +23,9 @@ Import _install/zshrc/main.rc
 -----------------------------------------------------------
 "
 
-cat ./_install/zshrc/main.rc
-
 cat ./_install/zshrc/main.rc >> $HOME/.zshrc
 
-cat $HOME/.zshrc
-
 source $HOME/.zshrc
-
-echo -n "
------------------------------------------------------------
-Test command: rezsh
------------------------------------------------------------
-"
-
-rezsh
 
 echo -n "
 ===========================================================
@@ -64,3 +52,21 @@ Install lazygit
 "
 
 ./_install/_lazygit.sh
+
+echo -n "
+===========================================================
+Load more zshrc
+-----------------------------------------------------------
+"
+
+find ../_zshrc -type f -name "*.rc" | xargs cat >> $HOME/.zshrc
+
+source $HOME/.zshrc
+
+echo -n "
+===========================================================
+Upgrade packages
+-----------------------------------------------------------
+"
+
+sudo apt update && sudo apt upgrade -y
