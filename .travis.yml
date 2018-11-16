@@ -9,4 +9,4 @@ install:
   - echo $PATH
   - cd $HOME
 script:
-  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/main.sh | bash
+  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/index.sh | bash

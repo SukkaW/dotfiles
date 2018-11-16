@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 curl -o- https://cdn.jsdelivr.net/gh/creationix/nvm@v0.33.11/install.sh | bash
 

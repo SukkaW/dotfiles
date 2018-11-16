@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 sudo add-apt-repository ppa:lazygit-team/release
 
 echo -n "
