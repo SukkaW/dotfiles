@@ -70,3 +70,11 @@ Upgrade packages
 "
 
 sudo apt update && sudo apt upgrade -y
+
+echo -n "
+===========================================================
+git config --global
+-----------------------------------------------------------
+"
+git config --global user.name "SukkaW"
+git config --global user.email "isukkaw@gmail.com"

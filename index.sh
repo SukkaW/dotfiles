@@ -108,6 +108,10 @@ echo -n "Done!
 
 echo -n "
 ===========================================================
-Finish Sukka Env Setup!
+Finish Sukka Env Setup! Do not forget those things:
+
+- yarn global add http-server serve hexo-cli gulp-cli docsify-cli
+- npm login
+- Write netrc file
 ===========================================================
 "
