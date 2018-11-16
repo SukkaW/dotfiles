@@ -3,12 +3,11 @@ dist: trusty
 sudo: required
 before_install:
   - echo "==========================================================="
-install:
   - echo "Start Sukka dotfiles test"
   - echo "==========================================================="
+install:
+  - echo " "
+  - echo " "
+  - echo " "
 script:
-  - gulp build
-cache:
-  yarn: true
-  directories:
-    - node_modules
+  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/main.sh | bash
