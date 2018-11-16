@@ -1,14 +1,5 @@
-#!/usr/bin/bash
+#!/bin/bash
 
-echo -n "
-===========================================================
-  ____          _     _ 
- / ___|  _   _ | | __| | __ __ _ 
- \___ \ | | | || |/ /| |/ // _\` |
-  ___) || |_| ||   < |   <| (_| |
- |____/  \__,_||_|\_\|_|\_\\\\__,_|
-===========================================================
-"
 echo -n "
 !! ATTENTION !!
 
@@ -83,14 +74,35 @@ sleep 1
 
 echo -n "
 ----------
-Here we go !
+Here we start...
 ===========================================================
-Install packages: zsh curl git fonts-powerline
+Install packages: zsh | curl | git | fonts-powerline
+-----------------------------------------------------------
+"
+sudo apt update
+sudo apt install zsh -y
+sudo apt install curl -y
+sudo apt install git -y
+sudo apt install fonts-powerline -y
+
+echo "==========================================================="
+echo "Get Sukka/dotfiles from GitHub.com"
+echo "-----------------------------------------------------------"
+
+git clone https://github.com/SukkaW/dotfiles.git --depth=2
+
+echo -n "
+===========================================================
+  ____          _     _ 
+ / ___|  _   _ | | __| | __ __ _ 
+ \___ \ | | | || |/ /| |/ // _\` |
+  ___) || |_| ||   < |   <| (_| |
+ |____/  \__,_||_|\_\|_|\_\\\\__,_|
+===========================================================
+Set permission of all scripts...
 "
 
+find ./_install -type f -name "*.sh" | xargs chmod +x
 
-sudo apt update
-sudo apt install zsh
-sudo apt install curl
-sudo apt install fonts-powerline
-
+echo "Done!"
+echo "==========================================================="

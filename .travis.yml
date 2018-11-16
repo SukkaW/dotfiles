@@ -1,5 +1,5 @@
 sudo: enabled
-dist: trusty
+dist: xenial
 before_install:
   - echo "==========================================================="
   - echo "Start Sukka dotfiles test"
