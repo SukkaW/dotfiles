@@ -9,3 +9,9 @@ echo "Output Yarn Version"
 echo "-----------------------------------------------------------"
 
 yarn --version
+
+echo "-----------------------------------------------------------"
+echo "Yarn Global install packages"
+echo "-----------------------------------------------------------"
+
+yarn global add http-server serve hexo-cli gulp-cli docsify-cli

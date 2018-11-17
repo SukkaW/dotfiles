@@ -91,6 +91,7 @@ echo "-----------------------------------------------------------"
 
 git clone https://github.com/SukkaW/dotfiles.git --depth=2
 cd ./dotfiles
+rm -rf .git
 
 echo -n "
 ===========================================================
@@ -110,7 +111,7 @@ echo -n "
 ===========================================================
 Finish Sukka Env Setup! Do not forget those things:
 
-- yarn global add http-server serve hexo-cli gulp-cli docsify-cli
+- chsh -s /usr/bin/zsh
 - npm login
 - Write netrc file
 ===========================================================
