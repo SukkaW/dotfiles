@@ -1,0 +1,68 @@
+{
+    "workbench.colorCustomizations": {},
+    "materialTheme.accentPrevious": "Sky",
+    "workbench.colorTheme": "Material Theme",
+    "materialTheme.fixIconsRunning": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.fontSize": 16.5,
+    "editor.renderWhitespace": "boundary",
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.lineHeight": 20,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "name": "Comments",
+                "scope": "comment, punctuation.definition.comment",
+                "settings": {
+                    "fontStyle": ""
+                }
+            },
+            {
+                "name": "markdown qoute",
+                "scope": "markup.quote.markdown",
+                "settings": {
+                    "fontStyle": "",
+                    "foreground": "#90A4AE"
+                }
+            },
+            {
+                "name": "HTML Attributes",
+                "scope": [
+                    "text.html.basic entity.other.attribute-name.html",
+                    "text.html.basic entity.other.attribute-name"
+                ],
+                "settings": {
+                    "fontStyle": "",
+                }
+            },
+            {
+                "name": "js/ts italic",
+                "scope": "entity.other.attribute-name.js,entity.other.attribute-name.ts,entity.other.attribute-name.jsx,entity.other.attribute-name.tsx,variable.parameter,variable.language.super",
+                "settings": {
+                    "fontStyle": ""
+                }
+            },
+            {
+                "name": "js ts this",
+                "scope": "var.this,variable.language.this.js,variable.language.this.ts,variable.language.this.jsx,variable.language.this.tsx",
+                "settings": {
+                    "fontStyle": ""
+                }
+            }
+        ]
+    },
+    "editor.acceptSuggestionOnEnter": "smart",
+    "workbench.startupEditor": "newUntitledFile",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.minimap.enabled": true,
+    "terminal.integrated.shell.windows": "X:\\wsl-terminal\\open-wsl.exe",
+    "files.eol": "\n",
+    "editor.formatOnPaste": false,
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 80000000,
+    "git.autofetch": true,
+    "prettier.printWidth": 0,
+    "prettier.tabWidth": 4,
+    "breadcrumbs.enabled": true,
+}
