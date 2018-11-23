@@ -32,8 +32,7 @@ echo -n "
  |__   _|
     | |  
     |_|  
-----------
-"
+----------"
 
 sleep 1
 
@@ -44,8 +43,7 @@ echo -n "
   |__ < 
   ___) |
  |____/ 
-----------
-"
+----------"
 
 sleep 1
 
@@ -56,8 +54,7 @@ echo -n "
    / / 
   / /_ 
  |____|
-----------
-"
+----------"
 
 sleep 1
 
@@ -113,6 +110,7 @@ Finish Sukka Env Setup! Do not forget those things:
 
 - chsh -s /usr/bin/zsh
 - npm login
-- Write netrc file
+- run_keybase
+= Write netrc file
 ===========================================================
 "
