@@ -1,15 +1,37 @@
 proxy () {
-  export ALL_PROXY="socks5://127.0.0.1:7891"
-  echo -e "Acquire::http::Proxy \"http://127.0.0.1:7890\";" | sudo tee -a /etc/apt/apt.conf
-  echo -e "Acquire::https::Proxy \"http://127.0.0.1:7890\";" | sudo tee -a /etc/apt/apt.conf
   echo "====================="
+  echo "Input proxy config"
+  echo "---------------------"
+  echo -n 'Please input socks5 proxy (Default as 127.0.0.1:1080)
+[Format address:port]:'
+  read socks5
+  echo "---------------------"
+  echo -n 'Please input http proxy (Default as 127.0.0.1:1090)
+[Format address:port]:'
+  read http
+
+  if [ ! -n "$socks5" ]; then
+    socks5="127.0.0.1:1080"
+  fi
+  if [ ! -n "$http" ]; then
+    http="127.0.0.1:1090"
+  fi
+
+  echo "====================="
+  echo "Setting terminal proxy to $socks5 ..."
+  export ALL_PROXY="socks5://$socks5"
+  echo "---------------------"
+  echo "Setting apt proxy to $http ..."
+  echo -e "Acquire::http::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
+  echo -e "Acquire::https::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
+  echo "---------------------"
   echo "Proxy enabled."
   echo "====================="
   echo "Check /etc/apt/apt.conf"
   echo "---------------------"
   sudo cat /etc/apt/apt.conf
   echo "====================="
-   echo "Check your IP"
+   echo "Checking IP"
   echo "---------------------"
   curl https://ip.cn
   echo "---------------------"
