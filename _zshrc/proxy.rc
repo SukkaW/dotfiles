@@ -3,11 +3,11 @@ proxy () {
   echo "Input proxy config"
   echo "---------------------"
   echo -n 'Please input socks5 proxy (Default as 127.0.0.1:1080)
-[Format address:port]:'
+[Format address:port] '
   read socks5
   echo "---------------------"
   echo -n 'Please input http proxy (Default as 127.0.0.1:1090)
-[Format address:port]:'
+[Format address:port] '
   read http
 
   if [ ! -n "$socks5" ]; then
