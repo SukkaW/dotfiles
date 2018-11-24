@@ -25,13 +25,23 @@ proxy () {
   echo -e "Acquire::http::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
   echo -e "Acquire::https::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
   echo "---------------------"
+  echo "Setting git proxy to $socks5"
+  git config --global http.proxy "socks5://$socks5"
+  git config --global https.proxy "socks5://$socks5"
+  echo "---------------------"
+  echo "Setting Yarn & NPM proxy to $http"
+  npm config set proxy "http://$http"
+  npm config set https-proxy "http://$http"
+  yarn config set proxy "http://$http"
+  yarn config set https-proxy "http://$http"
+  echo "---------------------"
   echo "Proxy enabled."
   echo "====================="
   echo "Check /etc/apt/apt.conf"
   echo "---------------------"
   sudo cat /etc/apt/apt.conf
   echo "====================="
-   echo "Checking IP"
+  echo "Checking IP"
   echo "---------------------"
   curl https://ip.cn
   echo "---------------------"
@@ -39,8 +49,15 @@ proxy () {
   echo "====================="
 }
 
+
 noproxy () {
   unset ALL_PROXY
+  git config --global --unset http.proxy
+  git config --global --unset https.proxy
+  npm config delete proxy
+  npm config delete https-proxy
+  yarn config delete proxy
+  yarn config delete https-proxy
   sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
   sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
   echo "====================="
