@@ -57,3 +57,7 @@ noproxy () {
   curl https://ip.gs
   echo "====================="
 }
+
+ppaproxy () {
+  sudo sed -i "s/http:\/\/ppa\.launchpad\.net/https:\/\/launchpad.proxy.ustclug.org/g" /etc/apt/sources.list.d/*.list
+}
