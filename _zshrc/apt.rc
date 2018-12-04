@@ -13,3 +13,21 @@ aptupd () {
 aptupg () {
   sudo apt upgrade -y
 }
+
+aptcn () {
+  echo "====================="
+  echo "Use the mirror hosted in China"
+  echo "====================="
+  sudo sed -i "s|https://mirrors.speedtests.ml|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list
+  sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list.d/*.list
+  sudo sed -i "s|https://launchpad.speedtests.ml|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list.d/*.list
+}
+
+aptcf () {
+  echo "====================="
+  echo "Use the mirror hosted on Cloudflare"
+  echo "====================="
+  sudo sed -i "s|https://mirrors.shu.edu.cn|https://mirrors.speedtests.ml|g" /etc/apt/sources.list
+  sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.speedtests.ml|g" /etc/apt/sources.list.d/*.list
+  sudo sed -i "s|https://launchpad.proxy.ustclug.org|https://launchpad.speedtests.ml|g" /etc/apt/sources.list.d/*.list
+}

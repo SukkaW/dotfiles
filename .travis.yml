@@ -5,8 +5,8 @@ before_install:
   - echo "Start Sukka dotfiles test"
   - echo "==========================================================="
 install:
-  - echo $HOME
-  - echo $PATH
+  - sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com|https://mirrors.speedtests.ml|g' /etc/apt/sources.list
+  - sudo sed -i 's|http://security.ubuntu.com|https://mirrors.speedtests.ml|g' /etc/apt/sources.list
   - cd $HOME
 script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
