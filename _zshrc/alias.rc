@@ -1,9 +1,10 @@
+alias rezsh="source $HOME/.zshrc"
+
 alias rmrf "rm -rf"
 alias gitcm "git commit -m"
 alias gitp "git push"
 alias gita "git add -a"
 alias gitall "git add ."
 alias lg='lazygit'
-alias apti='sudo apt install'
 alias 'git gui'='lazygit'
 

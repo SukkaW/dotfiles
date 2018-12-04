@@ -22,11 +22,7 @@ echo -n "
 -----------------------------------------------------------
 Oh-My-Zsh installed successfully!
 -----------------------------------------------------------
-Import _install/zshrc/main.rc
------------------------------------------------------------
 "
-
-cat ./_install/zshrc/main.rc >> $HOME/.zshrc
 
 source $HOME/.zshrc
 

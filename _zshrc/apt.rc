@@ -10,9 +10,8 @@ aptupd () {
   echo "====================="
 }
 
-aptupg () {
-  sudo apt upgrade -y
-}
+alias apti='sudo apt install'
+aliaa aptupg='sudo apt upgrade -y'
 
 aptcn () {
   echo "====================="
