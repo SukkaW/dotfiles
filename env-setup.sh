@@ -70,14 +70,25 @@ echo -n "
 sleep 1
 
 echo -n "
+
 ----------
-Here we start...
+Here we start!
+--------------->
+
 ===========================================================
-Install packages: zsh | curl | git | fonts-powerline | tree | adb | fastboot
+Install packages:
+
+- zsh
+- curl
+- git
+- fonts-powerline
+- tree
+- adb
+- fastboot
 -----------------------------------------------------------
 "
 sudo apt update
-sudo apt install -y zsh curl git tree adb fastboot
+sudo apt install -y zsh curl git fonts-powerline tree adb fastboot
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"

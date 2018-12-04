@@ -10,8 +10,16 @@ echo "-----------------------------------------------------------"
 
 yarn --version
 
-echo "-----------------------------------------------------------"
-echo "Yarn Global install packages"
-echo "-----------------------------------------------------------"
+echo -n "
+-----------------------------------------------------------
+Yarn Global add those packages:
+
+- http-server
+- serve
+- hexo-cli
+- gulp-cli
+- docsify-cli
+-----------------------------------------------------------
+"
 
 yarn global add http-server serve hexo-cli gulp-cli docsify-cli
