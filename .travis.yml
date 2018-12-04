@@ -1,12 +1,9 @@
 sudo: enabled
 dist: xenial
 before_install:
-  - echo "==========================================================="
-  - echo "Start Sukka dotfiles test"
-  - echo "==========================================================="
-install:
   - sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com|https://mirrors.speedtests.ml|g' /etc/apt/sources.list
   - sudo sed -i 's|http://security.ubuntu.com|https://mirrors.speedtests.ml|g' /etc/apt/sources.list
+install:
   - cd $HOME
 script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
