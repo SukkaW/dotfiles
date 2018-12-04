@@ -80,6 +80,7 @@ sudo apt update
 sudo apt install zsh -y
 sudo apt install curl -y
 sudo apt install git -y
+sudo apt install fonts-powerline -y
 sudo apt install tree -y
 
 echo "==========================================================="
