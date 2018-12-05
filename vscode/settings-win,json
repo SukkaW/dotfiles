@@ -56,7 +56,6 @@
     "editor.detectIndentation": false,
     "editor.tabSize": 4,
     "editor.minimap.enabled": true,
-    "terminal.integrated.shell.windows": "X:\\wsl-terminal\\open-wsl.exe",
     "files.eol": "\n",
     "editor.formatOnPaste": false,
     "editor.wordWrap": "bounded",
@@ -65,4 +64,15 @@
     "prettier.printWidth": 0,
     "prettier.tabWidth": 4,
     "breadcrumbs.enabled": true,
+    "terminal.integrated.shell.windows": "bash.exe",
+    "terminal.integrated.shellArgs.windows": [
+        "-i",
+        "-c",
+        "zsh"
+    ],
+    "terminal.external.windowsExec": "bash.exe",
+    "terminal.integrated.fontFamily": "Consolas NF",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.rendererType": "dom",
+    "git.ignoreMissingGitWarning": true
 }
