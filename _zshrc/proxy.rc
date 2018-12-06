@@ -22,6 +22,8 @@ proxy () {
   export ALL_PROXY="socks5://$socks5"
   echo "---------------------"
   echo "Setting apt proxy to $http ..."
+  sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
+  sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
   echo -e "Acquire::http::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
   echo -e "Acquire::https::Proxy \"http://$http\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
   echo "---------------------"
