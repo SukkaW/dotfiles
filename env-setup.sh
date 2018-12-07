@@ -85,10 +85,11 @@ Install packages:
 - tree
 - adb
 - fastboot
+- python2.7
 -----------------------------------------------------------
 "
 sudo apt update
-sudo apt install -y zsh curl git fonts-powerline tree adb fastboot
+sudo apt install -y zsh curl git fonts-powerline tree adb fastboot python2.7
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"
