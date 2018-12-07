@@ -7,6 +7,6 @@ before_install:
   - sudo sed -i 's|http://ppa.launchpad.net|https://launchpad.speedtests.ml|g' /etc/apt/sources.list.d/*.list
 install:
   - cd $HOME
-script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
+script:
   - echo "Test finished"
