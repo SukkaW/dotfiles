@@ -6,4 +6,6 @@ cd ci_edit
 
 sudo ./install.sh
 
+return 0
+
 cd ..
