@@ -18,12 +18,6 @@ echo "-----------------------------------------------------------"
 
 ./_install/_omz.sh
 
-echo -n "
------------------------------------------------------------
-Oh-My-Zsh installed successfully!
------------------------------------------------------------
-"
-
 source $HOME/.zshrc
 
 echo -n "
@@ -80,11 +74,11 @@ sudo pip3 install thefuck
 
 echo -n "
 ===========================================================
-Install Google ci_editor
+Clone Google ci_editor
 -----------------------------------------------------------
 "
 
-./_install/_ci_editor.sh
+git clone https://github.com/google/ci_edit.git --depth=50
 
 echo -n "
 ===========================================================

@@ -123,6 +123,8 @@ Finish Sukka Env Setup! Do not forget those things:
 - chsh -s /usr/bin/zsh
 - npm login
 - run_keybase
+- updateciedit (Install Google CI_Editor)
+
 = Write netrc file
 ===========================================================
 "
