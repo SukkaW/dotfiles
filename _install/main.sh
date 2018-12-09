@@ -88,6 +88,8 @@ Upgrade packages
 
 sudo apt update && sudo apt upgrade -y
 
+pip install --upgrade pip
+
 echo -n "
 ===========================================================
 git config --global
