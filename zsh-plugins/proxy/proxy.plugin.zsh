@@ -3,10 +3,10 @@ _PROXY_HTTP=$(cat "${HOME}/.proxy/http")
 _PROXY_SOCKS5=$(cat "${HOME}/.proxy/socks5")
 
 init_proxy() {
-    mkdir -p $HOME/.proxy
-    touch -p $HOME/.proxy/status
-    touch -p $HOME/.proxy/http
-    touch -p $HOME/.proxy/socks5
+    mkdir $HOME/.proxy
+    touch $HOME/.proxy/status
+    touch $HOME/.proxy/http
+    touch $HOME/.proxy/socks5
 }
 
 remove_proxy_plugin() {
@@ -41,6 +41,8 @@ config_proxy() {
 
     echo "socks5://$socks5" > $HOME/.proxy/socks5
     echo "http://$http" > $HOME/.proxy/http
+
+    source $HOME/.zshrc
 }
 
 enable_proxy() {
