@@ -10,8 +10,8 @@ Install sukka.zsh-theme ...
 
 touch $HOME/.oh-my-zsh/themes/sukka.zsh-theme
 
-cp ./zsh-theme/. $HOME/.oh-my-zsh/custom/themes/
-cp ./zsh-theme/. $HOME/.oh-my-zsh/custom/plugins/
+cp -r ./zsh-theme/. $HOME/.oh-my-zsh/custom/themes/
+cp -r ./zsh-plugins/. $HOME/.oh-my-zsh/custom/plugins/
 
 sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="sukka"/g' $HOME/.zshrc
 
