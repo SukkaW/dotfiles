@@ -1,12 +1,18 @@
-_PROXY_STATUS=$(cat "${HOME}/.proxy/status")
-_PROXY_HTTP=$(cat "${HOME}/.proxy/http")
-_PROXY_SOCKS5=$(cat "${HOME}/.proxy/socks5")
+if [ ! -f "${HOME}/.proxy/status" ] || [ ! -f "${HOME}/.proxy/http" ] || [ ! -f "${HOME}/.proxy/socks5" ] ; then
+    echo -e "You should run init_proxy first"
+else
+    _PROXY_STATUS=$(cat "${HOME}/.proxy/status")
+    _PROXY_HTTP=$(cat "${HOME}/.proxy/http")
+    _PROXY_SOCKS5=$(cat "${HOME}/.proxy/socks5")
+fi
+
 
 init_proxy() {
     mkdir $HOME/.proxy
     touch $HOME/.proxy/status
     touch $HOME/.proxy/http
     touch $HOME/.proxy/socks5
+    echo -e "Great! The proxy plugin has initialized"
 }
 
 remove_proxy_plugin() {
@@ -48,21 +54,25 @@ config_proxy() {
 enable_proxy() {
     export ALL_PROXY="${_PROXY_SOCKS5}"
     export all_proxy="${_PROXY_SOCKS5}"
-    sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
-    sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
-    echo -e "Acquire::http::Proxy \"${_PROXY_HTTP}\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
-    echo -e "Acquire::https::Proxy \"${_PROXY_HTTP}\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
-    echo "1" > $HOME/.proxy/status
-    check_ip
 }
 
 disable_proxy() {
     unset ALL_PROXY
     unset all_proxy
+}
+
+enable_apt_proxy() {
+    sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
+    sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
+    echo -e "Acquire::http::Proxy \"${_PROXY_HTTP}\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
+    echo -e "Acquire::https::Proxy \"${_PROXY_HTTP}\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
+    echo "1" > $HOME/.proxy/status
+}
+
+disable_apt_proxy() {
     sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf
     sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf
     echo "0" > $HOME/.proxy/status
-    check_ip
 }
 
 auto_proxy() {
@@ -75,7 +85,16 @@ auto_proxy() {
 }
 
 # Aliases for backward compatibility
-alias proxy=enable_proxy
-alias noproxy=disable_proxy
+proxy() {
+    enable_proxy
+    enable_apt_proxy
+    check_ip
+}
+
+noproxy() {
+    disable_proxy
+    disable_apt_proxy
+    check_ip
+}
 
 auto_proxy
