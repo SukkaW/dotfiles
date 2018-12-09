@@ -6,3 +6,5 @@ curl -O https://prerelease.keybase.io/keybase_amd64.deb
 # subsequent command corrects it
 sudo dpkg -i keybase_amd64.deb
 sudo apt-get install -f
+
+rm -rf keybase_amd64.deb

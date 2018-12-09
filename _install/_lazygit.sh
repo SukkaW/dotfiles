@@ -4,7 +4,7 @@ sudo add-apt-repository ppa:lazygit-team/release
 
 echo -n "
 -----------------------------------------------------------
-Using USTC PPA Proxy ...
+Using PPA Proxy ...
 ----------------------------------------------------------
 "
 
