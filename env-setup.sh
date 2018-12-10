@@ -8,8 +8,7 @@ Before setting up Sukka Environment, make sure you are:
 * Have your /etc/apt/sources.list modified
 
 The setup will begin in 5 seconds...
-----------
-"
+----------"
 
 sleep 1
 
@@ -20,8 +19,7 @@ echo -n "
  |___ \ 
   ___) |
  |____/ 
-----------
-"
+----------"
 
 sleep 1
 
@@ -81,10 +79,9 @@ Install packages:
 - zsh
 - curl
 - git
-- fonts-powerline
 - tree
-- adb
-- fastboot
+- android-tools-adb
+- android-tools-fastboot
 - python2.7
 - python3-dev
 - python3-pip
@@ -92,7 +89,7 @@ Install packages:
 -----------------------------------------------------------
 "
 sudo apt update
-sudo apt install -y zsh curl git fonts-powerline tree adb fastboot python2.7 python3-dev python3-pip python3-setuptools
+sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"
