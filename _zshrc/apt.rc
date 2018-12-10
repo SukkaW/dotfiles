@@ -11,7 +11,7 @@ aptupd () {
 }
 
 alias apti='sudo apt install'
-aliaa aptupg='sudo apt upgrade -y'
+alias aptupg='sudo apt upgrade -y'
 
 aptcn () {
   echo "====================="
