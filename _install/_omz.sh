@@ -15,7 +15,7 @@ cp -r ./zsh-plugins/. $HOME/.oh-my-zsh/custom/plugins/
 
 sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="sukka"/g' $HOME/.zshrc
 
-sed -i 's|plugins=(|plugins=(\n  proxy|g' $HOME/.zshrc
+sed -i 's|plugins=(|plugins=(proxy|g' $HOME/.zshrc
 
 tree $HOME/.oh-my-zsh/custom/
 
