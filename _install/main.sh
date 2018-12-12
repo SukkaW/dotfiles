@@ -90,6 +90,8 @@ sudo apt update && sudo apt upgrade -y
 
 pip install --upgrade pip
 
+npm i -g npm
+
 echo -n "
 ===========================================================
 git config --global
