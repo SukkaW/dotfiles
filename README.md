@@ -9,7 +9,7 @@ Sounds so boring. Let me try again.
 
 *Here is where the stories begin.*
 
-Still boring. Tar again. This time should be better.
+Still boring. Try again. This time should be better.
 
 **This is how I make myself feel like a 10x developer.**
 
