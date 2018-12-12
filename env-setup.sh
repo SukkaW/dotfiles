@@ -86,10 +86,11 @@ Install packages:
 - python3-dev
 - python3-pip
 - python3-setuptools
+- whois
 -----------------------------------------------------------
 "
 sudo apt update
-sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools
+sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"
