@@ -7,13 +7,13 @@ oload() {
     echo "---------------------"
     read openloadurl
     echo "---------------------"
-    echo 'Please input axel max connections (Default as 12)'
+    echo 'Please input axel max connections (Default as 24)'
     echo "---------------------"
     read connections
     echo "====================="
 
     if [ ! -n "$connections" ]; then
-        connections="12"
+        connections="24"
     fi
 
     axel -n ${connections} $(openload link ${openloadurl})
