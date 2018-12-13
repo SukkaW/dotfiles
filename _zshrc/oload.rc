@@ -16,5 +16,14 @@ oload() {
         connections="24"
     fi
 
-    axel -n ${connections} $(openload link ${openloadurl})
+    downloadlink=$(openload link ${openloadurl})
+
+    result=$(echo ${downloadlink} | grep "Error")
+
+    if [[ "$result" != *"Error"* ]]
+    then
+       axel -n ${connections} $(openload link ${openloadurl})
+    else
+       echo ${downloadlink}
+    fi
 }
