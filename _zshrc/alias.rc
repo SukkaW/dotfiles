@@ -6,4 +6,5 @@ alias gitp "git push"
 alias gita "git add -a"
 alias gitall "git add ."
 alias lg='lazygit'
-alias updateciedit="cd $HOME && cd ci_edit && git pull && sudo ./install.sh && cd ."
+alias updciedit="cd $HOME && cd ci_edit && git pull && sudo ./install.sh && cd ."
+alias myip='check_ip'

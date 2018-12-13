@@ -10,8 +10,9 @@ aptupd () {
   echo "====================="
 }
 
-alias apti='sudo apt install'
 alias aptupg='sudo apt upgrade -y'
+alias apti='sudo apt install'
+alias apts='sudo apt search'
 
 aptcn () {
   echo "====================="
