@@ -19,7 +19,8 @@ Yarn Global add those packages:
 - hexo-cli
 - gulp-cli
 - docsify-cli
+- openload-cli
 -----------------------------------------------------------
 "
 
-yarn global add http-server serve hexo-cli gulp-cli docsify-cli
+yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli

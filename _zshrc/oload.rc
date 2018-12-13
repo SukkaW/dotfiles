@@ -1,0 +1,19 @@
+oload() {
+    echo "====================="
+    echo "Openload Downloader"
+    echo "Make sure you are now at download folder"
+    echo "---------------------"
+    echo "Please input openload url (end with /)"
+    echo "---------------------"
+    read openloadurl
+    echo "---------------------"
+    echo -n 'Please input axel max connections (Default as 12)'
+    read connections
+    echo "====================="
+
+    if [ ! -n "$connections" ]; then
+        connections="12"
+    fi
+
+    axel -n ${connections} $(openload link ${openloadurl})
+}

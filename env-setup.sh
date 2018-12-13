@@ -87,10 +87,11 @@ Install packages:
 - python3-pip
 - python3-setuptools
 - whois
+- axel
 -----------------------------------------------------------
 "
 sudo apt update
-sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois
+sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois axel
 
 echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"
@@ -124,5 +125,6 @@ Finish Sukka Env Setup! Do not forget those things:
 - updateciedit (Install Google CI_Editor)
 
 = Write netrc file
+= Sign in Openload with 'openload config --login [login] --key [key]'
 ===========================================================
 "
