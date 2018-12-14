@@ -24,9 +24,7 @@ curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh |
 ### Cloud9 IDE Setup
 
 ```bash
-curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/cs50ide-setup.sh | bash
-
-curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
+curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_cs50/setup.sh | bash
 ```
 
 ## ZSH Theme
