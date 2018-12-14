@@ -27,3 +27,23 @@ oload() {
        echo ${downloadlink}
     fi
 }
+
+oload-config () {
+    echo "====================="
+    echo "Openload CLI Configuration"
+    echo "---------------------"
+    echo "Please input openload login"
+    echo "---------------------"
+    read login
+    echo "---------------------"
+    echo 'Please input openload key'
+    echo "---------------------"
+    read key
+    echo "====================="
+
+    if [ ! -n "$login" ] || [ ! -n "$key" ] ; then
+        echo "You should enter all the field!"
+    else
+        openload config --login $login --key $key
+    fi
+}
