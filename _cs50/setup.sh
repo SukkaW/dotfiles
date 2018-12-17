@@ -15,4 +15,3 @@ sudo apt upgrade -y
 ) && \. "$NVM_DIR/nvm.sh"
 
 echo "curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_cs50/set-mirror.sh | bash" > $HOME/.bashrc
-echo "bash -c zsh" >> $HOME/.bashrc
