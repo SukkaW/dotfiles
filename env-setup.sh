@@ -97,8 +97,12 @@ echo "==========================================================="
 echo "Get Sukka/dotfiles from GitHub.com"
 echo "-----------------------------------------------------------"
 
-git clone https://github.com/SukkaW/dotfiles.git --depth=2
+git clone https://github.com/SukkaW/dotfiles.git
+
 cd ./dotfiles
+
+git checkout refactor/module
+
 rm -rf .git
 
 echo -n "
