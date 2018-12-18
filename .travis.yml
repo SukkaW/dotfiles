@@ -7,7 +7,7 @@ before_install:
   - cd $HOME
   - cat $HOME/.bashrc
   - cat $HOME/.bash_profile
-  - tree
+  - tree -L 3
 install:
   - rm -rf $HOME/.bashrc
   - rm -rf $HOME/.bash_profile
