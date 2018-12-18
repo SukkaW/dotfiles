@@ -10,16 +10,21 @@ echo -n "
 
 curl -o- https://cdn.jsdelivr.net/gh/creationix/nvm@v0.33.11/install.sh | bash
 
-echo -n "
-------------------------------------------------------------
-* Import nvm script to .zshrc"
-
 source $HOME/.zshrc
 
+echo -n "
+------------------------------------------------------------
+* Import nvm script to .zshrc... "
+
 if [ ! -n "$NVM_DIR" ]; then
-    cat ./_node/nvm.zshrc >> $HOME/.zshrc
-    source $HOME/.zshrc
+    cat ./_install/_node/nvm.zshrc >> $HOME/.zshrc
 fi
+
+echo -n "Done!
+------------------------------------------------------------
+"
+
+source $HOME/.zshrc
 
 echo -n "
 ------------------------------------------------------------
@@ -76,7 +81,7 @@ echo -n "
 -----------------------------------------------------------
 * Adding node package cli to PATH... "
 
-cat ./_node/yarn.zshrc >> $HOME/.zshrc
+cat ./_install/_node/yarn.zshrc >> $HOME/.zshrc
 source $HOME/.zshrc
 
 echo -n "Done!

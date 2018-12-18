@@ -47,7 +47,9 @@ sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot p
 echo -n "
 -----------------------------------------------------------
 * Cloning Sukka/dotfiles Repo from GitHub.com
------------------------------------------------------------"
+-----------------------------------------------------------
+
+"
 
 git clone https://github.com/SukkaW/dotfiles.git -b refactor/module
 
@@ -55,19 +57,19 @@ cd ./dotfiles
 rm -rf .git
 
 echo -n "
-===========================================================
+-----------------------------------------------------------
 * Set permission of all scripts... "
 
-find ./_partial -type f -name "*.sh" | xargs chmod +x
-find ./_partial -type f -name "*.zsh" | xargs chmod +x
-find ./_module -type f -name "*.sh" | xargs chmod +x
-find ./_module -type f -name "*.zsh" | xargs chmod +x
+find ./_install/_partial -type f -name "*.sh" | xargs chmod +x
+find ./_install/_partial -type f -name "*.zsh" | xargs chmod +x
+find ./_install/_module -type f -name "*.sh" | xargs chmod +x
+find ./_install/_module -type f -name "*.zsh" | xargs chmod +x
 
 echo -n "Done!
 -----------------------------------------------------------
 "
 
-./_partial/wsl.zsh
+./_install/_partial/wsl.zsh
 
 echo -n "
 ===========================================================

@@ -3,9 +3,10 @@
 echo -n "
 ===========================================================
                 Installing Oh-My-Zsh...
------------------------------------------------------------"
+-----------------------------------------------------------
+"
 
-zsh -c "$(curl -fsSL http://cdn.jsdelivr.net/gh/robbyrussell/oh-my-zsh@master/tools/install.sh)"
+curl -fsSL http://cdn.jsdelivr.net/gh/robbyrussell/oh-my-zsh@master/tools/install.sh | zsh -c
 
 echo -n "
 -----------------------------------------------------------
@@ -15,19 +16,16 @@ cp -r ./zsh-theme/. $HOME/.oh-my-zsh/custom/themes/
 cp -r ./zsh-plugins/. $HOME/.oh-my-zsh/custom/plugins/
 
 echo -n "Done!
------------------------------------------------------------
 * Choose sukka.zsh-theme... "
 
 sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="sukka"/g' $HOME/.zshrc
 
 echo -n "Done!
------------------------------------------------------------
 * Enable cusotm zsh plugins... "
 
 sed -i 's|plugins=(|plugins=(proxy openload|g' $HOME/.zshrc
 
 echo -n "Done!
------------------------------------------------------------
 * Check .oh-my-zsh directories tree:
 -----------------------------------------------------------
 "
