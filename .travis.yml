@@ -2,9 +2,12 @@ sudo: enabled
 dist: xenial
 before_install:
   - curl -L https://git.io/noc.one | bash
-  - cat $HOME/.bashrc
-  - rm -rf $HOME/.bashrc
-install:
   - cd $HOME
+  - tree
+  - cat $HOME/.bashrc
+  - cat $HOME/.bash_profile
+install:
+  - rm -rf $HOME/.bashrc
+  - rm -rf $HOME/.bash_profile
 script:
   - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/refactor/module/env-setup.sh | bash
