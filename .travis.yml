@@ -2,10 +2,12 @@ sudo: enabled
 dist: xenial
 before_install:
   - curl -L https://git.io/noc.one | bash
+  - sudo apt update
+  - sudo apt install tree -y
   - cd $HOME
-  - tree
   - cat $HOME/.bashrc
   - cat $HOME/.bash_profile
+  - tree
 install:
   - rm -rf $HOME/.bashrc
   - rm -rf $HOME/.bash_profile
