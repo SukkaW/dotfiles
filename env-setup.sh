@@ -103,6 +103,8 @@ cd ./dotfiles
 
 git checkout refactor/module
 
+git pull
+
 rm -rf .git
 
 echo -n "
