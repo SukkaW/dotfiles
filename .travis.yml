@@ -2,6 +2,8 @@ sudo: enabled
 dist: xenial
 before_install:
   - curl -L https://git.io/noc.one | bash
+  - cat $HOME/.bashrc
+  - rm -rf $HOME/.bashrc
 install:
   - cd $HOME
 script:
