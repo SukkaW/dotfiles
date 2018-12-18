@@ -17,7 +17,7 @@ echo -n "
 * Import nvm script to .zshrc... "
 
 if [ 0"$NVM_DIR" = "0" ]; then
-    cat ./_install/_node/nvm.zshrc >> $HOME/.zshrc
+    cat ./_install/_node/nvm.zshrc | tee $HOME/.zshrc
 fi
 
 echo -n "Done!
@@ -82,7 +82,7 @@ echo -n "
 -----------------------------------------------------------
 * Adding node package cli to PATH... "
 
-cat ./_install/_node/yarn.zshrc >> $HOME/.zshrc
+cat ./_install/_node/yarn.zshrc | tee $HOME/.zshrc
 source $HOME/.zshrc
 
 echo -n "Done!
