@@ -16,7 +16,7 @@ echo -n "
 ------------------------------------------------------------
 * Import nvm script to .zshrc... "
 
-if [ ! -n "$NVM_DIR" ]; then
+if [ 0"$NVM_DIR" = "0" ]; then
     cat ./_install/_node/nvm.zshrc >> $HOME/.zshrc
 fi
 
