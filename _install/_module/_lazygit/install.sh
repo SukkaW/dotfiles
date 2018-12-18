@@ -1,6 +1,6 @@
 #!/bin/bash
 echo -n "
------------------------------------------------------------
+===========================================================
                   Installing lazygit
 -----------------------------------------------------------
 "
@@ -15,6 +15,10 @@ sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g" /etc/
 
 sudo apt update
 
-echo -e "* Installing lazygit..."
+echo -n "
+* Installing lazygit..."
 
 sudo apt install lazygit
+
+echo -n "Done!
+"

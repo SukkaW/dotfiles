@@ -8,4 +8,4 @@ install:
   - cat $HOME/.bash_profile
   - ls $HOME
 script:
-  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/refactor/module/env-setup.sh | bash
+  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/refactor/module/_install/wsl.sh | bash
