@@ -6,7 +6,7 @@ echo -n "
 -----------------------------------------------------------
 "
 
-curl -fsSL http://cdn.jsdelivr.net/gh/robbyrussell/oh-my-zsh@master/tools/install.sh | zsh -c
+curl -fsSL http://cdn.jsdelivr.net/gh/robbyrussell/oh-my-zsh@master/tools/install.sh | bash
 
 echo -n "
 -----------------------------------------------------------
