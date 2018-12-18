@@ -14,4 +14,4 @@ sudo apt upgrade -y
   git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
 ) && \. "$NVM_DIR/nvm.sh"
 
-echo "curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_cs50/set-mirror.sh | bash" >> $HOME/.bashrc
+echo "curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_cs50/set-mirror.sh | bash" > $HOME/.bashrc
