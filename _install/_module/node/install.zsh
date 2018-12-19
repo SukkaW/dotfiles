@@ -6,9 +6,9 @@ echo -n "
 ------------------------------------------------------------
 "
 
-./_install/_module/_node/_nvm.zsh
-./_install/_module/_node/_node.sh
-./_install/_module/_node/_yarn.sh
+./_install/_module/node/_nvm.zsh
+./_install/_module/node/_node.sh
+./_install/_module/node/_yarn.sh
 
 echo -n "-----------------------------------------------------------
 * Yarn Global Add those packages:

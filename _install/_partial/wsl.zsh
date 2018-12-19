@@ -1,10 +1,10 @@
 #!/bin/zsh
 
-./_install/_module/_omz/install.zsh
-./_install/_module/_node/install.zsh
+./_install/_module/omz/install.zsh
+./_install/_module/node/install.zsh
 
-./_install/_module/_lazygit/install.sh
-./_install/_module/_keybase/install.sh
+./_install/_module/lazygit/install.sh
+./_install/_module/keybase/install.sh
 
 echo -n "
 ===========================================================
@@ -20,7 +20,7 @@ cat ./_zshrc/alias.zshrc >> $HOME/.zshrc
 
 source $HOME/.zshrc
 
-./_install/_module/_thefuck/install.sh
+./_install/_module/thefuck/install.sh
 
 echo -n "
 ===========================================================

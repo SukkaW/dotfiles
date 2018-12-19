@@ -16,7 +16,7 @@ echo -n "
 _NVM_RC=$(cat $HOME/.zshrc | grep 'export NVM_DIR')
 
 if [ "$_NVM_RC" == "" ]; then
-    cat ./_install/_node/nvm.zshrc | tee $HOME/.zshrc
+    cat ./_install/_module/node/nvm.zshrc | tee $HOME/.zshrc
 fi
 
 echo -n "Done!
