@@ -9,7 +9,7 @@ sudo sed -i 's|http://security.ubuntu.com|https://ubuntu.mirror.noc.one|g' /etc/
 sudo sed -i 's|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g' /etc/apt/sources.list
 sudo sed -i 's|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g' /etc/apt/sources.list.d/*.list
 
-sudo sed -i 's|https://downloads-distro.mongodb.org|https://mongodb-distro.mirror.noc.one|g' /etc/apt/sources.list.d/*.list
+sudo sed -i 's|http://downloads-distro.mongodb.org|https://mongodb-distro.mirror.noc.one|g' /etc/apt/sources.list.d/*.list
 
 sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com|https://ubuntu.mirror.noc.one|g' /etc/apt/sources.list
 sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com|https://ubuntu.mirror.noc.one|g' /etc/apt/sources.list.d/*.list
