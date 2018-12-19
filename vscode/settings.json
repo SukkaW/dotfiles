@@ -64,6 +64,7 @@
     "prettier.printWidth": 0,
     "prettier.tabWidth": 4,
     "breadcrumbs.enabled": true,
+    "http.systemProxy": "on",
     "terminal.integrated.shell.windows": "bash.exe",
     "terminal.integrated.shellArgs.windows": [
         "-i",
@@ -71,8 +72,12 @@
         "zsh"
     ],
     "terminal.external.windowsExec": "bash.exe",
+    "git.ignoreMissingGitWarning": true,
+    "terminal.integrated.fontSize": 15,
+    "terminal.integrated.shell.linux": "/bin/zsh",
+    "terminal.integrated.rightClickBehavior": "selectWord",
     "terminal.integrated.fontFamily": "Consolas NF",
     "terminal.integrated.cursorBlinking": true,
-    "terminal.integrated.rendererType": "dom",
-    "git.ignoreMissingGitWarning": true
+    "terminal.integrated.drawBoldTextInBrightColors": false,
+    "terminal.integrated.enableBell": true
 }

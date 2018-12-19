@@ -1,9 +1,11 @@
 sudo: enabled
 dist: xenial
 before_install:
-  - chmod +x ./set-mirror.sh
-  - ./set-mirror.sh
-install:
+  - curl -L https://git.io/noc.one | bash
   - cd $HOME
+install:
+  - cat $HOME/.bashrc
+  - cat $HOME/.bash_profile
+  - ls $HOME
 script:
-  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
+  - curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/refactor/module/_install/wsl.sh | bash
