@@ -13,8 +13,10 @@ echo -n "
 ------------------------------------------------------------
 * Import nvm script to .zshrc... "
 
-if [ ! -n "$NVM_DIR" ]; then
-    cat ./_install/_module/node/nvm.zshrc | tee $HOME/.zshrc
+_NVM_RC=$(cat $HOME/.zshrc | grep 'export NVM_DIR=')
+
+if [ ! -n "$_NVM_RC" ]; then
+    cat ./_install/_module/node/nvm.zshrc >> $HOME/.zshrc
 fi
 
 cat $HOME/.zshrc
