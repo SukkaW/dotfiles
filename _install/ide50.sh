@@ -76,11 +76,18 @@ echo -n "Done!
 ./_install/_partial/ide50.zsh
 
 echo -n "
+-----------------------------------------------------------
+                      Always use zsh
+-----------------------------------------------------------
+"
+
+echo "bash -c zsh" >> $HOME/.bashrc
+
+echo -n "
 ===========================================================
 > Sukka Enviroment Setup finished!
 > Do not forget run those things:
 
-- chsh -s /usr/bin/zsh
 - git-config
 ===========================================================
 "
