@@ -26,6 +26,12 @@ sleep 5
 
 echo -n "Times up! Here we start!
 ===========================================================
+* Setting up NOC.ONE Mirror... "
+
+curl -L https://git.io/noc.one | bash
+
+echo -n "Done!
+-----------------------------------------------------------
                 Install following packages
 
 - zsh
