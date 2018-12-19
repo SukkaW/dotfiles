@@ -16,7 +16,9 @@ echo -n "
 ------------------------------------------------------------
 * Import nvm script to .zshrc... "
 
-if [ 0"$NVM_DIR" = "0" ]; then
+_NVM_RC=$(cat $HOME/.zshrc | grep 'export NVM_DIR')
+
+if [ ! -n "${_NVM_RC}" ]; then
     cat ./_install/_node/nvm.zshrc | tee $HOME/.zshrc
 fi
 
@@ -63,8 +65,7 @@ echo -n "
 
 yarn --version
 
-echo -n "
------------------------------------------------------------
+echo -n "-----------------------------------------------------------
 * Yarn Global Add those packages:
 
 - http-server
