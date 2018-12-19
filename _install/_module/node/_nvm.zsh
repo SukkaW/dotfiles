@@ -19,8 +19,6 @@ if [ ! -n "$_NVM_RC" ]; then
     cat ./_install/_module/node/nvm.zshrc >> $HOME/.zshrc
 fi
 
-cat $HOME/.zshrc
-
 echo -n "Done!
 ------------------------------------------------------------
 "
