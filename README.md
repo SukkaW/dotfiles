@@ -15,16 +15,16 @@ Still boring. Try again. This time should be better.
 
 ## Usage
 
-### Dev Env Setup
+### WSL Ubuntu Setup
 
 ```bash
-curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/env-setup.sh | bash
+curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/wsl.sh | bash
 ```
 
 ### Cloud9 IDE Setup
 
 ```bash
-curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_cs50/setup.sh | bash
+curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/ide50.sh | bash
 ```
 
 ## ZSH Theme
