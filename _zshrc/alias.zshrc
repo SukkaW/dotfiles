@@ -8,6 +8,7 @@ alias gitall "git add ."
 alias lg='lazygit'
 alias myip='check_ip'
 
+eval $(thefuck --alias)
 
 ci-edit-update() {
     (
