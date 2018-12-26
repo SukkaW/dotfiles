@@ -59,10 +59,8 @@ echo -n "
 -----------------------------------------------------------
 * Set permission of all scripts... "
 
-find ./_install/_partial -type f -name "*.sh" | xargs chmod +x
-find ./_install/_partial -type f -name "*.zsh" | xargs chmod +x
-find ./_install/_module -type f -name "*.sh" | xargs chmod +x
-find ./_install/_module -type f -name "*.zsh" | xargs chmod +x
+find ./_install -type f -name "*.sh" | xargs chmod +x
+find ./_install -type f -name "*.zsh" | xargs chmod +x
 
 echo -n "Done!
 -----------------------------------------------------------
