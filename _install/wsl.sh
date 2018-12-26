@@ -50,7 +50,7 @@ echo -n "
 -----------------------------------------------------------
 "
 
-git clone https://github.com/SukkaW/dotfiles.git -b refactor/module
+git clone https://github.com/SukkaW/dotfiles.git
 
 cd ./dotfiles
 rm -rf .git
