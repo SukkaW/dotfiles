@@ -10,7 +10,8 @@ echo -n "
 ./_install/_module/node/_node.sh
 ./_install/_module/node/_yarn.sh
 
-echo -n "-----------------------------------------------------------
+echo -n "
+-----------------------------------------------------------
 * Yarn Global Add those packages:
 
 - http-server
@@ -23,13 +24,3 @@ echo -n "-----------------------------------------------------------
 "
 
 yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli
-
-echo -n "
------------------------------------------------------------
-* Adding node package cli to PATH... "
-
-cat ./_install/_node/yarn.zshrc | tee $HOME/.zshrc
-source $HOME/.zshrc
-
-echo -n "Done!
-"

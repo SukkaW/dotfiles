@@ -48,7 +48,6 @@ echo -n "
 -----------------------------------------------------------
 * Cloning Sukka/dotfiles Repo from GitHub.com
 -----------------------------------------------------------
-
 "
 
 git clone https://github.com/SukkaW/dotfiles.git -b refactor/module
@@ -69,7 +68,7 @@ echo -n "Done!
 -----------------------------------------------------------
 "
 
-./_install/_partial/wsl.zsh
+./_install/_partial/wsl-ubuntu.zsh
 
 echo -n "
 ===========================================================

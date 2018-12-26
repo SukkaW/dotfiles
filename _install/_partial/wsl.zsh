@@ -6,21 +6,17 @@
 ./_install/_module/lazygit/install.sh
 ./_install/_module/keybase/install.sh
 
+./_install/_module/thefuck/install.sh
+
 echo -n "
 ===========================================================
-              Import following sukka's zshrc
-
-- apt
-- alias
+                  Import sukka env zshrc
 -----------------------------------------------------------
 "
 
-cat ./_zshrc/apt.zshrc >> $HOME/.zshrc
-cat ./_zshrc/alias.zshrc >> $HOME/.zshrc
+cat ./_zshrc/wsl-ubuntu.zshrc > $HOME/.zshrc
 
 source $HOME/.zshrc
-
-./_install/_module/thefuck/install.sh
 
 echo -n "
 ===========================================================

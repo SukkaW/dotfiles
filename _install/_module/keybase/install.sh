@@ -13,6 +13,7 @@ curl -O https://prerelease.keybase.io/keybase_amd64.deb
 echo -n "
 -----------------------------------------------------------
 * Install keybase package...
+-----------------------------------------------------------
 "
 
 sudo dpkg -i keybase_amd64.deb
