@@ -14,7 +14,8 @@ sudo apt-get update
 echo -n "
 -----------------------------------------------------------
 * Installing apt-fast...
------------------------------------------------------------"
+-----------------------------------------------------------
+"
 
 sudo apt-get -y install apt-fast
 
@@ -22,7 +23,11 @@ echo -n "
 -----------------------------------------------------------
 * Import apt-fast.conf... "
 
-cat ./etc-conf/apt-fast.conf | sudo tee /etc/apt/apt-fast.conf
+cat ./etc-conf/apt-fast.conf | sudo tee /etc/apt/apt-fast.conf >/dev/null
+echo -n "
+-------------------------------------------
+"
+cat /etc/apt/apt-fast.conf
 
 echo -n "Done!
 "
