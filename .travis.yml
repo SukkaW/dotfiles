@@ -1,7 +1,7 @@
 sudo: enabled
 dist: xenial
 before_install:
-  - curl -L https://git.io/noc.one | bash
+  - curl -sL https://noc.one/ubuntu-set-mirror.sh | bash
   - cd $HOME
 install:
   - cat $HOME/.bashrc
