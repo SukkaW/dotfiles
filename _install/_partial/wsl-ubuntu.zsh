@@ -1,6 +1,9 @@
 #!/bin/zsh
 
 ./_install/_module/omz/install.zsh
+
+./_install/_module/apt-fast/install.sh
+
 ./_install/_module/node/install.zsh
 
 ./_install/_module/lazygit/install.sh
