@@ -24,10 +24,6 @@ echo -n "
 * Import apt-fast.conf... "
 
 cat ./etc-conf/apt-fast.conf | sudo tee /etc/apt/apt-fast.conf >/dev/null
-echo -n "
--------------------------------------------
-"
-cat /etc/apt/apt-fast.conf
 
 echo -n "Done!
 "

@@ -11,7 +11,6 @@ echo -n "
 ./_install/_module/node/_yarn.sh
 
 echo -n "
------------------------------------------------------------
 * Yarn Global Add those packages:
 
 - http-server
