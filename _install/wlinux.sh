@@ -207,6 +207,7 @@ ci_editor() {
     echo "-----------------------------------------------------------"
     echo "> You can run 'ci-edit-update' later to finish install."
 
+    cp -rf dotfiles/ci_edit ~/ci_edit
     sleep 3
 }
 
@@ -235,7 +236,6 @@ finish() {
     echo ""
     echo "- chsh -s /usr/bin/zsh"
     echo "- npm login"
-    echo "- run_keybase"
     echo "- ci-edit-update"
     echo "- oload-config"
     echo "- git-config"
@@ -249,7 +249,7 @@ clone-repo
 setup-omz
 install-nodejs
 lazygit
-keybase
+thefuck
 ci_editor
 zshrc
 upgrade-packages
