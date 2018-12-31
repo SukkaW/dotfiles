@@ -49,8 +49,8 @@ install-linux-packages() {
     echo "  - axel"
     echo "-----------------------------------------------------------"
 
-    sudo apt update
-    sudo apt install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois axel
+    sudo apt-get update
+    sudo apt-get install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois axel
 }
 
 clone-repo() {
@@ -178,13 +178,13 @@ lazygit() {
 
     sudo add-apt-repository ppa:lazygit-team/release
     sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list.d/*.list
-    sudo apt update
+    sudo apt-get update
 
     echo "-----------------------------------------------------------"
     echo "* Installing lazygit..."
     echo "-----------------------------------------------------------"
 
-    sudo apt install lazygit -y
+    sudo apt-get install lazygit -y
 }
 
 keybase() {
@@ -247,7 +247,7 @@ upgrade-packages() {
     echo "                      Upgrade packages                     "
     echo "-----------------------------------------------------------"
 
-    sudo apt update && sudo apt upgrade -y
+    sudo apt-get update && sudo apt-get upgrade -y
     pip install --upgrade pip
     npm i -g npm
 }
