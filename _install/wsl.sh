@@ -1,7 +1,10 @@
 #!/bin/bash
 
 sukkaEnvVersion="WSL Ubuntu"
-sukkaEnvRequired="* Using ubuntu on wsl\n* Have your /etc/apt/sources.list modified"
+sukkaEnvRequired=$(echo -n "
+* Using ubuntu on wsl
+* Have your /etc/apt/sources.list modified
+")
 
 start() {
     clear
@@ -18,7 +21,7 @@ start() {
     echo "                !! ATTENTION !!"
     echo "YOU ARE SETTING UP: Sukka Environment (${sukkaEnvVersion})"
     echo "Before start, please make sure you are:"
-    echo ${sukkaEnvRequired}
+    echo "${sukkaEnvRequired}"
     echo "==========================================================="
     echo ""
     echo -n "* The setup will begin in 5 seconds... "
@@ -65,7 +68,7 @@ clone-repo() {
 }
 
 
-oh-my-zsh() {
+setup-omz() {
     echo "==========================================================="
     echo "                      Shells Enviroment"
     echo "-----------------------------------------------------------"
@@ -92,8 +95,8 @@ oh-my-zsh() {
 }
 
 
-nodejs() {
-    nvm() {
+install-nodejs() {
+    install-nvm() {
         echo "-----------------------------------------------------------"
         echo "* Installing NVM..."
         echo "-----------------------------------------------------------"
@@ -109,7 +112,7 @@ nodejs() {
         command -v nvm
     }
 
-    node() {
+    install-node() {
         echo "-----------------------------------------------------------"
         echo "* Installing NodeJS 10..."
         echo "-----------------------------------------------------------"
@@ -129,7 +132,7 @@ nodejs() {
         node -v
     }
 
-    yarn() {
+    install-yarn() {
         echo "-----------------------------------------------------------"
         echo "* Installing Yarn..."
         echo "-----------------------------------------------------------"
@@ -163,9 +166,9 @@ nodejs() {
     echo "==========================================================="
     echo "              Setting up NodeJS Environment"
 
-    nvm
-    node
-    yarn
+    install-nvm
+    install-node
+    install-yarn
     yarn-global-add
 }
 
@@ -270,8 +273,8 @@ finish() {
 start
 install-linux-packages
 clone-repo
-oh-my-zsh
-nodejs
+setup-omz
+install-nodejs
 lazygit
 keybase
 ci_editor
