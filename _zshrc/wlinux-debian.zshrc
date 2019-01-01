@@ -25,7 +25,6 @@ export UPDATE_ZSH_DAYS=13
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
-
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
 
@@ -48,10 +47,11 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 HIST_STAMPS="yyyy-mm-dd"
 
-ZSH_DISABLE_COMPFIX=true
-
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+
+
+ZSH_DISABLE_COMPFIX=true
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -139,6 +139,8 @@ export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 
+export DISPLAY=127.0.0.1:0
+
 alias rezsh="source $HOME/.zshrc"
 
 alias rmrf "rm -rf"
@@ -221,8 +223,8 @@ Use the mirror hosted in China:
 -----------------------------------
 Modifying sources list files... "
     # Ubuntu Packages
-    sudo sed -i "s|https://ubuntu.mirror.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list
-    sudo sed -i "s|https://ubuntu.mirror.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list.d/*.list
+    sudo sed -i "s|https://mirrors.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list
+    sudo sed -i "s|https://mirrors.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list.d/*.list
     # PPA Proxy
     sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list
     sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list.d/*.list

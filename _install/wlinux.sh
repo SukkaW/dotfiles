@@ -171,12 +171,28 @@ install-nodejs() {
 lazygit() {
     echo "==========================================================="
     echo "                  Installing lazygit                       "
-    echo ""
+    echo "* Install software-properties-common for add-apt-repository"
+    echo "-----------------------------------------------------------"
+
+    sudo apt-get install software-properties-common
+
+    echo "-----------------------------------------------------------"
     echo "* Adding lazygit PPA..."
     echo "-----------------------------------------------------------"
 
-    sudo add-apt-repository ppa:lazygit-team/release
+    sudo add-apt-repository ppa:lazygit-team/daily
+
+    echo "-----------------------------------------------------------"
+    echo -n "* Modifying sources.list.d/lazygit-team-ubuntu-daily-disco.list"
+
     sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list.d/*.list
+    sudo sed -i "s|disco|bionic|g" /etc/apt/sources.list.d/lazygit-team-ubuntu-daily-disco.list
+
+    echo -n "Done!"
+    echo "* Adding lazygit pubkey"
+    echo "-----------------------------------------------------------"
+
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 41468D9A516AB58268042C6768CCF87596E97291
     sudo apt-get update
 
     echo "-----------------------------------------------------------"
