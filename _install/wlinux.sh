@@ -203,6 +203,26 @@ lazygit() {
     sudo apt-get install lazygit -y
 }
 
+install-nali() {
+    echo "==========================================================="
+    echo "                   Installing Nali                         "
+    echo ""
+    echo "* Cloning SukkaW/Nali"
+    echo "-----------------------------------------------------------"
+
+    git clone https://github.com/sukkaw/nali.git --depth=10
+
+    echo "-----------------------------------------------------------"
+    echo "* Install Nali..."
+    echo "-----------------------------------------------------------"
+    ./configure
+    make && sudo make install
+    echo "-----------------------------------------------------------"
+    echo "* Updating Nali IP Database..."
+    echo "-----------------------------------------------------------"
+    sudo nali-update
+}
+
 thefuck() {
     echo "==========================================================="
     echo "                      Install thefuck                      "
@@ -267,8 +287,8 @@ clone-repo
 setup-omz
 install-nodejs
 lazygit
-thefuck
 install-nali
+thefuck
 ci_editor
 zshrc
 upgrade-packages
