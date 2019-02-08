@@ -31,10 +31,6 @@ curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/ide50
 
 - `sukka.zsh-theme`, copied and self modified from [`ys.zsh-theme`](https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/ys.zsh-theme), the one of default themes in oh-my-zsh master repository.
 
-## ZSH Plugin
-
-- `proxy.plugin.zsh`, a plugin can manage the proxy config and automatically restore proxy status.
-
 ## Maintainer
 
 **dotfiles** © [Sukka](https://github.com/SukkaW), Released under the [Unlicense](./LICENSE) License.<br>
