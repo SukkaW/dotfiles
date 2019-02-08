@@ -63,7 +63,6 @@ plugins=(
   openload
   zsh-autosuggestions
   git
-  gitcd
   zsh-syntax-highlighting
 )
 
