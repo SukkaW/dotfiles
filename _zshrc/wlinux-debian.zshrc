@@ -143,13 +143,21 @@ export DISPLAY=127.0.0.1:0
 
 alias rezsh="source $HOME/.zshrc"
 
-alias rmrf "rm -rf"
-alias gitcm "git commit -m"
-alias gitp "git push"
-alias gita "git add -a"
-alias gitall "git add ."
+alias rmrf="rm -rf"
+alias gitcm="git commit -m"
+alias gitp="git push"
+alias gita="git add -a"
+alias gitall="git add ."
 alias lg='lazygit'
 alias myip='check_ip'
+
+
+alias ping="nali-ping"
+alias dig="nali-dig"
+alias traceroute="nali-traceroute"
+alias tracepath="nali-tracepath"
+alias dig="nali-dig"
+alias nslookup="nali-nslookup"
 
 eval $(thefuck --alias)
 
