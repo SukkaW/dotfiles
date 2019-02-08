@@ -268,6 +268,7 @@ setup-omz
 install-nodejs
 lazygit
 thefuck
+install-nali
 ci_editor
 zshrc
 upgrade-packages

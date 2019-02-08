@@ -224,6 +224,7 @@ keybase() {
     echo "-----------------------------------------------------------"
 
     sudo dpkg -i keybase_amd64.deb && sudo apt-get install -f
+    sudo apt-get -f install
 
     echo "-----------------------------------------------------------"
     echo -n "* Clean up... "
@@ -231,6 +232,7 @@ keybase() {
     rm -rf keybase_amd64.deb
 
     echo -n "Done!"
+    echo ""
 }
 
 thefuck() {
@@ -298,6 +300,7 @@ clone-repo
 setup-omz
 install-nodejs
 lazygit
+install-nali
 keybase
 ci_editor
 zshrc
