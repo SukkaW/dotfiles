@@ -190,6 +190,25 @@ lazygit() {
     sudo apt-get install lazygit -y
 }
 
+install-nali() {
+    echo "==========================================================="
+    echo "                   Installing Nali                         "
+    echo ""
+    echo "* Cloning SukkaW/Nali"
+    echo "-----------------------------------------------------------"
+
+    git clone https://github.com/sukkaw/nali.git --depth=10
+
+    echo "-----------------------------------------------------------"
+    echo "* Install Nali..."
+    echo "-----------------------------------------------------------"
+    make && sudo make install
+    echo "-----------------------------------------------------------"
+    echo "* Updating Nali IP Database..."
+    echo "-----------------------------------------------------------"
+    sudo nali-update
+}
+
 keybase() {
     echo "==========================================================="
     echo "                      Install keybase                      "
@@ -229,12 +248,14 @@ ci_editor() {
     echo "* Cloning google/ci_edit from GitHub.com"
     echo "-----------------------------------------------------------"
 
+    cd $HOME
     git clone https://github.com/google/ci_edit.git --depth=50
 
     echo "-----------------------------------------------------------"
     echo "> You can run 'ci-edit-update' later to finish install."
 
     sleep 3
+    cd dotfiles
 }
 
 zshrc() {

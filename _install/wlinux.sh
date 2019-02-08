@@ -218,13 +218,14 @@ ci_editor() {
     echo "* Cloning google/ci_edit from GitHub.com"
     echo "-----------------------------------------------------------"
 
+    cd $HOME
     git clone https://github.com/google/ci_edit.git --depth=50
 
     echo "-----------------------------------------------------------"
     echo "> You can run 'ci-edit-update' later to finish install."
 
-    cp -rf dotfiles/ci_edit ~/ci_edit
     sleep 3
+    cd dotfiles
 }
 
 zshrc() {
