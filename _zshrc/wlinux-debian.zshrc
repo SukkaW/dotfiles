@@ -138,6 +138,8 @@ export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
+export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:$HOME/bin
 
 export DISPLAY=127.0.0.1:0
 
@@ -149,8 +151,6 @@ alias gitp="git push"
 alias gita="git add -a"
 alias gitall="git add ."
 alias lg='lazygit'
-alias myip='check_ip'
-
 
 alias ping="nali-ping"
 alias dig="nali-dig"
@@ -158,6 +158,7 @@ alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias dig="nali-dig"
 alias nslookup="nali-nslookup"
+alias nali-update="sudo nali-update"
 
 eval $(thefuck --alias)
 
@@ -264,3 +265,30 @@ Modifying sources list files... "
 }
 
 eval $(thefuck --alias)
+
+goclean() {
+  local pkg=$1; shift || return 1
+  local ost
+  local cnt
+  local scr
+
+  # Clean removes object files from package source directories (ignore error)
+  go clean -i $pkg &>/dev/null
+
+  # Set local variables
+  [[ "$(uname -m)" == "x86_64" ]] \
+  && ost="$(uname)" && ost="${ost,,}_amd64" \
+  && cnt="${pkg//[^\/]}"
+
+  # Delete the source directory and compiled package directory(ies)
+  if (("${#cnt}" == "2")); then
+    rm -rf "${GOPATH%%:*}/src/${pkg%/*}"
+    rm -rf "${GOPATH%%:*}/pkg/${ost}/${pkg%/*}"
+  elif (("${#cnt}" > "2")); then
+    rm -rf "${GOPATH%%:*}/src/${pkg%/*/*}"
+    rm -rf "${GOPATH%%:*}/pkg/${ost}/${pkg%/*/*}"
+  fi
+
+  # Reload the current shell
+  source ~/.zshrc
+}
