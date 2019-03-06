@@ -160,6 +160,10 @@ alias dig="nali-dig"
 alias nslookup="nali-nslookup"
 alias nali-update="sudo nali-update"
 
+ipip() {
+    curl https://freeapi.ipip.net/$1 --silent | sed 's|"",||g' | sed 's|","| |g' | sed 's|\["||g' | sed 's|"\]||g'
+}
+
 eval $(thefuck --alias)
 
 ci-edit-update() {
