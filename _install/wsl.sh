@@ -160,7 +160,7 @@ install-nodejs() {
         echo "  - openload-cli"
         echo "-----------------------------------------------------------"
 
-        yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli
+        yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli now
     }
 
 
@@ -209,6 +209,11 @@ install-nali() {
     echo "* Updating Nali IP Database..."
     echo "-----------------------------------------------------------"
     sudo nali-update
+}
+
+install-ctop() {
+    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.2/ctop-0.7.2-linux-amd64 -O /usr/local/bin/ctop
+    sudo chmod +x /usr/local/bin/ctop
 }
 
 keybase() {
@@ -307,6 +312,8 @@ setup-omz
 install-nodejs
 lazygit
 install-nali
+install-ctop
+thefuck
 keybase
 ci_editor
 zshrc
