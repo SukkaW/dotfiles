@@ -267,6 +267,11 @@ upgrade-packages() {
     npm i -g npm
 }
 
+chmod() {
+    sudo chmod u+s /bin/ping
+    sudo chmod u+s /usr/sbin/traceroute
+}
+
 finish() {
     echo "==========================================================="
     echo "> Sukka Enviroment Setup finished!"
@@ -291,5 +296,6 @@ install-nali
 thefuck
 ci_editor
 zshrc
+chmod
 upgrade-packages
 finish
