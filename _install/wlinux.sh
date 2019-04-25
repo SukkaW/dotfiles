@@ -51,10 +51,12 @@ install-linux-packages() {
     echo "  - python3-setuptools"
     echo "  - whois"
     echo "  - axel"
+    echo "  - iputils-tracepath"
+    echo "  - dnsutils"
     echo "-----------------------------------------------------------"
 
     sudo apt-get update
-    sudo apt-get install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois axel iputils-tracepath
+    sudo apt-get install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-dev python3-pip python3-setuptools whois axel iputils-tracepath dnsutils
 }
 
 clone-repo() {
@@ -154,6 +156,7 @@ install-nodejs() {
         echo "  - gulp-cli"
         echo "  - docsify-cli"
         echo "  - openload-cli"
+        echo "  - now"
         echo "-----------------------------------------------------------"
 
         yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli now
@@ -211,6 +214,7 @@ install-nali() {
     echo "-----------------------------------------------------------"
 
     git clone https://github.com/sukkaw/nali.git --depth=10
+    cd ./nali
 
     echo "-----------------------------------------------------------"
     echo "* Install Nali..."
@@ -221,6 +225,7 @@ install-nali() {
     echo "* Updating Nali IP Database..."
     echo "-----------------------------------------------------------"
     sudo nali-update
+    cd ..
 }
 
 install-ctop() {
