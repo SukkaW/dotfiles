@@ -157,9 +157,10 @@ install-nodejs() {
         echo "  - docsify-cli"
         echo "  - openload-cli"
         echo "  - now"
+        echo "  - @upimg/cli"
         echo "-----------------------------------------------------------"
 
-        yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli now
+        yarn global add http-server serve hexo-cli gulp-cli docsify-cli openload-cli now @upimg/cli
     }
 
 
@@ -178,7 +179,7 @@ lazygit() {
     echo "* Install software-properties-common for add-apt-repository"
     echo "-----------------------------------------------------------"
 
-    sudo apt-get install software-properties-common
+    sudo apt-get install -y software-properties-common
 
     echo "-----------------------------------------------------------"
     echo "* Adding lazygit PPA..."
