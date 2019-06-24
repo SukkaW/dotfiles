@@ -25,6 +25,7 @@ export UPDATE_ZSH_DAYS=13
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
+
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
 
@@ -47,11 +48,10 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 HIST_STAMPS="yyyy-mm-dd"
 
+ZSH_DISABLE_COMPFIX=true
+
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
-
-
-ZSH_DISABLE_COMPFIX=true
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -64,6 +64,7 @@ plugins=(
   zsh-autosuggestions
   git
   zsh-syntax-highlighting
+  zsh-ipip
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -135,14 +136,14 @@ nvm-update() {
 }
 
 export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
+export PATH="$PATH:/c/bin/platform-tools"
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/bin
-
-export DISPLAY=127.0.0.1:0
-
+export PATH=$PATH:/c/bin
+export DISPLAY=127.0.0.1:0.0
+export PULSE_SERVER=tcp:127.0.0.1
 alias rezsh="source $HOME/.zshrc"
 
 alias rmrf="rm -rf"
@@ -156,13 +157,8 @@ alias ping="nali-ping"
 alias dig="nali-dig"
 alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
-alias dig="nali-dig"
 alias nslookup="nali-nslookup"
 alias nali-update="sudo nali-update"
-
-ipip() {
-    curl https://freeapi.ipip.net/$1 --silent | sed 's|"",||g' | sed 's|","| |g' | sed 's|\["||g' | sed 's|"\]||g'
-}
 
 eval $(thefuck --alias)
 
@@ -225,48 +221,7 @@ aptupd () {
 alias aptupg='sudo apt upgrade -y'
 alias apti='sudo apt install'
 alias apts='sudo apt search'
-
-aptcn () {
-  echo -n "
-===================================
-Use the mirror hosted in China:
-
-- Ubuntu Package: https://mirrors.shu.edu.cn
-- PPA: https://launchpad.proxy.ustclug.org
------------------------------------
-Modifying sources list files... "
-    # Ubuntu Packages
-    sudo sed -i "s|https://mirrors.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list
-    sudo sed -i "s|https://mirrors.noc.one|https://mirrors.shu.edu.cn|g" /etc/apt/sources.list.d/*.list
-    # PPA Proxy
-    sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list
-    sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list.d/*.list
-    sudo sed -i "s|https://launchpad.proxy.noc.one|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list
-    sudo sed -i "s|https://launchpad.proxy.noc.one|https://launchpad.proxy.ustclug.org|g" /etc/apt/sources.list.d/*.list
-
-    echo -n "Done!
-"
-}
-
-aptcf () {
-  echo -n "
-===================================
-Use the mirror hosted by NOC.ONE:
-
-- Ubuntu Package: https://ubuntu.mirror.noc.one
-- PPA: https://launchpad.proxy.noc.one
------------------------------------
-Modifying sources list files... "
-
-    # Ubuntu Packages
-    sudo sed -i "s|https://mirrors.shu.edu.cn|https://ubuntu.mirror.noc.one|g" /etc/apt/sources.list
-    sudo sed -i "s|https://mirrors.shu.edu.cn|https://ubuntu.mirror.noc.one|g" /etc/apt/sources.list.d/*.list
-    # PPA Proxy
-    sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list
-    sudo sed -i "s|http://ppa.launchpad.net|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list.d/*.list
-    sudo sed -i "s|https://launchpad.proxy.ustclug.org|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list
-    sudo sed -i "s|https://launchpad.proxy.ustclug.org|https://launchpad.proxy.noc.one|g" /etc/apt/sources.list.d/*.list
-}
+alias e="explorer.exe ."
 
 eval $(thefuck --alias)
 
@@ -296,3 +251,12 @@ goclean() {
   # Reload the current shell
   source ~/.zshrc
 }
+
+ssh_start() {
+  sshd_status=$(service ssh status)
+  if [[ $sshd_status = *"is not running"* ]]; then
+    sudo service ssh --full-restart
+  fi
+}
+
+# source /home/sukka/.gvm/scripts/gvm
