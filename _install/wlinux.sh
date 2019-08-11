@@ -53,10 +53,11 @@ install-linux-packages() {
     echo "  - axel"
     echo "  - iputils-tracepath"
     echo "  - dnsutils"
+    echo "  - libxml2-utils"
     echo "-----------------------------------------------------------"
 
     sudo apt-get update
-    sudo apt-get install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-pip python3-setuptools whois axel iputils-tracepath dnsutils
+    sudo apt-get install -y zsh curl git tree android-tools-adb android-tools-fastboot python2.7 python3-pip python3-setuptools whois axel iputils-tracepath dnsutils libxml2-utils
 }
 
 clone-repo() {
