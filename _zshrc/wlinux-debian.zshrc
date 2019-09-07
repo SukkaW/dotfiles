@@ -1,3 +1,13 @@
+# =================================================== #
+#   _____       _    _            ______              #
+#  / ____|     | |  | |          |  ____|             #
+# | (___  _   _| | _| | ____ _   | |__   ______   __  #
+#  \___ \| | | | |/ / |/ / _\`|  |  __| |  _ \ \ / /  #
+#  ____) | |_| |   <|   < (_| |  | |____| | | \ V /   #
+# |_____/ \__,_|_|\_\_|\_\__,_|  |______|_| |_|\_/    #
+#                                                     #
+# =================================================== #
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -21,7 +31,7 @@ ZSH_THEME="sukka"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=4
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -58,6 +68,9 @@ ZSH_DISABLE_COMPFIX=true
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+
+export NVM_AUTO_USE=true
+
 plugins=(
   zsh-proxy
   openload
@@ -65,6 +78,7 @@ plugins=(
   git
   zsh-syntax-highlighting
   zsh-ipip
+  zsh-nvm
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -88,52 +102,6 @@ source $ZSH/oh-my-zsh.sh
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# =================================================== #
-#   _____       _    _            ______              #
-#  / ____|     | |  | |          |  ____|             #
-# | (___  _   _| | _| | ____ _   | |__   ______   __  #
-#  \___ \| | | | |/ / |/ / _\`|  |  __| |  _ \ \ / /  #
-#  ____) | |_| |   <|   < (_| |  | |____| | | \ V /   #
-# |_____/ \__,_|_|\_\_|\_\__,_|  |______|_| |_|\_/    #
-#                                                     #
-# =================================================== #
-
-# ------------------------------ NVM
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-# Calling nvm use automatically in a directory with a .nvmrc file
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
-
-nvm-update() {
-    (
-        cd "$NVM_DIR"
-        git fetch --tags origin
-        git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-    ) && \. "$NVM_DIR/nvm.sh"
-}
 
 export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="$PATH:/c/bin/platform-tools"
@@ -222,6 +190,7 @@ alias aptupg='sudo apt upgrade -y'
 alias apti='sudo apt install'
 alias apts='sudo apt search'
 alias e="explorer.exe ."
+alias code="code ."
 
 eval $(thefuck --alias)
 
