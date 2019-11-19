@@ -1,13 +1,3 @@
-# =================================================== #
-#   _____       _    _            ______              #
-#  / ____|     | |  | |          |  ____|             #
-# | (___  _   _| | _| | ____ _   | |__   ______   __  #
-#  \___ \| | | | |/ / |/ / _\`|  |  __| |  _ \ \ / /  #
-#  ____) | |_| |   <|   < (_| |  | |____| | | \ V /   #
-# |_____/ \__,_|_|\_\_|\_\__,_|  |______|_| |_|\_/    #
-#                                                     #
-# =================================================== #
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -77,8 +67,9 @@ plugins=(
   zsh-autosuggestions
   git
   zsh-syntax-highlighting
-  zsh-ipip
   zsh-nvm
+  zsh-ipip
+  zsh-gitcd
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -103,15 +94,30 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# =================================================== #
+#   _____       _    _            ______              #
+#  / ____|     | |  | |          |  ____|             #
+# | (___  _   _| | _| | ____ _   | |__   ______   __  #
+#  \___ \| | | | |/ / |/ / _\`|  |  __| |  _ \ \ / /  #
+#  ____) | |_| |   <|   < (_| |  | |____| | | \ V /   #
+# |_____/ \__,_|_|\_\_|\_\__,_|  |______|_| |_|\_/    #
+#                                                     #
+# =================================================== #
+
+nvm-update() {
+    echo "Use 'nvm upgrade' since you have zsh-nvm installed."
+}
+
 export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="$PATH:/c/bin/platform-tools"
+
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/bin
-export PATH=$PATH:/c/bin
+
 export DISPLAY=127.0.0.1:0.0
 export PULSE_SERVER=tcp:127.0.0.1
+
 alias rezsh="source $HOME/.zshrc"
 
 alias rmrf="rm -rf"
@@ -128,7 +134,7 @@ alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
 alias nali-update="sudo nali-update"
 
-eval $(thefuck --alias)
+alias e="explorer.exe"
 
 ci-edit-update() {
     (
@@ -189,8 +195,6 @@ aptupd () {
 alias aptupg='sudo apt upgrade -y'
 alias apti='sudo apt install'
 alias apts='sudo apt search'
-alias e="explorer.exe ."
-alias code="code ."
 
 eval $(thefuck --alias)
 
@@ -228,4 +232,6 @@ ssh_start() {
   fi
 }
 
-# source /home/sukka/.gvm/scripts/gvm
+smartdns="@192.168.123.254 -p 6053"
+dns="@192.168.123.1"
+cfdns="@1.0.0.1 +tcp"
