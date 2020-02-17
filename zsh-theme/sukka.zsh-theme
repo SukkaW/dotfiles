@@ -3,10 +3,9 @@
 #
 # 2018-12-7 - Sukka
 
-
 # Machine name.
 function box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || echo $HOST
+    [ -f ~/.box-name ] && cat ~/.box-name || echo $(echo $HOST | sed -e "s/.local//")
 }
 
 # Directory info.rez
@@ -43,21 +42,19 @@ ys_hg_prompt_info() {
   fi
 }
 
+local node_version=$(node -v 2>/dev/null | sed -e "s/v//")
+
+# Exit Code
+local exit_code="%(?,,%{$fg[red]%}c:%?%{$reset_color%})"
+
 # Prompt format: \n # TIME USER at MACHINE in [DIRECTORY] on git:BRANCH STATE \n $
 PROMPT="
 %{$fg[blue]%}[%*] \
-%{$fg[green]%}%n@$(box_name) \
+%{$fg[green]%}%n %{$fg[white]%}@ %{$fg[green]%}$(box_name) \
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[blue]%}${current_dir}%{$reset_color%}\
-${hg_info}${git_info}${git_last_commit}
+${hg_info}${git_info}${git_last_commit}${exit_code}
 %{$fg[magenta]%}$ %{$reset_color%}"
 
-if [[ "$USER" == "root" ]]; then
-PROMPT="
-%{$fg[red]%}[%*] \
-%{$fg[yellow]%}%n@$(box_name) \
-%{$fg[white]%}in \
-%{$terminfo[bold]$fg[cyan]%}${current_dir}%{$reset_color%}\
-${hg_info}${git_info}${git_last_commit}
-%{$fg[magenta]%}# %{$reset_color%}"
-fi
+RPROMPT="%{$(echotc UP 1)%}%{$fg[blue]%}<20%D>%{$reset_color%} %{$fg[green]%}%B⬡%b $node_version%{$reset_color%}%{$(echotc DO 1)%}"
+
