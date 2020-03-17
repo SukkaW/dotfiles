@@ -73,12 +73,12 @@ export NVM_AUTO_USE=true
 
 plugins=(
     osx
-    \
     zsh-z
     # openload
     zsh-autosuggestions
     git
-    zsh-syntax-highlighting
+    # zsh-syntax-highlighting
+    fast-syntax-highlighting 
     zsh-nvm
     zsh-gitcd
     zsh-completions
@@ -120,9 +120,13 @@ nvm-update() {
     echo "Use 'nvm upgrade' since you have zsh-nvm installed."
 }
 
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/opt/curl/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin"
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin"
 
 export GOPATH="$HOME/go"
+
+export LDFLAGS="-L/usr/local/opt/curl/lib"
+export CPPFLAGS="-I/usr/local/opt/curl/include"
+export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
 
 alias rezsh="source $HOME/.zshrc"
 
@@ -131,7 +135,7 @@ alias gitcm="git commit -m"
 alias gitp="git push"
 alias gita="git add -a"
 alias gitall="git add ."
-alias lg='lazygit'
+alias lg="lazygit"
 
 alias ping="nali-ping"
 alias dig="nali-dig"
@@ -147,6 +151,7 @@ hash -d documents="$HOME/Documents"
 hash -d dropbox="$HOME/Dropbox"
 hash -d services="$HOME/Services"
 hash -d projects="$HOME/Projects"
+hash -d application="/Applications"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
 alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
@@ -229,13 +234,19 @@ extract() {
     fi
 }
 
-eval $(thefuck --alias)
-eval $(hexo --completion=zsh)
-
 smartdns="@192.168.123.254 -p 6053"
 dns="@192.168.123.1"
 cfdns="@1.0.0.1 +tcp"
 
+if command -v thefuck 1>/dev/null 2>&1; then
+    eval $(thefuck --alias)
+fi
+
+
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
+fi
+
+if command -v hexo 1>/dev/null 2>&1; then
+    eval $(hexo --completion=zsh)
 fi
