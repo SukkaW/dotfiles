@@ -28,7 +28,7 @@ ZSH_THEME="sukka"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=4
+export UPDATE_ZSH_DAYS=12
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -78,7 +78,7 @@ plugins=(
     zsh-autosuggestions
     git
     # zsh-syntax-highlighting
-    fast-syntax-highlighting 
+    fast-syntax-highlighting
     zsh-nvm
     zsh-gitcd
     zsh-completions
@@ -120,7 +120,7 @@ nvm-update() {
     echo "Use 'nvm upgrade' since you have zsh-nvm installed."
 }
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin"
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
 
 export GOPATH="$HOME/go"
 
@@ -234,6 +234,44 @@ extract() {
     fi
 }
 
+gitpullall() {
+    red=$(tput setaf 1)
+    reset=$(tput sgr0)
+
+    (
+        cd $HOME/project
+        find $(pwd) -type d -name ".git" | while read LINE; do
+            echo "$red$LINE$reset"
+            cd $(dirname $LINE)
+            git pull
+            git gc
+        done
+    ) && echo "${red}Done!${reset}"
+}
+
+upgrade_oh_my_zsh_custom_plugins() {
+    red=$(tput setaf 1)
+    blue=$(tput setaf 4)
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+
+    printf "${blue}%s${reset}\n" "Upgrading custom plugins"
+
+
+    find "${ZSH_CUSTOM}" -type d -name ".git" | while read LINE; do
+        p=$(dirname "$LINE")
+        pushd -q "${p}"
+
+        if git pull --rebase --stat origin master
+        then
+            printf "${green}%s${reset}\n" "Hooray! $d has been updated and/or is at the current version."
+        else
+            printf "${red}%s${reset}\n" 'There was an error updating. Try again later?'
+        fi
+        popd -q
+    done
+}
+
 smartdns="@192.168.123.254 -p 6053"
 dns="@192.168.123.1"
 cfdns="@1.0.0.1 +tcp"
@@ -242,7 +280,6 @@ if command -v thefuck 1>/dev/null 2>&1; then
     eval $(thefuck --alias)
 fi
 
-
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
@@ -250,3 +287,5 @@ fi
 if command -v hexo 1>/dev/null 2>&1; then
     eval $(hexo --completion=zsh)
 fi
+
+alias digshort="dig @1.0.0.1 +short "
