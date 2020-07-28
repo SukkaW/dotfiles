@@ -1,3 +1,7 @@
+# For Performance Debug purpose
+# Use "zprof" to see the result
+# zmodload zsh/zprof
+
 # =================================================== #
 #   _____       _    _            ______              #
 #  / ____|     | |  | |          |  ____|             #
@@ -69,30 +73,37 @@ ZSH_DISABLE_COMPFIX="true"
 
 # Configuration for zsh-nvm
 # https://github.com/lukechilds/zsh-nvm
-export NVM_AUTO_USE=true
+export NVM_AUTO_USE=false
+
+# Cache Common Use Variables
+## Homebrew prefix
+__SUKKA_HOMWBREW__PREFIX=$(brew --prefix)
+## Box Name used for my zsh-theme
+__SUKKA_BOX_NAME=$([ -f ~/.box-name ] && cat ~/.box-name || echo $HOST | sed -e "s/.local//")
 
 plugins=(
-    osx
+    # osx
     zsh-z
     # openload
     zsh-autosuggestions
-    git
+    # git
     # zsh-syntax-highlighting
     fast-syntax-highlighting
-    zsh-nvm
     zsh-gitcd
     zsh-completions
+    zsh-nvm
+    zsh_reload
 )
 
 # ZSH completions
 # For homebrew, is must be added before oh-my-zsh is called.
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 # https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
-if ((!${fpath[(I) / usr / local / share / zsh / site - functions]})); then
-    FPATH=/usr/local/share/zsh/site-functions:$FPATH
-fi
+if type brew &>/dev/null; then
+  FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
 
-autoload -U compinit && compinit
+  autoload -Uz compinit && compinit
+fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -104,21 +115,17 @@ source $ZSH/oh-my-zsh.sh
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+   export EDITOR='vim'
+else
+   export EDITOR='nano'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-nvm-update() {
-    echo "Use 'nvm upgrade' since you have zsh-nvm installed."
-}
 
 export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
 
@@ -128,7 +135,7 @@ export LDFLAGS="-L/usr/local/opt/curl/lib"
 export CPPFLAGS="-I/usr/local/opt/curl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
 
-alias rezsh="source $HOME/.zshrc"
+alias rezsh="src"
 
 alias rmrf="rm -rf"
 alias gitcm="git commit -m"
@@ -146,11 +153,16 @@ alias nslookup="nali-nslookup"
 hash -d desktop="$HOME/Desktop"
 hash -d music="$HOME/Music"
 hash -d pictures="$HOME/Pictures"
+hash -d picture="$HOME/Pictures"
 hash -d downloads="$HOME/Downloads"
+hash -d download="$HOME/Downloads"
 hash -d documents="$HOME/Documents"
+hash -d document="$HOME/Documents"
 hash -d dropbox="$HOME/Dropbox"
 hash -d services="$HOME/Services"
 hash -d projects="$HOME/Projects"
+hash -d project="$HOME/Projects"
+hash -d applications="/Applications"
 hash -d application="/Applications"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
@@ -257,13 +269,13 @@ upgrade_oh_my_zsh_custom_plugins() {
 
     printf "${blue}%s${reset}\n" "Upgrading custom plugins"
 
-
     find "${ZSH_CUSTOM}" -type d -name ".git" | while read LINE; do
         p=$(dirname "$LINE")
         pushd -q "${p}"
 
-        if git pull --rebase --stat origin master
-        then
+        if git pull --rebase --stat origin master; then
+            printf "${green}%s${reset}\n" "Hooray! $d has been updated and/or is at the current version."
+        elif git pull --rebase --stat origin main; then
             printf "${green}%s${reset}\n" "Hooray! $d has been updated and/or is at the current version."
         else
             printf "${red}%s${reset}\n" 'There was an error updating. Try again later?'
@@ -272,20 +284,15 @@ upgrade_oh_my_zsh_custom_plugins() {
     done
 }
 
-smartdns="@192.168.123.254 -p 6053"
 dns="@192.168.123.1"
 cfdns="@1.0.0.1 +tcp"
 
-if command -v thefuck 1>/dev/null 2>&1; then
+if type thefuck &>/dev/null; then
     eval $(thefuck --alias)
 fi
 
-if command -v pyenv 1>/dev/null 2>&1; then
+if type pyenv &>/dev/null; then
     eval "$(pyenv init -)"
-fi
-
-if command -v hexo 1>/dev/null 2>&1; then
-    eval $(hexo --completion=zsh)
 fi
 
 alias digshort="dig @1.0.0.1 +short "
