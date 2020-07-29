@@ -71,15 +71,11 @@ ZSH_DISABLE_COMPFIX="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-# Configuration for zsh-nvm
-# https://github.com/lukechilds/zsh-nvm
-export NVM_AUTO_USE=false
-
 # Cache Common Use Variables
 ## Homebrew prefix
-__SUKKA_HOMWBREW__PREFIX=$(brew --prefix)
+__SUKKA_HOMWBREW__PREFIX="/usr/local"
 ## Box Name used for my zsh-theme
-__SUKKA_BOX_NAME=$([ -f ~/.box-name ] && cat ~/.box-name || echo $HOST | sed -e "s/.local//")
+__SUKKA_BOX_NAME=${HOST/.local/}
 
 plugins=(
     # osx
@@ -91,7 +87,6 @@ plugins=(
     fast-syntax-highlighting
     zsh-gitcd
     zsh-completions
-    zsh-nvm
     zsh_reload
 )
 
@@ -99,10 +94,10 @@ plugins=(
 # For homebrew, is must be added before oh-my-zsh is called.
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 # https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
-if type brew &>/dev/null; then
-  FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
+if (( $+commands[brew] )) &>/dev/null; then
+    FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
 
-  autoload -Uz compinit && compinit
+    autoload -Uz compinit && compinit
 fi
 
 source $ZSH/oh-my-zsh.sh
@@ -116,9 +111,9 @@ export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='vim'
+    export EDITOR='vim'
 else
-   export EDITOR='nano'
+    export EDITOR='nano'
 fi
 
 # Compilation flags
@@ -127,13 +122,51 @@ fi
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
+# Set tj/n Path
+export N_PREFIX="$HOME/.n"
+export N_PRESERVE_NPM=1
+
+# Set NPM Global Path
+export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+# Create .npm-global folder if not exists
+[[ ! -d "$HOME/.npm-global" ]] && mkdir -p $HOME/.npm-global
+
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$PATH:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
 
 export GOPATH="$HOME/go"
 
 export LDFLAGS="-L/usr/local/opt/curl/lib"
 export CPPFLAGS="-I/usr/local/opt/curl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
+
+
+# Lazyload Function
+
+## Setup a mock function for lazyload
+## Usage:
+## 1. Define function "_sukka_lazyload_command_[command name]" that will init the command
+## 2. sukka_lazyload_add_command [command name]
+sukka_lazyload_add_command() {
+    local command_name=$1
+    eval "$1() { \
+        unfunction $1; \
+        _sukka_lazyload_command_$1; \
+        return $1 \"\$@\"; \
+    }"
+}
+## Setup autocompletion for lazyload
+## Usage:
+## 1. Define function "_sukka_lazyload_completion_[command name]" that will init the autocompletion
+## 2. sukka_lazyload_add_comp [command name]
+sukka_lazyload_add_completion() {
+    local comp_name="_sukka_lazyload__compfunc_$1"
+    eval "${comp_name}() { \
+        compdef -d $1; \
+        unfunction $1; \
+        _sukka_lazyload_completion_$1; \
+    }"
+    compdef $comp_name $1
+}
 
 alias rezsh="src"
 
@@ -226,7 +259,7 @@ brew-cask-upgrade() {
 }
 
 extract() {
-    if [ -f $1 ]; then
+    if [[ -f $1 ]]; then
         case $1 in
         *.tar.bz2) tar xjf $1 ;;
         *.tar.gz) tar xzf $1 ;;
@@ -284,15 +317,36 @@ upgrade_oh_my_zsh_custom_plugins() {
     done
 }
 
-dns="@192.168.123.1"
 cfdns="@1.0.0.1 +tcp"
 
-if type thefuck &>/dev/null; then
-    eval $(thefuck --alias)
+## Lazyload thefuck
+if (( $+commands[thefuck] )) &>/dev/null; then
+    _sukka_lazyload_command_fuck() {
+        eval $(thefuck --alias)
+    }
+
+    sukka_lazyload_add_command fuck
 fi
 
-if type pyenv &>/dev/null; then
-    eval "$(pyenv init -)"
+## Lazyload pyenv
+export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
+
+if (( $+commands[pyenv] )) &>/dev/null; then
+    export PATH="${PYENV_ROOT}/shims:${PATH}"
+
+    _sukka_lazyload_command_pyenv() {
+        eval "$(command pyenv init -)"
+        if [[ -n "${ZSH_PYENV_LAZY_VIRTUALENV}" ]]; then
+            eval "$(command pyenv virtualenv-init -)"
+        fi
+    }
+
+    _sukka_lazyload_completion_pyenv() {
+        source "$(brew --prefix pyenv)/completions/pyenv.zsh"
+    }
+
+    sukka_lazyload_add_command pyenv
+    sukka_lazyload_add_completion pyenv
 fi
 
 alias digshort="dig @1.0.0.1 +short "
