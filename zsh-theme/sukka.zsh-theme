@@ -3,14 +3,13 @@
 #
 # 2018-12-7 - Sukka
 
-
 # Machine name.
-function box_name {
-    if [ -z ${__SUKKA_BOX_NAME} ]; then
-      __SUKKA_BOX_NAME=$([ -f ~/.box-name ] && cat ~/.box-name || echo $HOST | sed -e "s/.local//");
-    fi
+box_name() {
+  if [[ -z ${__SUKKA_BOX_NAME} ]]; then
+    __SUKKA_BOX_NAME=${HOST/.local/}
+  fi
 
-    echo ${__SUKKA_BOX_NAME}
+  echo ${__SUKKA_BOX_NAME}
 }
 
 # Directory info.rez
@@ -35,15 +34,23 @@ ZSH_THEME_GIT_PROMPT_CLEAN="$YS_VCS_PROMPT_CLEAN"
 local hg_info='$(ys_hg_prompt_info) '
 ys_hg_prompt_info() {
   # make sure this is a hg dir
-  if [ -d '.hg' ]; then
+  if [[ -d '.hg' ]]; then
     echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
     echo -n $(hg branch 2>/dev/null)
-    if [ -n "$(hg status 2>/dev/null)" ]; then
+    if [[ -n "$(hg status 2>/dev/null)" ]]; then
       echo -n "$YS_VCS_PROMPT_DIRTY"
     else
       echo -n "$YS_VCS_PROMPT_CLEAN"
     fi
     echo -n "$YS_VCS_PROMPT_SUFFIX"
+  fi
+}
+
+# Node.js version
+local node_version='$(node_version_prompt_info)'
+node_version_prompt_info() {
+  if (( $+commands[node] )) &>/dev/null; then
+    echo -n "%{$fg[green]%}%B⬡%b %{$fg[green]%}$(node -v 2>&1)%{$reset_color%}"
   fi
 }
 
@@ -58,3 +65,5 @@ PROMPT="
 %{$terminfo[bold]$fg[blue]%}${current_dir}%{$reset_color%}\
 ${hg_info}${git_info}${git_last_commit} ${exit_code}
 %{$fg[magenta]%}$ %{$reset_color%}"
+
+RPROMPT="%{$(echotc UP 1)%} ${node_version}%{$(echotc DO 1)%}"
