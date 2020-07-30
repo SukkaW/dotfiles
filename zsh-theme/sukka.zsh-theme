@@ -33,16 +33,18 @@ ZSH_THEME_GIT_PROMPT_CLEAN="$YS_VCS_PROMPT_CLEAN"
 # HG info
 local hg_info='$(ys_hg_prompt_info) '
 ys_hg_prompt_info() {
-  # make sure this is a hg dir
-  if [[ -d '.hg' ]]; then
-    echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
-    echo -n $(hg branch 2>/dev/null)
-    if [[ -n "$(hg status 2>/dev/null)" ]]; then
-      echo -n "$YS_VCS_PROMPT_DIRTY"
-    else
-      echo -n "$YS_VCS_PROMPT_CLEAN"
+  if (( $+commands[hg] )) &>/dev/null; then
+    # make sure this is a hg dir
+    if [[ -d '.hg' ]]; then
+      echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
+      echo -n $(hg branch 2>/dev/null)
+      if [[ -n "$(hg status 2>/dev/null)" ]]; then
+        echo -n "$YS_VCS_PROMPT_DIRTY"
+      else
+        echo -n "$YS_VCS_PROMPT_CLEAN"
+      fi
+      echo -n "$YS_VCS_PROMPT_SUFFIX"
     fi
-    echo -n "$YS_VCS_PROMPT_SUFFIX"
   fi
 }
 
