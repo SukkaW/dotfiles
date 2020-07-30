@@ -65,21 +65,22 @@ ZSH_DISABLE_COMPFIX="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# Cache Common Use Variables
+## Homebrew prefix
+__SUKKA_HOMWBREW__PREFIX="/usr/local"
+## Box Name used for my zsh-theme
+__SUKKA_BOX_NAME=${HOST/.local/}
+# Homebrew zsh completion path
+__SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions"
+
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-# Cache Common Use Variables
-## Homebrew prefix
-__SUKKA_HOMWBREW__PREFIX="/usr/local"
-## Box Name used for my zsh-theme
-__SUKKA_BOX_NAME=${HOST/.local/}
-
 plugins=(
     # osx
-    zsh-z
     # openload
     zsh-autosuggestions
     # git
@@ -88,17 +89,20 @@ plugins=(
     zsh-gitcd
     zsh-completions
     zsh_reload
+    zsh-z
 )
 
 # ZSH completions
 # For homebrew, is must be added before oh-my-zsh is called.
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 # https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
-if (( $+commands[brew] )) &>/dev/null; then
+# Add a check avoiding duplicated fpath
+if (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
     FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
-
-    autoload -Uz compinit && compinit
 fi
+
+# Requested by Homebrew & zsh-completions
+autoload -Uz compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
 
@@ -147,7 +151,6 @@ export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
 ## 1. Define function "_sukka_lazyload_command_[command name]" that will init the command
 ## 2. sukka_lazyload_add_command [command name]
 sukka_lazyload_add_command() {
-    local command_name=$1
     eval "$1() { \
         unfunction $1; \
         _sukka_lazyload_command_$1; \
@@ -347,6 +350,23 @@ if (( $+commands[pyenv] )) &>/dev/null; then
 
     sukka_lazyload_add_command pyenv
     sukka_lazyload_add_completion pyenv
+fi
+
+# Lazyload hexo completion
+if (( $+commands[hexo] )) &>/dev/null; then
+    _hexo_completion() {
+        compls=$(hexo --console-list)
+        completions=(${=compls})
+        compadd -- $completions
+    }
+
+    _sukka_lazyload__compfunc_hexo() {
+        unfunction _sukka_lazyload__compfunc_hexo
+        compdef -d hexo
+        compdef _hexo_completion hexo
+    }
+
+    compdef _sukka_lazyload__compfunc_hexo hexo
 fi
 
 alias digshort="dig @1.0.0.1 +short "
