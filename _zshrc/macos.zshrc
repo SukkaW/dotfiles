@@ -19,7 +19,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="sukka"
+
+#ZSH_THEME="sukka"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -65,7 +67,7 @@ ZSH_DISABLE_COMPFIX="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-# Cache Common Use Variables
+# Cache Freq Use Variables
 ## Homebrew prefix
 __SUKKA_HOMWBREW__PREFIX="/usr/local"
 ## Box Name used for my zsh-theme
@@ -135,14 +137,13 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 # Create .npm-global folder if not exists
 [[ ! -d "$HOME/.npm-global" ]] && mkdir -p $HOME/.npm-global
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$PATH:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
 
 export GOPATH="$HOME/go"
 
 export LDFLAGS="-L/usr/local/opt/curl/lib"
 export CPPFLAGS="-I/usr/local/opt/curl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
-
 
 # Lazyload Function
 
@@ -154,7 +155,7 @@ sukka_lazyload_add_command() {
     eval "$1() { \
         unfunction $1; \
         _sukka_lazyload_command_$1; \
-        return $1 \"\$@\"; \
+        $1 \$@; \
     }"
 }
 ## Setup autocompletion for lazyload
@@ -369,4 +370,29 @@ if (( $+commands[hexo] )) &>/dev/null; then
     compdef _sukka_lazyload__compfunc_hexo hexo
 fi
 
+# Lazyload pnpm completion
+if (( $+commands[pnpm] )) &>/dev/null; then
+  _pnpm_completion() {
+    local reply
+    local si=$IFS
+
+    IFS=$'\n'
+    reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
+    IFS=$si
+
+    _describe 'values' reply
+  }
+
+  _sukka_lazyload__compfunc_pnpm() {
+    unfunction _sukka_lazyload__compfunc_pnpm
+    compdef -d pnpm
+    compdef _pnpm_completion pnpm
+  }
+
+  compdef _sukka_lazyload__compfunc_pnpm pnpm
+fi
+
 alias digshort="dig @1.0.0.1 +short "
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
