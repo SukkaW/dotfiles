@@ -70,10 +70,14 @@ ZSH_DISABLE_COMPFIX="true"
 # Cache Freq Use Variables
 ## Homebrew prefix
 __SUKKA_HOMWBREW__PREFIX="/usr/local"
+## pyenv prefix
+__SUKKA_HOMEBREW_PYENV_PREFIX="/usr/local/opt/pyenv"
 ## Box Name used for my zsh-theme
 __SUKKA_BOX_NAME=${HOST/.local/}
 # Homebrew zsh completion path
 __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions"
+# zsh-completion fpath
+__SUKKA_ZSH_COMPLETION_SRC="$HOME/.oh-my-zsh/custom/plugins/zsh-completions/src"
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -89,22 +93,22 @@ plugins=(
     # zsh-syntax-highlighting
     fast-syntax-highlighting
     zsh-gitcd
-    zsh-completions
+    # zsh-completion will be added to FPATH directly
+    # zsh-completions
     zsh_reload
     zsh-z
 )
 
 # ZSH completions
-# For homebrew, is must be added before oh-my-zsh is called.
-# https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-# https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
-# Add a check avoiding duplicated fpath
+## For homebrew, is must be added before oh-my-zsh is called.
+## https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+## https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
+## Add a check avoiding duplicated fpath
 if (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
     FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
-
-# Requested by Homebrew & zsh-completions
-autoload -Uz compinit && compinit
+## https://github.com/zsh-users/zsh-completions
+[[ -d ${__SUKKA_ZSH_COMPLETION_SRC} ]] && FPATH="${__SUKKA_ZSH_COMPLETION_SRC}:$FPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -166,7 +170,6 @@ sukka_lazyload_add_completion() {
     local comp_name="_sukka_lazyload__compfunc_$1"
     eval "${comp_name}() { \
         compdef -d $1; \
-        unfunction $1; \
         _sukka_lazyload_completion_$1; \
     }"
     compdef $comp_name $1
@@ -186,6 +189,9 @@ alias dig="nali-dig"
 alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
+alias digshort="dig @1.0.0.1 +short "
+
+cfdns="@1.0.0.1 +tcp"
 
 hash -d desktop="$HOME/Desktop"
 hash -d music="$HOME/Music"
@@ -311,17 +317,15 @@ upgrade_oh_my_zsh_custom_plugins() {
         pushd -q "${p}"
 
         if git pull --rebase --stat origin master; then
-            printf "${green}%s${reset}\n" "Hooray! $d has been updated and/or is at the current version."
+            printf "${green}%s${reset}\n" "Hooray! $p has been updated and/or is at the current version."
         elif git pull --rebase --stat origin main; then
-            printf "${green}%s${reset}\n" "Hooray! $d has been updated and/or is at the current version."
+            printf "${green}%s${reset}\n" "Hooray! $p has been updated and/or is at the current version."
         else
-            printf "${red}%s${reset}\n" 'There was an error updating. Try again later?'
+            printf "${red}%s${reset}\n" "There was an error updating $p. Try again later?"
         fi
         popd -q
     done
 }
-
-cfdns="@1.0.0.1 +tcp"
 
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
@@ -346,7 +350,7 @@ if (( $+commands[pyenv] )) &>/dev/null; then
     }
 
     _sukka_lazyload_completion_pyenv() {
-        source "$(brew --prefix pyenv)/completions/pyenv.zsh"
+        source "${__SUKKA_HOMEBREW_PYENV_PREFIX}/completions/pyenv.zsh"
     }
 
     sukka_lazyload_add_command pyenv
@@ -355,22 +359,14 @@ fi
 
 # Lazyload hexo completion
 if (( $+commands[hexo] )) &>/dev/null; then
-    _hexo_completion() {
-        compls=$(hexo --console-list)
-        completions=(${=compls})
-        compadd -- $completions
+    _sukka_lazyload_completion_hexo() {
+        eval $(hexo --completion=zsh)
     }
 
-    _sukka_lazyload__compfunc_hexo() {
-        unfunction _sukka_lazyload__compfunc_hexo
-        compdef -d hexo
-        compdef _hexo_completion hexo
-    }
-
-    compdef _sukka_lazyload__compfunc_hexo hexo
+    sukka_lazyload_add_completion hexo
 fi
 
-# Lazyload pnpm completion
+# pnpm completion
 if (( $+commands[pnpm] )) &>/dev/null; then
   _pnpm_completion() {
     local reply
@@ -383,16 +379,8 @@ if (( $+commands[pnpm] )) &>/dev/null; then
     _describe 'values' reply
   }
 
-  _sukka_lazyload__compfunc_pnpm() {
-    unfunction _sukka_lazyload__compfunc_pnpm
-    compdef -d pnpm
-    compdef _pnpm_completion pnpm
-  }
-
-  compdef _sukka_lazyload__compfunc_pnpm pnpm
+  compdef _pnpm_completion pnpm
 fi
 
-alias digshort="dig @1.0.0.1 +short "
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
