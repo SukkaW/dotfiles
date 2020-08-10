@@ -1,7 +1,3 @@
-# For Performance Debug purpose
-# Use "zprof" to see the result
-# zmodload zsh/zprof
-
 # =================================================== #
 #   _____       _    _            ______              #
 #  / ____|     | |  | |          |  ____|             #
@@ -11,6 +7,24 @@
 # |_____/ \__,_|_|\_\_|\_\__,_|  |______|_| |_|\_/    #
 #                                                     #
 # =================================================== #
+
+# For Performance Debug purpose
+export SUKKA_ENABLE_PERFORMANCE_PROFILING="false"
+
+if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
+    zmodload zsh/zprof
+
+    zmodload zsh/datetime
+
+    setopt PROMPT_SUBST
+    PS4='+$EPOCHREALTIME %N:%i> '
+    rm -rf zsh_profile*
+    __sukka_zsh_profiling_logfile=$(mktemp zsh_profile.XXXXXX)
+    echo "Logging to $__sukka_zsh_profiling_logfile"
+    exec 3>&2 2>$__sukka_zsh_profiling_logfile
+
+    setopt XTRACE
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -34,7 +48,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=12
+export UPDATE_ZSH_DAYS=4
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -176,7 +190,6 @@ sukka_lazyload_add_completion() {
 }
 
 alias rezsh="src"
-
 alias rmrf="rm -rf"
 alias gitcm="git commit -m"
 alias gitp="git push"
@@ -384,3 +397,48 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
+
+if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
+    unsetopt XTRACE
+    exec 2>&3 3>&-
+
+    parse_zsh_profiling() {
+        typeset -a lines
+        typeset -i prev_time=0
+        typeset prev_command
+
+        while read line; do
+            if [[ $line =~ '^.*\+([0-9]{10})\.([0-9]{6})[0-9]* (.+)' ]]; then
+                integer this_time=$match[1]$match[2]
+
+                if [[ $prev_time -gt 0 ]]; then
+                    time_difference=$(( $this_time - $prev_time ))
+                    lines+="$time_difference $prev_command"
+                fi
+
+                prev_time=$this_time
+
+                local this_command=$match[3]
+                if [[ ${#this_command} -le 80 ]]; then
+                    prev_command=$this_command
+                else
+                    prev_command="${this_command:0:77}..."
+                fi
+            fi
+        done < ${1:-/dev/stdin}
+
+        print -l ${(@On)lines}
+    }
+
+    zprof() {
+        unfunction zprof
+
+        parse_zsh_profiling $__sukka_zsh_profiling_logfile | head -n 30
+
+        echo ""
+        echo "========================================"
+        echo ""
+
+        zprof $@
+    }
+fi
