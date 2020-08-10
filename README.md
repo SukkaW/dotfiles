@@ -15,6 +15,12 @@ Still boring. Try again. This time should be better.
 
 ## Usage
 
+### macOS Setup
+
+```bash
+curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/macos.zsh | zsh
+```
+
 ### WSL Ubuntu Setup
 
 ```bash

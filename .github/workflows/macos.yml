@@ -1,0 +1,12 @@
+name: macOS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+    runs-on: macos-latest
+    steps:
+      - run: curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/macos.zsh | zsh

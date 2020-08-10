@@ -343,7 +343,7 @@ upgrade_oh_my_zsh_custom_plugins() {
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
     _sukka_lazyload_command_fuck() {
-        eval $(thefuck --alias)
+        eval $(thefuck --alias --enable-experimental-instant-mode)
     }
 
     sukka_lazyload_add_command fuck

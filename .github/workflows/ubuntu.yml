@@ -1,0 +1,12 @@
+name: Ubuntu
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/wsl.sh | bash
