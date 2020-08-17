@@ -267,6 +267,14 @@ zshrc() {
   cat $HOME/dotfiles/p10k/.p10k.zsh > $HOME/.p10k.zsh
 }
 
+vimrc() {
+  echo "==========================================================="
+  echo "                  Import sukka env vimrc                   "
+  echo "-----------------------------------------------------------"
+
+  cat $HOME/dotfiles/vim/.vimrc > $HOME/.vimrc
+}
+
 finish() {
   echo "==========================================================="
   echo -n "* Clean up..."
@@ -284,6 +292,7 @@ finish() {
   echo "- ci-edit-update"
   echo "- oload-config"
   echo "- git-config"
+  echo "* open vim and run :PlugInstall"
   echo "==========================================================="
 
   cd $HOME
