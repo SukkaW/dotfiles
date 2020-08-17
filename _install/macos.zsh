@@ -220,6 +220,14 @@ install-nodejs() {
   done
 }
 
+install-goenv() {
+  echo "==========================================================="
+  echo "                   Install syndbg/goenv"
+  echo "-----------------------------------------------------------"
+
+  git clone https://github.com/syndbg/goenv.git $HOME/.goenv
+}
+
 ci_editor() {
   echo "==========================================================="
   echo "                Install Google ci_editor"

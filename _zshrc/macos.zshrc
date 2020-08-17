@@ -155,9 +155,10 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 # Create .npm-global folder if not exists
 [[ ! -d "$HOME/.npm-global" ]] && mkdir -p $HOME/.npm-global
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/bin"
-
+export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
+
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:$PATH:$GOPATH/bin"
 
 export LDFLAGS="-L/usr/local/opt/curl/lib"
 export CPPFLAGS="-I/usr/local/opt/curl/include"
@@ -229,6 +230,20 @@ ci-edit-update() {
         cd "$HOME/.ci_edit"
         git pull
     ) && sudo "$HOME/.ci_edit/install.sh"
+}
+
+goenv-update() {
+    red=$(tput setaf 1)
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+
+    (
+        if git pull --rebase; then
+            printf "${green}%s${reset}\n" "Hooray! goenv has been updated and/or is at the current version."
+        else
+            printf "${red}%s${reset}\n" "There was an error updating goenv, try again later?"
+        fi
+    )
 }
 
 git-config() {
@@ -317,7 +332,7 @@ gitpullall() {
     ) && echo "${red}Done!${reset}"
 }
 
-upgrade_oh_my_zsh_custom_plugins() {
+upgrade_ohmyzsh_custom_plugins() {
     red=$(tput setaf 1)
     blue=$(tput setaf 4)
     green=$(tput setaf 2)
@@ -329,9 +344,7 @@ upgrade_oh_my_zsh_custom_plugins() {
         p=$(dirname "$LINE")
         pushd -q "${p}"
 
-        if git pull --rebase --stat origin master; then
-            printf "${green}%s${reset}\n" "Hooray! $p has been updated and/or is at the current version."
-        elif git pull --rebase --stat origin main; then
+        if git pull --rebase; then
             printf "${green}%s${reset}\n" "Hooray! $p has been updated and/or is at the current version."
         else
             printf "${red}%s${reset}\n" "There was an error updating $p. Try again later?"
@@ -393,6 +406,20 @@ if (( $+commands[pnpm] )) &>/dev/null; then
   }
 
   compdef _pnpm_completion pnpm
+fi
+
+# goenv
+if (( $+commands[goenv] )) &>/dev/null; then
+    _sukka_lazyload_command_goenv() {
+        eval "$(goenv init -)"
+    }
+
+    _sukka_lazyload_completion_goenv() {
+        source "$GOENV_ROOT/completions/goenv.zsh"
+    }
+
+    sukka_lazyload_add_command goenv
+    sukka_lazyload_add_completion goenv
 fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
