@@ -106,7 +106,7 @@ install_packages() {
   done
 
   for __tap ($__taps_to_be_installed); do
-    echo "  - ${__tap} (cask)"
+    echo "  - ${__tap} (tap)"
   done
 
   echo "-----------------------------------------------------------"
@@ -119,7 +119,7 @@ install_packages() {
 
   if [ "$CI" != "true" ]; then
     for __cask ($__casks_to_be_installed); do
-      brew install ${__cask}
+      brew cask install ${__cask}
     done
   else
     echo "CI Environment detected, skip brew cask"
