@@ -227,7 +227,7 @@ ci_editor() {
   echo "-----------------------------------------------------------"
 
   cd $HOME
-  git clone https://github.com/google/ci_edit.git --depth=30
+  git clone https://github.com/google/ci_edit.git --depth=5
 
   echo "-----------------------------------------------------------"
   echo "> You can run 'ci-edit-update' later to finish install."
@@ -242,7 +242,7 @@ ioio() {
 
   wget https://bitbucket.org/RehabMan/os-x-ioio/downloads/RehabMan-ioio-2014-0122.zip
   mkdir -p ioio
-  unzip RehabMan-ioio-2014-0122.zip -d ioio
+  unzip -o RehabMan-ioio-2014-0122.zip -d ioio
 
   cp -i ./ioio/Release/ioio $HOME/bin
 
@@ -255,6 +255,7 @@ zshrc() {
   echo "-----------------------------------------------------------"
 
   cat $HOME/dotfiles/_zshrc/macos.zshrc > $HOME/.zshrc
+  cat $HOME/dotfiles/p10k/.p10k.zsh > $HOME/.p10k.zsh
 }
 
 finish() {
