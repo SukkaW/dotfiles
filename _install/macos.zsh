@@ -244,7 +244,7 @@ ioio() {
   mkdir -p ioio
   unzip -o RehabMan-ioio-2014-0122.zip -d ioio
 
-  cp -i ./ioio/Release/ioio $HOME/bin
+  \cp -rf ./ioio/Release/ioio $HOME/bin
 
   rm -rf ioio
 }
