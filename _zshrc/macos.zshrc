@@ -197,6 +197,38 @@ alias gitp="git push"
 alias gita="git add -a"
 alias gitall="git add ."
 alias lg="lazygit"
+# Git Undo
+alias git-undo="git reset --soft HEAD^"
+
+# Git Delete Local Merged
+git-delete-local-merged() {
+    red=$(tput setaf 1)
+    blue=$(tput setaf 4)
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+
+    branches=($(git branch --merged master | grep -v "\*\|master\|unstable\|develop"))
+
+    [ -z "$branches" ] && printf "${green}\nNo merged branches to delete!${reset}\n" && exit;
+
+    command="git branch -d $branches"
+
+    echo ""
+    printf "%s" "$branches"
+    echo ""
+
+    printf "\n${blue}Delete merged branches locally? Press [Enter] to continue...${reset}"
+    read _
+
+    echo ""
+    echo "Safely deleting merged local branches..."
+
+    for branch ($branches); do
+        git branch -d $branch
+    done
+
+    echo "${green}Done!${reset}"
+}
 
 alias ping="nali-ping"
 alias dig="nali-dig"
@@ -204,6 +236,11 @@ alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
 alias digshort="dig @1.0.0.1 +short "
+
+# Kills all docker containers running
+docker-kill-all() {
+    docker kill $(docker ps -aq)
+}
 
 cfdns="@1.0.0.1 +tcp"
 
@@ -296,6 +333,21 @@ brew-cask-upgrade() {
     echo "* ${red}brew clean up done.${reset}"
 }
 
+# Kills a process running on a specified tcp port
+killport() {
+  echo "Killing process on port: $1"
+  fuser -n tcp -k $1;
+}
+
+# MVP
+# Move and make parent directories
+mvp () {
+    source="$1"
+    target="$2"
+    target_dir="$(dirname "$target")"
+    mkdir --parents $target_dir; mv $source $target
+}
+
 extract() {
     if [[ -f $1 ]]; then
         case $1 in
@@ -332,7 +384,7 @@ gitpullall() {
     ) && echo "${red}Done!${reset}"
 }
 
-upgrade_ohmyzsh_custom_plugins() {
+update_ohmyzsh_custom_plugins() {
     red=$(tput setaf 1)
     blue=$(tput setaf 4)
     green=$(tput setaf 2)
@@ -356,7 +408,7 @@ upgrade_ohmyzsh_custom_plugins() {
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
     _sukka_lazyload_command_fuck() {
-        eval $(thefuck --alias --enable-experimental-instant-mode)
+        eval $(thefuck --alias)
     }
 
     sukka_lazyload_add_command fuck
@@ -383,13 +435,27 @@ if (( $+commands[pyenv] )) &>/dev/null; then
     sukka_lazyload_add_completion pyenv
 fi
 
-# Lazyload hexo completion
+# hexo completion
 if (( $+commands[hexo] )) &>/dev/null; then
-    _sukka_lazyload_completion_hexo() {
-        eval $(hexo --completion=zsh)
+    function _hexo_completion() {
+        compls=$(hexo --console-list)
+        completions=(${=compls})
+        compadd -- $completions
     }
 
-    sukka_lazyload_add_completion hexo
+    compdef _hexo_completion hexo
+fi
+
+# gulp completion
+if (( $+commands[gulp] )) &>/dev/null; then
+    _gulp_completion() {
+        # Grab tasks
+        compls=$(gulp --tasks-simple)
+        completions=(${=compls})
+        compadd -- $completions
+    }
+
+    compdef _gulp_completion gulp
 fi
 
 # pnpm completion
