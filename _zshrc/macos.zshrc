@@ -235,6 +235,22 @@ alias dig="nali-dig"
 alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
+
+# Enable aliases to be sudo’ed
+# http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+alias sudo='sudo '
+
+# Avoid stupidity with trash-cli:
+# https://github.com/sindresorhus/trash-cli
+# or use default rm -i
+if (( $+commands[trash] )); then
+  alias rm='trash'
+else
+  alias rm='rm -i'
+fi
+
+alias q="cd $HOME && clear"
+
 alias digshort="dig @1.0.0.1 +short "
 
 # Kills all docker containers running
@@ -264,9 +280,9 @@ alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
 
 ci-edit-update() {
     (
-        cd "$HOME/.ci_edit"
+        cd "$HOME/ci_edit"
         git pull
-    ) && sudo "$HOME/.ci_edit/install.sh"
+    ) && sudo "$HOME/ci_edit/install.sh"
 }
 
 goenv-update() {
@@ -488,6 +504,44 @@ if (( $+commands[goenv] )) &>/dev/null; then
     sukka_lazyload_add_completion goenv
 fi
 
+# Add OSX-like shadow to image
+# USAGE: osx-shadow [--rm|-r] <original.png> [result.png]
+osx-shadow() {
+    # Help message
+    function help {
+        echo "Wrong number of arguments have been entered."
+        echo "USAGE: osx-shadow [--rm|-r] <original.png> [result.png]"
+    }
+
+    if [[ $1 == --rm || $1 == -r ]]; then
+        # Remove shadow
+        case $# in
+            3) # osx-shadow --rm|-r src.png dist.png
+                convert $2 -crop +50+34 -crop -50-66 $3
+                ;;
+            2) # osx-shadow --rm|-r src.png
+                convert $2 -crop +50+34 -crop -50-66 ${2%.*}-croped.png
+                ;;
+            *)
+                help
+                ;;
+        esac
+    else
+        # Add shadow
+        case $# in
+            2) # osx-shadow src.png dist.png
+                convert $1 \( +clone -background gray -shadow 100x40+0+16 \) +swap -background none -layers merge +repage $2
+                ;;
+            1) # osx-shadow src.png
+                convert $1 \( +clone -background gray -shadow 100x40+0+16 \) +swap -background none -layers merge +repage ${1%.*}-shadow.png
+                ;;
+            *)
+                help
+                ;;
+        esac
+    fi
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
 
@@ -535,3 +589,5 @@ if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
         zprof $@
     }
 fi
+
+
