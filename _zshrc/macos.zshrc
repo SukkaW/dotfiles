@@ -158,11 +158,7 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:$PATH:$GOPATH/bin"
-
-export LDFLAGS="-L/usr/local/opt/curl/lib"
-export CPPFLAGS="-I/usr/local/opt/curl/include"
-export PKG_CONFIG_PATH="/usr/local/opt/curl/lib/pkgconfig"
+export PATH="/usr/local/opt/curl-openssl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:$PATH:$GOPATH/bin"
 
 # Lazyload Function
 
@@ -209,7 +205,7 @@ git-delete-local-merged() {
 
     branches=($(git branch --merged master | grep -v "\*\|master\|unstable\|develop"))
 
-    [ -z "$branches" ] && printf "${green}\nNo merged branches to delete!${reset}\n" && exit;
+    [ -z "$branches" ] && printf "${green}\nNo merged branches to delete!${reset}\n"
 
     command="git branch -d $branches"
 
