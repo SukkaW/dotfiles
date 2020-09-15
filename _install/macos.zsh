@@ -42,7 +42,7 @@ install_homebrew() {
 install_packages() {
   __pkg_to_be_installed=(
     zsh
-    curl
+    curl-openssl
     wget
     git
     tree
