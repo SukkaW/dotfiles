@@ -158,7 +158,10 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
-export PATH="/usr/local/opt/curl-openssl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:$PATH:$GOPATH/bin"
+export PATH="/usr/local/opt/curl-openssl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
+
+
+export BAT_THEME="Monokai Extended Bright"
 
 # Lazyload Function
 
@@ -273,6 +276,26 @@ hash -d application="/Applications"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
 alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
+clear_finder_icon_cache() {
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+    printf "${green}%s${reset}\n" '- Cleaning "/Library/Caches/com.apple.iconservices.store" folder ...'
+    sudo rm -rfv /Library/Caches/com.apple.iconservices.store
+    printf "${green}%s${reset}\n" '- Cleaning "com.apple.dock.iconcache" and "com.apple.dock.iconcache" files ...'
+    sudo find /private/var/folders/ \( -name com.apple.dock.iconcache -or -name com.apple.iconservices \) -exec rm -rfv {} \;
+    sleep 1
+    sudo touch /Applications/*
+    printf "${green}%s${reset}\n" '- Restarting Dock & Finder ...'
+    killall Dock
+    killall Finder
+    sleep 2
+    printf "${green}%s${reset}\n" '- Done!'
+}
+
+clear_dns_cache() {
+    sudo dscacheutil -flushcache
+    sudo killall -HUP mDNSResponder
+}
 
 ci-edit-update() {
     (
@@ -585,5 +608,3 @@ if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
         zprof $@
     }
 fi
-
-
