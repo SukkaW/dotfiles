@@ -71,6 +71,7 @@ install_packages() {
     ezip
     typora
     google-chrome
+    firefox
     upic
     motrix
     sensiblesidebuttons
