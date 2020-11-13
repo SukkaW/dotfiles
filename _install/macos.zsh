@@ -54,6 +54,10 @@ install_packages() {
     ncdu
     n
     thefuck
+    unrar
+    telnet
+    jq
+    whois
   )
 
   __casks_to_be_installed=(
@@ -73,6 +77,9 @@ install_packages() {
     visual-studio-code
     neteasemusic
     snipaste
+    surge
+    hackintool
+    monitorcontrol
     # Quick Look Plugin
     qlcolorcode
     qlimagesize
