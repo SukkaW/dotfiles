@@ -205,7 +205,7 @@ install-nodejs() {
     hexo-cli
     ipip-cli
     nali-cli
-    now
+    vercel
     npm-why
     pnpm
     serve
