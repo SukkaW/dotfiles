@@ -58,6 +58,7 @@ install_packages() {
     telnet
     jq
     whois
+    mas
   )
 
   __casks_to_be_installed=(
