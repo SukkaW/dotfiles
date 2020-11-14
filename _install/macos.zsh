@@ -63,7 +63,6 @@ install_packages() {
 
   __casks_to_be_installed=(
     android-platform-tools
-    1password-beta
     iina
     telegram-desktop
     iterm2
@@ -82,6 +81,9 @@ install_packages() {
     surge
     hackintool
     monitorcontrol
+    1password
+    switchhosts
+    scroll-reverser    
     # Quick Look Plugin
     qlcolorcode
     qlimagesize
@@ -96,6 +98,7 @@ install_packages() {
   __taps_to_be_installed=(
     github/gh/gh
     jesseduffield/lazygit/lazygit
+    font-consolas-for-powerline
   )
 
   echo "==========================================================="
