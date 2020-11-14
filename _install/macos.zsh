@@ -181,7 +181,8 @@ install-nodejs() {
   echo "              Setting up NodeJS Environment"
 
   export N_PREFIX="$HOME/.n"
-  export N_PRESERVE_NPM=1
+  export N_PRESERVE_NPM=0
+  export PATH="$N_PREFIX/bin:$PATH"
 
   # Set NPM Global Path
   export NPM_CONFIG_PREFIX="$HOME/.npm-global"
