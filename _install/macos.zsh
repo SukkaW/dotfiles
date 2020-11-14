@@ -288,6 +288,16 @@ vimrc() {
   cat $HOME/dotfiles/vim/.vimrc > $HOME/.vimrc
 }
 
+fix_home_end_keybinding() {
+  mkdir -p $HOME/Library/KeyBindings/
+  echo "{
+    \"\UF729\"  = moveToBeginningOfLine:; // home
+    \"\UF72B\"  = moveToEndOfLine:; // end
+    \"$\UF729\" = moveToBeginningOfLineAndModifySelection:; // shift-home
+    \"$\UF72B\" = moveToEndOfLineAndModifySelection:; // shift-end
+  }" > $HOME/Library/KeyBindings/DefaultKeyBinding.dict
+}
+
 finish() {
   echo "==========================================================="
   echo -n "* Clean up..."
@@ -319,5 +329,6 @@ setup-omz
 install-nodejs
 ci_editor
 ioio
+fix_home_end_keybinding
 zshrc
 finish
