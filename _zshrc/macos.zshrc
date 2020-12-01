@@ -158,10 +158,11 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
-export PATH="/usr/local/opt/curl-openssl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$N_PREFIX/bin:$HOME/.yarn/bin:$HOME/.npm-global/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
+export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$N_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
 
 
 export BAT_THEME="Monokai Extended Bright"
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 # Lazyload Function
 
@@ -427,7 +428,7 @@ update_ohmyzsh_custom_plugins() {
 
     printf "${blue}%s${reset}\n" "Upgrading custom plugins"
 
-    find "${ZSH_CUSTOM}" -type d -name ".git" | while read LINE; do
+    find "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}" -type d -name ".git" | while read LINE; do
         p=$(dirname "$LINE")
         pushd -q "${p}"
 
@@ -440,6 +441,10 @@ update_ohmyzsh_custom_plugins() {
     done
 }
 
+# Load zsh-async worker
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-async/async.zsh
+async_init
+
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
     _sukka_lazyload_command_fuck() {
@@ -450,29 +455,23 @@ if (( $+commands[thefuck] )) &>/dev/null; then
 fi
 
 ## Lazyload pyenv
-export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
-
 if (( $+commands[pyenv] )) &>/dev/null; then
     export PATH="${PYENV_ROOT}/shims:${PATH}"
+    export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
 
-    _sukka_lazyload_command_pyenv() {
+    load_pyenv() {
         eval "$(command pyenv init -)"
-        if [[ -n "${ZSH_PYENV_LAZY_VIRTUALENV}" ]]; then
-            eval "$(command pyenv virtualenv-init -)"
-        fi
-    }
-
-    _sukka_lazyload_completion_pyenv() {
         source "${__SUKKA_HOMEBREW_PYENV_PREFIX}/completions/pyenv.zsh"
     }
 
-    sukka_lazyload_add_command pyenv
-    sukka_lazyload_add_completion pyenv
+    async_start_worker pyenv_worker -n
+    async_register_callback pyenv_worker load_pyenv
+    async_job pyenv_worker sleep 0.1
 fi
 
 # hexo completion
 if (( $+commands[hexo] )) &>/dev/null; then
-    function _hexo_completion() {
+    _hexo_completion() {
         compls=$(hexo --console-list)
         completions=(${=compls})
         compadd -- $completions
@@ -523,6 +522,58 @@ if (( $+commands[goenv] )) &>/dev/null; then
     sukka_lazyload_add_completion goenv
 fi
 
+# zsh-osx-autoproxy (self use)
+zsh-osx-autoproxy() {
+    # Cache the output of scutil --proxy
+    __ZSH_OSX_AUTOPROXY_SCUTIL_PROXY=$(scutil --proxy)
+
+    # Pattern used to match the status
+    __ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED_PATTERN="HTTPEnable : 1"
+    __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED_PATTERN="HTTPSEnable : 1"
+    __ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED_PATTERN="FTPSEnable : 1"
+    __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED_PATTERN="SOCKSEnable : 1"
+
+    __ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED_PATTERN]
+    __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED_PATTERN]
+    __ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED_PATTERN]
+    __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED_PATTERN]
+
+    # http proxy
+    if (( $__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED )); then
+        __ZSH_OSX_AUTOPROXY_HTTP_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPProxy : }[(f)1]}
+        __ZSH_OSX_AUTOPROXY_HTTP_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPPort : }[(f)1]}
+        export http_proxy="http://${__ZSH_OSX_AUTOPROXY_HTTP_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_HTTP_PROXY_PORT}"
+        export HTTP_PROXY="${http_proxy}"
+    fi
+    # https_proxy
+    if (( $__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED )); then
+        __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPSProxy : }[(f)1]}
+        __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPSPort : }[(f)1]}
+        export https_proxy="http://${__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_PORT}"
+        export HTTPS_PROXY="${https_proxy}"
+    fi
+    # ftp_proxy
+    if (( $__ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED )); then
+        __ZSH_OSX_AUTOPROXY_FTP_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*FTPProxy : }[(f)1]}
+        __ZSH_OSX_AUTOPROXY_FTP_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*FTPPort : }[(f)1]}
+        export ftp_proxy="http://${__ZSH_OSX_AUTOPROXY_FTP_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_FTP_PROXY_PORT}"
+        export FTP_PROXY="${ftp_proxy}"
+    fi
+    # all_proxy
+    if (( $__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED )); then
+        __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*SOCKSProxy : }[(f)1]}
+        __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*SOCKSPort : }[(f)1]}
+        export all_proxy="http://${__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_PORT}"
+        export ALL_PROXY="${all_proxy}"
+    elif (( $__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED )); then
+        export all_proxy="${http_proxy}"
+        export ALL_PROXY="${all_proxy}"
+    fi
+}
+
+async_register_callback background_worker zsh-osx-autoproxy
+async_job background_worker sleep 0.1
+
 # Add OSX-like shadow to image
 # USAGE: osx-shadow [--rm|-r] <original.png> [result.png]
 osx-shadow() {
@@ -563,6 +614,23 @@ osx-shadow() {
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
+
+# This speed up zsh-autosuggetions by a lot
+export ZSH_AUTOSUGGEST_USE_ASYNC='true'
+# This speeds up pasting w/ autosuggest
+# https://github.com/zsh-users/zsh-autosuggestions/issues/238
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+# https://github.com/zsh-users/zsh-autosuggestions/issues/351
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste accept-line)
 
 if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
     unsetopt XTRACE
