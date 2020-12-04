@@ -87,7 +87,7 @@ __SUKKA_HOMWBREW__PREFIX="/usr/local"
 ## pyenv prefix
 __SUKKA_HOMEBREW_PYENV_PREFIX="/usr/local/opt/pyenv"
 ## Box Name used for my zsh-theme
-__SUKKA_BOX_NAME=${HOST/.local/}
+# __SUKKA_BOX_NAME=${HOST/.local/}
 # Homebrew zsh completion path
 __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions"
 # zsh-completion fpath
@@ -134,7 +134,7 @@ source $ZSH/oh-my-zsh.sh
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
+if (( $#SSH_CONNECTION )); then
     export EDITOR='vim'
 else
     export EDITOR='nano'
@@ -209,7 +209,7 @@ git-delete-local-merged() {
 
     branches=($(git branch --merged master | grep -v "\*\|master\|unstable\|develop"))
 
-    [ -z "$branches" ] && printf "${green}\nNo merged branches to delete!${reset}\n"
+    (( ! $#branches )) && printf "${green}\nNo merged branches to delete!${reset}\n"
 
     command="git branch -d $branches"
 
@@ -296,27 +296,15 @@ clear_finder_icon_cache() {
 clear_dns_cache() {
     sudo dscacheutil -flushcache
     sudo killall -HUP mDNSResponder
+    sudo killall mDNSResponderHelper
 }
+alias flushdns="clear_dns_cache"
 
 ci-edit-update() {
     (
         cd "$HOME/ci_edit"
         git pull
     ) && sudo "$HOME/ci_edit/install.sh"
-}
-
-goenv-update() {
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    reset=$(tput sgr0)
-
-    (
-        if git pull --rebase; then
-            printf "${green}%s${reset}\n" "Hooray! goenv has been updated and/or is at the current version."
-        else
-            printf "${red}%s${reset}\n" "There was an error updating goenv, try again later?"
-        fi
-    )
 }
 
 git-config() {
@@ -349,26 +337,6 @@ brew-fix() {
     chmod u+w /usr/local/include /usr/local/lib /usr/local/lib/pkgconfig
 }
 
-brew-cask-upgrade() {
-    red=$(tput setaf 1)
-    # green=$(tput setaf 2)
-    reset=$(tput sgr0)
-
-    brew update
-
-    for cask in $(brew cask outdated | awk '{print $1}'); do
-        echo "${red}update ${cask} ...${reset}."
-
-        brew cask install --force "$cask"
-    done
-
-    echo "* ${red}brew clean up ...${reset}"
-
-    brew cleanup -s
-
-    echo "* ${red}brew clean up done.${reset}"
-}
-
 # Kills a process running on a specified tcp port
 killport() {
   echo "Killing process on port: $1"
@@ -377,10 +345,10 @@ killport() {
 
 # MVP
 # Move and make parent directories
-mvp () {
+mvp() {
     source="$1"
     target="$2"
-    target_dir="$(dirname "$target")"
+    target_dir=${target:h}
     mkdir --parents $target_dir; mv $source $target
 }
 
@@ -413,12 +381,14 @@ gitpullall() {
         cd $HOME/project
         find $(pwd) -type d -name ".git" | while read LINE; do
             echo "$red$LINE$reset"
-            cd $(dirname $LINE)
+            cd ${LINE:h}
             git pull
             git gc
         done
     ) && echo "${red}Done!${reset}"
 }
+
+# override "omz update"
 
 update_ohmyzsh_custom_plugins() {
     red=$(tput setaf 1)
@@ -426,19 +396,32 @@ update_ohmyzsh_custom_plugins() {
     green=$(tput setaf 2)
     reset=$(tput sgr0)
 
+    echo ""
     printf "${blue}%s${reset}\n" "Upgrading custom plugins"
 
     find "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}" -type d -name ".git" | while read LINE; do
-        p=$(dirname "$LINE")
+        p=${LINE:h}
         pushd -q "${p}"
 
         if git pull --rebase; then
-            printf "${green}%s${reset}\n" "Hooray! $p has been updated and/or is at the current version."
+            printf "${green}%s${reset}\n" "${p:t} has been updated and/or is at the current version."
         else
-            printf "${red}%s${reset}\n" "There was an error updating $p. Try again later?"
+            printf "${red}%s${reset}\n" "There was an error updating ${p:t}. Try again later?"
         fi
         popd -q
     done
+}
+
+eval "__sukka_original_$(which omz)"
+unfunction omz
+
+omz() {
+    if [[ $1 == update ]]; then
+        __sukka_original_omz update
+        update_ohmyzsh_custom_plugins
+    else
+        __sukka_original_omz $@
+    fi
 }
 
 # Load zsh-async worker
@@ -494,18 +477,18 @@ fi
 
 # pnpm completion
 if (( $+commands[pnpm] )) &>/dev/null; then
-  _pnpm_completion() {
-    local reply
-    local si=$IFS
+    _pnpm_completion() {
+        local reply
+        local si=$IFS
 
-    IFS=$'\n'
-    reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
-    IFS=$si
+        IFS=$'\n'
+        reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
+        IFS=$si
 
-    _describe 'values' reply
-  }
+        _describe 'values' reply
+    }
 
-  compdef _pnpm_completion pnpm
+    compdef _pnpm_completion pnpm
 fi
 
 # goenv
