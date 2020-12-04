@@ -191,6 +191,7 @@ sukka_lazyload_add_completion() {
 }
 
 alias rezsh="src"
+alias zshconfig="code $HOME/.zshrc"
 alias rmrf="rm -rf"
 alias gitcm="git commit -m"
 alias gitp="git push"
