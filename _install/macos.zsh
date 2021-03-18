@@ -43,6 +43,7 @@ install_packages() {
   __pkg_to_be_installed=(
     zsh
     curl-openssl
+    cmake
     wget
     git
     tree
@@ -50,7 +51,6 @@ install_packages() {
     axel
     bind
     neofetch
-    telnet
     ncdu
     n
     thefuck
@@ -59,6 +59,8 @@ install_packages() {
     jq
     whois
     mas
+    imagemagick
+    nmap
   )
 
   __casks_to_be_installed=(
@@ -68,7 +70,9 @@ install_packages() {
     iterm2
     textmate
     keybase
-    ezip
+    maczip
+    keka
+    kekaexternalhelper
     typora
     google-chrome
     firefox
@@ -83,7 +87,8 @@ install_packages() {
     monitorcontrol
     1password
     switchhosts
-    scroll-reverser    
+    scroll-reverser
+    osxfuse
     # Quick Look Plugin
     qlcolorcode
     qlimagesize
@@ -93,6 +98,7 @@ install_packages() {
     quicklook-json
     quicklookase
     webpquicklook
+    sogouinput
   )
 
   __taps_to_be_installed=(
@@ -131,7 +137,7 @@ install_packages() {
 
   if [ "$CI" != "true" ]; then
     for __cask ($__casks_to_be_installed); do
-      brew cask install ${__cask}
+      brew install ${__cask} --cask
     done
   else
     echo "CI Environment detected, skip brew cask"
@@ -169,6 +175,7 @@ setup-omz() {
   echo "  - fast-syntax-highlighting"
   echo "  - zsh-gitcd"
   echo "  - p10k zsh-theme"
+  echo "  - zsh-z"
   echo "-----------------------------------------------------------"
 
   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -177,6 +184,8 @@ setup-omz() {
   git clone https://github.com/agkozak/zsh-z ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-z
 
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+  git clone https://github.com/agkozak/zsh-z ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-z
 }
 
 install-nodejs() {
@@ -206,6 +215,8 @@ install-nodejs() {
   __npm_global_pkgs=(
     @cloudflare/wrangler
     @upimg/cli
+    cf-firewall-rules-generator
+    http-server
     gulp-cli
     hexo-cli
     ipip-cli
@@ -216,6 +227,8 @@ install-nodejs() {
     serve
     surge
     npm
+    ts-node
+    typescript
   )
 
   echo "-----------------------------------------------------------"

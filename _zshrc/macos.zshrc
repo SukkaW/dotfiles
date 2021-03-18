@@ -11,7 +11,7 @@
 # For Performance Debug purpose
 export SUKKA_ENABLE_PERFORMANCE_PROFILING="false"
 
-if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
+if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING}" == "true" ]]; then
     zmodload zsh/zprof
 
     zmodload zsh/datetime
@@ -158,7 +158,7 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
-export PATH="/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$N_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
+export PATH="/usr/local/opt/openjdk/bin:/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$N_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
 
 
 export BAT_THEME="Monokai Extended Bright"
@@ -191,7 +191,13 @@ sukka_lazyload_add_completion() {
 }
 
 alias rezsh="src"
-alias zshconfig="code $HOME/.zshrc"
+if (( $+commands[code] )); then
+    alias zshconfig="code $HOME/.zshrc"
+else
+    alias zshconfig="nano $HOME/.zshrc"
+fi
+
+
 alias rmrf="rm -rf"
 alias gitcm="git commit -m"
 alias gitp="git push"
@@ -275,6 +281,7 @@ hash -d projects="$HOME/Projects"
 hash -d project="$HOME/Projects"
 hash -d applications="/Applications"
 hash -d application="/Applications"
+hash -d surge="$HOME/Library/Application Support/Surge/Profiles"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
 alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
@@ -387,6 +394,16 @@ gitpullall() {
             git gc
         done
     ) && echo "${red}Done!${reset}"
+}
+
+
+# update clash ipdb
+
+update_clash_mmdb() {
+    (
+        cd $HOME/.config/clash
+        wget https://raw.github.cnpmjs.org/Hackl0us/GeoIP2-CN/release/Country.mmdb -O Country.mmdb
+    ) && echo "Done!"
 }
 
 # override "omz update"
@@ -555,8 +572,11 @@ zsh-osx-autoproxy() {
     fi
 }
 
-async_register_callback background_worker zsh-osx-autoproxy
-async_job background_worker sleep 0.1
+alias proxy="zsh-osx-autoproxy"
+
+async_start_worker zsh_osx_proxy_worker -n
+async_register_callback zsh_osx_proxy_worker zsh-osx-autoproxy
+async_job zsh_osx_proxy_worker sleep 0.1
 
 # Add OSX-like shadow to image
 # USAGE: osx-shadow [--rm|-r] <original.png> [result.png]
