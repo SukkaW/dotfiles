@@ -44,14 +44,9 @@ install_packages() {
   # Later we will call brew bundle
   __pkg_to_be_installed=(
     curl
-    fd
     fnm
-    fzf
-    gawk
     git
     jq
-    nano
-    tree
     wget
     zsh
   )
@@ -84,7 +79,7 @@ clone-repo() {
   rm -rf .git
 }
 
-setup-omz() {
+setup_omz() {
   echo "==========================================================="
   echo "                      Shells Enviroment"
   echo "-----------------------------------------------------------"
@@ -117,7 +112,7 @@ brew_bundle() {
   brew bundle
 }
 
-install-nodejs() {
+install_nodejs() {
   echo "==========================================================="
   echo "              Setting up NodeJS Environment"
 
@@ -265,10 +260,10 @@ finish() {
 start
 install_homebrew
 install_packages
-clone-repo
-setup-omz
+clone_repo
+setup_omz
 brew_bundle
-install-nodejs
+install_nodejs
 ci_editor
 ioio
 fix_home_end_keybinding
