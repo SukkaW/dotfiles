@@ -28,7 +28,7 @@ echo -n "Times up! Here we start!
 -----------------------------------------------------------
 "
 
-curl -L https://git.io/noc.one | bash
+curl -L https://github.com/sukkaw/dotfiles/raw/master/set-mirror.sh | bash
 
 echo -n "
 -----------------------------------------------------------
