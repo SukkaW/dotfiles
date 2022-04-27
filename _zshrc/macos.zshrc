@@ -12,13 +12,13 @@
 export SUKKA_ENABLE_PERFORMANCE_PROFILING="false"
 
 if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING}" == "true" ]]; then
+    rm -rf zsh_profile*
     zmodload zsh/zprof
 
     zmodload zsh/datetime
 
     setopt PROMPT_SUBST
     PS4='+$EPOCHREALTIME %N:%i> '
-    rm -rf zsh_profile*
     __sukka_zsh_profiling_logfile=$(mktemp zsh_profile.XXXXXX)
     echo "Logging to $__sukka_zsh_profiling_logfile"
     exec 3>&2 2>$__sukka_zsh_profiling_logfile
@@ -48,7 +48,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=4
+export UPDATE_ZSH_DAYS=7
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -76,7 +76,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Enable insecure directories and files from custom plugins
-ZSH_DISABLE_COMPFIX="true"
+# ZSH_DISABLE_COMPFIX="true"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -91,7 +91,10 @@ __SUKKA_HOMEBREW_PYENV_PREFIX="/usr/local/opt/pyenv"
 # Homebrew zsh completion path
 __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions"
 # zsh-completion fpath
-__SUKKA_ZSH_COMPLETION_SRC="$HOME/.oh-my-zsh/custom/plugins/zsh-completions/src"
+__SUKKA_ZSH_COMPLETION_SRC="$ZSH/custom/plugins/zsh-completions/src"
+
+# This speed up zsh-autosuggetions by a lot
+export ZSH_AUTOSUGGEST_USE_ASYNC='true'
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -101,7 +104,6 @@ __SUKKA_ZSH_COMPLETION_SRC="$HOME/.oh-my-zsh/custom/plugins/zsh-completions/src"
 
 plugins=(
     # osx
-    # openload
     zsh-autosuggestions
     # git
     # zsh-syntax-highlighting
@@ -109,8 +111,9 @@ plugins=(
     zsh-gitcd
     # zsh-completion will be added to FPATH directly
     # zsh-completions
-    zsh_reload
     zsh-z
+    # zsh-interactive-cd
+    fzf-tab
 )
 
 # ZSH completions
@@ -123,6 +126,9 @@ if (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/
 fi
 ## https://github.com/zsh-users/zsh-completions
 [[ -d ${__SUKKA_ZSH_COMPLETION_SRC} ]] && FPATH="${__SUKKA_ZSH_COMPLETION_SRC}:$FPATH"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
 
 source $ZSH/oh-my-zsh.sh
 
@@ -146,10 +152,6 @@ fi
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-# Set tj/n Path
-export N_PREFIX="$HOME/.n"
-export N_PRESERVE_NPM=1
-
 # Set NPM Global Path
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 # Create .npm-global folder if not exists
@@ -158,11 +160,17 @@ export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
-export PATH="/usr/local/opt/openjdk/bin:/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$N_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:$PATH:$GOPATH/bin"
-
-
 export BAT_THEME="Monokai Extended Bright"
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+# fnm
+if (( $+commands[fnm] )); then
+    eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+
+# Path should be set after fnm
+export PATH="/usr/local/opt/whois/bin:/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:/usr/local/opt/openjdk@8/bin:$PATH:$PATH:$GOPATH/bin:/usr/local/anaconda3/bin"
+
 
 # Lazyload Function
 
@@ -190,9 +198,11 @@ sukka_lazyload_add_completion() {
     compdef $comp_name $1
 }
 
-alias rezsh="src"
+alias rezsh="omz reload"
 if (( $+commands[code] )); then
     alias zshconfig="code $HOME/.zshrc"
+elif (( $+commands[we] )); then
+    alias zshconfig="we $HOME/.zshrc"
 else
     alias zshconfig="nano $HOME/.zshrc"
 fi
@@ -243,7 +253,7 @@ alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
 
-# Enable aliases to be sudo’ed
+# Enable sudo in aliased
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 
@@ -277,11 +287,14 @@ hash -d documents="$HOME/Documents"
 hash -d document="$HOME/Documents"
 hash -d dropbox="$HOME/Dropbox"
 hash -d services="$HOME/Services"
-hash -d projects="$HOME/Projects"
-hash -d project="$HOME/Projects"
+hash -d projects="$HOME/Project"
+hash -d project="$HOME/Project"
+hash -d tools="$HOME/Tools"
+hash -d tool="$HOME/Tools"
 hash -d applications="/Applications"
 hash -d application="/Applications"
 hash -d surge="$HOME/Library/Application Support/Surge/Profiles"
+hash -d smartdns="$HOME/.config/smartdns"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
 alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
@@ -360,6 +373,16 @@ mvp() {
     mkdir --parents $target_dir; mv $source $target
 }
 
+find_folder_by_name() {
+    local dir="$1"
+    local name="$2"
+    if (( $+commands[fd] )) &>/dev/null; then
+        fd --color "never" -H -g --type d $name $dir
+    else
+        find $dir -type d -name $name
+    fi
+}
+
 extract() {
     if [[ -f $1 ]]; then
         case $1 in
@@ -381,29 +404,18 @@ extract() {
     fi
 }
 
-gitpullall() {
+gitgc() {
     red=$(tput setaf 1)
     reset=$(tput sgr0)
 
     (
         cd $HOME/project
-        find $(pwd) -type d -name ".git" | while read LINE; do
+        find_folder_by_name "$HOME/project" ".git" | while read LINE; do
             echo "$red$LINE$reset"
             cd ${LINE:h}
-            git pull
             git gc
         done
     ) && echo "${red}Done!${reset}"
-}
-
-
-# update clash ipdb
-
-update_clash_mmdb() {
-    (
-        cd $HOME/.config/clash
-        wget https://raw.github.cnpmjs.org/Hackl0us/GeoIP2-CN/release/Country.mmdb -O Country.mmdb
-    ) && echo "Done!"
 }
 
 # override "omz update"
@@ -417,7 +429,7 @@ update_ohmyzsh_custom_plugins() {
     echo ""
     printf "${blue}%s${reset}\n" "Upgrading custom plugins"
 
-    find "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}" -type d -name ".git" | while read LINE; do
+    find_folder_by_name "${ZSH_CUSTOM:-$ZSH/custom}" ".git" | while read LINE; do
         p=${LINE:h}
         pushd -q "${p}"
 
@@ -443,8 +455,8 @@ omz() {
 }
 
 # Load zsh-async worker
-source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-async/async.zsh
-async_init
+# source ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-async/async.zsh
+# async_init
 
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
@@ -457,17 +469,18 @@ fi
 
 ## Lazyload pyenv
 if (( $+commands[pyenv] )) &>/dev/null; then
-    export PATH="${PYENV_ROOT}/shims:${PATH}"
-    export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
-
-    load_pyenv() {
+    _sukka_lazyload_command_pyenv() {
+        export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}" # pyenv init --path
         eval "$(command pyenv init -)"
+    }
+    sukka_lazyload_add_command pyenv
+
+    _sukka_lazyload_completion_pyenv() {
         source "${__SUKKA_HOMEBREW_PYENV_PREFIX}/completions/pyenv.zsh"
     }
+    sukka_lazyload_add_completion pyenv
 
-    async_start_worker pyenv_worker -n
-    async_register_callback pyenv_worker load_pyenv
-    async_job pyenv_worker sleep 0.1
+    export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
 fi
 
 # hexo completion
@@ -509,6 +522,20 @@ if (( $+commands[pnpm] )) &>/dev/null; then
     compdef _pnpm_completion pnpm
 fi
 
+# npm completion
+if (( $+commands[npm] )) &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+fi
+
 # goenv
 if (( $+commands[goenv] )) &>/dev/null; then
     _sukka_lazyload_command_goenv() {
@@ -523,60 +550,97 @@ if (( $+commands[goenv] )) &>/dev/null; then
     sukka_lazyload_add_completion goenv
 fi
 
+# conda
+if (( $+commands[conda] )) &>/dev/null; then
+  # lazyload conda
+  __sukka_lazy_conda_aliases=('python' 'conda' 'pip' 'pip3' 'python3')
+  for lazy_conda_alias in $__sukka_lazy_conda_aliases
+  do
+    alias $lazy_conda_alias="__sukka_load_conda && $lazy_conda_alias"
+  done
+
+  __sukka_load_conda() {
+    for lazy_conda_alias in $__sukka_lazy_conda_aliases
+    do
+        unalias $lazy_conda_alias
+    done
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/usr/local/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/usr/local/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/usr/local/anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+    # export PATH="/usr/local/anaconda3/bin:$PATH"  # commented out by conda initialize
+
+    unfunction __sukka_load_conda
+  }
+fi
+
 # zsh-osx-autoproxy (self use)
 zsh-osx-autoproxy() {
+    emulate -L zsh -o extended_glob
+    # export https_proxy=http://127.0.0.1:6152
+    # export http_proxy=http://127.0.0.1:6152
+    # export all_proxy=socks5://127.0.0.1:6153
+
     # Cache the output of scutil --proxy
-    __ZSH_OSX_AUTOPROXY_SCUTIL_PROXY=$(scutil --proxy)
+    local scutil_output=$(scutil --proxy)
+    local -A info=(${=${(M)${(f)scutil_output}:#[A-Za-z ]# : [^ ]#}/:})
 
-    # Pattern used to match the status
-    __ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED_PATTERN="HTTPEnable : 1"
-    __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED_PATTERN="HTTPSEnable : 1"
-    __ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED_PATTERN="FTPSEnable : 1"
-    __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED_PATTERN="SOCKSEnable : 1"
+    local proxy_enabled=0
 
-    __ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED_PATTERN]
-    __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED_PATTERN]
-    __ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED_PATTERN]
-    __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED=$__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY[(I)$__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED_PATTERN]
+    if (( $info[HTTPEnable] )); then
+        export http_proxy=http://$info[HTTPProxy]:$info[HTTPPort]
+        export HTTP_PROXY=http://$info[HTTPProxy]:$info[HTTPPort]
+        proxy_enabled=1
+    fi
+    if (( $info[HTTPSEnable] )); then
+        export https_proxy=http://$info[HTTPSProxy]:$info[HTTPSPort]
+        export HTTPS_PROXY=http://$info[HTTPSProxy]:$info[HTTPSPort]
+        proxy_enabled=1
+    fi
+    if (( $info[FTPSEnable] )); then
+        export ftp_proxy=http://$info[SOCKSProxy]:$info[SOCKSPort]
+        export FTP_PROXY=http://$info[SOCKSProxy]:$info[SOCKSPort]
+        proxy_enabled=1
+    fi
+    if (( $info[SOCKSEnable] )); then
+        export all_proxy=socks5://$info[SOCKSProxy]:$info[SOCKSPort]
+        export ALL_PROXY=socks5://$info[SOCKSProxy]:$info[SOCKSPort]
+        proxy_enabled=1
+    elif (( $info[HTTPEnable] )); then
+        export all_proxy=http://$info[HTTPProxy]:$info[HTTPPort]
+        export ALL_PROXY=http://$info[HTTPProxy]:$info[HTTPPort]
+        proxy_enabled=1
+    fi
 
-    # http proxy
-    if (( $__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED )); then
-        __ZSH_OSX_AUTOPROXY_HTTP_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPProxy : }[(f)1]}
-        __ZSH_OSX_AUTOPROXY_HTTP_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPPort : }[(f)1]}
-        export http_proxy="http://${__ZSH_OSX_AUTOPROXY_HTTP_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_HTTP_PROXY_PORT}"
-        export HTTP_PROXY="${http_proxy}"
-    fi
-    # https_proxy
-    if (( $__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_ENABLED )); then
-        __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPSProxy : }[(f)1]}
-        __ZSH_OSX_AUTOPROXY_HTTPS_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*HTTPSPort : }[(f)1]}
-        export https_proxy="http://${__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_HTTPS_PROXY_PORT}"
-        export HTTPS_PROXY="${https_proxy}"
-    fi
-    # ftp_proxy
-    if (( $__ZSH_OSX_AUTOPROXY_FTP_PROXY_ENABLED )); then
-        __ZSH_OSX_AUTOPROXY_FTP_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*FTPProxy : }[(f)1]}
-        __ZSH_OSX_AUTOPROXY_FTP_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*FTPPort : }[(f)1]}
-        export ftp_proxy="http://${__ZSH_OSX_AUTOPROXY_FTP_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_FTP_PROXY_PORT}"
-        export FTP_PROXY="${ftp_proxy}"
-    fi
-    # all_proxy
-    if (( $__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_ENABLED )); then
-        __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_SERVER=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*SOCKSProxy : }[(f)1]}
-        __ZSH_OSX_AUTOPROXY_SOCKS_PROXY_PORT=${${__ZSH_OSX_AUTOPROXY_SCUTIL_PROXY#*SOCKSPort : }[(f)1]}
-        export all_proxy="http://${__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_SERVER}:${__ZSH_OSX_AUTOPROXY_SOCKS_PROXY_PORT}"
-        export ALL_PROXY="${all_proxy}"
-    elif (( $__ZSH_OSX_AUTOPROXY_HTTP_PROXY_ENABLED )); then
-        export all_proxy="${http_proxy}"
-        export ALL_PROXY="${all_proxy}"
+    if (( $proxy_enabled )); then
+        export NO_PROXY="127.0.0.0/8, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 100.64.0.0/10, 162.14.0.0/16, localhost, *.local"
+        export no_proxy="127.0.0.0/8, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 100.64.0.0/10, 162.14.0.0/16, localhost, *.local"
     fi
 }
 
-alias proxy="zsh-osx-autoproxy"
+noproxy() {
+    unset http_proxy
+    unset HTTP_PROXY
+    unset https_proxy
+    unset HTTPS_PROXY
+    unset all_proxy
+    unset ALL_PROXY
+    unset ftp_proxy
+    unset FTP_PROXY
+}
 
-async_start_worker zsh_osx_proxy_worker -n
-async_register_callback zsh_osx_proxy_worker zsh-osx-autoproxy
-async_job zsh_osx_proxy_worker sleep 0.1
+zsh-osx-autoproxy
+alias proxy="zsh-osx-autoproxy"
 
 # Add OSX-like shadow to image
 # USAGE: osx-shadow [--rm|-r] <original.png> [result.png]
@@ -616,11 +680,6 @@ osx-shadow() {
     fi
 }
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
-
-# This speed up zsh-autosuggetions by a lot
-export ZSH_AUTOSUGGEST_USE_ASYNC='true'
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {
@@ -635,6 +694,7 @@ zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 # https://github.com/zsh-users/zsh-autosuggestions/issues/351
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste accept-line)
+ZSH_AUTOSUGGEST_MANUAL_REBIND=""
 
 if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
     unsetopt XTRACE
