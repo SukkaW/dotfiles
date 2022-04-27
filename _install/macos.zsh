@@ -40,71 +40,20 @@ install_homebrew() {
 }
 
 install_packages() {
+  # Only install required packages for setting up enviroments
+  # Later we will call brew bundle
   __pkg_to_be_installed=(
-    zsh
-    curl-openssl
-    cmake
-    wget
+    curl
+    fd
+    fnm
+    fzf
+    gawk
     git
-    tree
-    pyenv
-    axel
-    bind
-    neofetch
-    ncdu
-    n
-    thefuck
-    unrar
-    telnet
     jq
-    whois
-    mas
-    imagemagick
-    nmap
-  )
-
-  __casks_to_be_installed=(
-    android-platform-tools
-    iina
-    telegram-desktop
-    iterm2
-    textmate
-    keybase
-    maczip
-    keka
-    kekaexternalhelper
-    typora
-    google-chrome
-    firefox
-    upic
-    motrix
-    sensiblesidebuttons
-    visual-studio-code
-    neteasemusic
-    snipaste
-    surge
-    hackintool
-    monitorcontrol
-    1password
-    switchhosts
-    scroll-reverser
-    osxfuse
-    # Quick Look Plugin
-    qlcolorcode
-    qlimagesize
-    qlmarkdown
-    qlstephen
-    qlvideo
-    quicklook-json
-    quicklookase
-    webpquicklook
-    sogouinput
-  )
-
-  __taps_to_be_installed=(
-    github/gh/gh
-    jesseduffield/lazygit/lazygit
-    font-consolas-for-powerline
+    nano
+    tree
+    wget
+    zsh
   )
 
   echo "==========================================================="
@@ -115,36 +64,12 @@ install_packages() {
     echo "  - ${__pkg}"
   done
 
-  for __cask ($__casks_to_be_installed); do
-    echo "  - ${__cask} (cask)"
-  done
-
-  for __cask ($__casks_to_be_installed); do
-    echo "  - ${__cask} (cask)"
-  done
-
-  for __tap ($__taps_to_be_installed); do
-    echo "  - ${__tap} (tap)"
-  done
-
   echo "-----------------------------------------------------------"
 
   brew update
 
   for __pkg ($__pkg_to_be_installed); do
-    brew install ${__pkg}
-  done
-
-  if [ "$CI" != "true" ]; then
-    for __cask ($__casks_to_be_installed); do
-      brew install ${__cask} --cask
-    done
-  else
-    echo "CI Environment detected, skip brew cask"
-  fi
-
-  for __tap ($__taps_to_be_installed); do
-    brew install ${__tap}
+    brew install ${__pkg} || true
   done
 }
 
@@ -178,34 +103,37 @@ setup-omz() {
   echo "  - zsh-z"
   echo "-----------------------------------------------------------"
 
+  git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/fzf-tab
   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone https://github.com/zdharma/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
+  git clone https://github.com/mafredri/zsh-async.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-async
   git clone https://github.com/sukkaw/zsh-gitcd.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-gitcd
   git clone https://github.com/agkozak/zsh-z ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-z
 
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+}
 
-  git clone https://github.com/agkozak/zsh-z ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-z
+brew_bundle() {
+  brew bundle
 }
 
 install-nodejs() {
   echo "==========================================================="
   echo "              Setting up NodeJS Environment"
 
-  export N_PREFIX="$HOME/.n"
-  export N_PRESERVE_NPM=0
-  export PATH="$N_PREFIX/bin:$PATH"
+  eval $(fnm env --shell zsh)
+  fnm install --lts
 
   # Set NPM Global Path
   export NPM_CONFIG_PREFIX="$HOME/.npm-global"
   # Create .npm-global folder if not exists
-  [[ ! -d "$HOME/.npm-global" ]] && mkdir -p $HOME/.npm-global
+  [[ ! -d "$NPM_CONFIG_PREFIX" ]] && mkdir -p $NPM_CONFIG_PREFIX
 
   echo "-----------------------------------------------------------"
   echo "* Installing NodeJS LTS..."
   echo "-----------------------------------------------------------"
 
-  n lts
+  fnm install --lts
 
   echo "-----------------------------------------------------------"
   echo -n "* NodeJS Version: "
@@ -215,20 +143,20 @@ install-nodejs() {
   __npm_global_pkgs=(
     @cloudflare/wrangler
     @upimg/cli
+    0x
     cf-firewall-rules-generator
-    http-server
-    gulp-cli
+    clinic
     hexo-cli
     ipip-cli
-    nali-cli
+    nali-cli@next
     vercel
     npm-why
     pnpm
+    npm
+    posea
     serve
     surge
-    npm
-    ts-node
-    typescript
+    yarn
   )
 
   echo "-----------------------------------------------------------"
@@ -339,6 +267,7 @@ install_homebrew
 install_packages
 clone-repo
 setup-omz
+brew_bundle
 install-nodejs
 ci_editor
 ioio
