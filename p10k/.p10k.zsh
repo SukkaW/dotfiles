@@ -53,13 +53,14 @@
     # direnv                  # direnv status (https://direnv.net/)
     # asdf                    # asdf version manager (https://github.com/asdf-vm/asdf)
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
-    # anaconda                # conda environment (https://conda.io/)
+    anaconda                # conda environment (https://conda.io/)
     pyenv                   # python environment (https://github.com/pyenv/pyenv)
     goenv                   # go environment (https://github.com/syndbg/goenv)
     # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
     # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
     # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
     node_version          # node.js version
+    sukka_npm_type          # defined in .zshrc
     # go_version            # go version (https://golang.org)
     # rust_version          # rustc version (https://www.rust-lang.org)
     # dotnet_version        # .NET version (https://dotnet.microsoft.com)
@@ -871,7 +872,7 @@
   # Custom icon.
   # typeset -g POWERLEVEL9K_CONTEXT_VISUAL_IDENTIFIER_EXPANSION='⭐'
   # Custom prefix.
-  # typeset -g POWERLEVEL9K_CONTEXT_PREFIX='%fwith '
+  # typeset -g POWERLEVEL9K_CONTEXT_PREFIX='%f '
 
   ###[ virtualenv: python virtual environment (https://docs.python.org/3/library/venv.html) ]###
   # Python virtual environment color.
@@ -1585,7 +1586,7 @@
       ip="$(curl --max-time 5 -w '\n' "https://cool-wind-4f8a.ipdb.workers.dev" 2>/dev/null)"
     fi
     if [[ -n $ip ]]; then
-      next=$((start + _POWERLEVEL9K_PUBLIC_IP_TIMEOUT))
+      next=$((start + 240))
     fi
     _p9k__public_ip_next_time=$next
     _p9k_print_params _p9k__public_ip_next_time

@@ -48,7 +48,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=7
+export UPDATE_ZSH_DAYS=30
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -678,6 +678,30 @@ osx-shadow() {
                 ;;
         esac
     fi
+}
+
+# Add npm package manager prompt to powerlevel10k
+prompt_sukka_npm_type() {
+    _p9k_upglob yarn.lock
+    (( $? == 1 )) && {
+        p10k segment -s "YARN" -f blue -t "yarn"
+        return
+    }
+    _p9k_upglob pnpm-lock.yaml
+    (( $? == 1 )) && {
+        p10k segment -s "PNPM" -f yellow -t "pnpm"
+        return
+    }
+    _p9k_upglob package-lock.json
+    (( $? == 1 )) && {
+        p10k segment -s "NPM" -f red -t "npm"
+        return
+    }
+    _p9k_upglob package.json
+    (( $? == 1 )) && {
+        p10k segment -s "NPM" -f red -t "npm"
+        return
+    }
 }
 
 # This speeds up pasting w/ autosuggest
