@@ -68,7 +68,7 @@ install_packages() {
   done
 }
 
-clone-repo() {
+clone_repo() {
   echo "-----------------------------------------------------------"
   echo "* Cloning Sukka/dotfiles Repo from GitHub.com"
   echo "-----------------------------------------------------------"
