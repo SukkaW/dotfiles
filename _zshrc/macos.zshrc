@@ -9,9 +9,10 @@
 # =================================================== #
 
 # For Performance Debug purpose
-export SUKKA_ENABLE_PERFORMANCE_PROFILING="false"
+# Set to 1 to enable profiling
+SUKKA_ENABLE_PERFORMANCE_PROFILING=0
 
-if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING}" == "true" ]]; then
+if (( $SUKKA_ENABLE_PERFORMANCE_PROFILING )); then
     rm -rf zsh_profile*
     zmodload zsh/zprof
 
@@ -94,7 +95,7 @@ __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-func
 __SUKKA_ZSH_COMPLETION_SRC="$ZSH/custom/plugins/zsh-completions/src"
 
 # This speed up zsh-autosuggetions by a lot
-export ZSH_AUTOSUGGEST_USE_ASYNC='true'
+export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -163,14 +164,21 @@ export GOPATH="$HOME/go"
 export BAT_THEME="Monokai Extended Bright"
 export HOMEBREW_NO_AUTO_UPDATE=1
 
+# if (( ! $PATH[(I)/usr/local/bin] )) &>/dev/null; then
+#     export PATH=""
+# fi
+
+# Path should be set before fnm
+export PATH="/usr/local/opt/llvm/bin:/usr/local/opt/whois/bin:/usr/local/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:/usr/local/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+
 # fnm
 if (( $+commands[fnm] )); then
     eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
-# Path should be set after fnm
-export PATH="/usr/local/opt/whois/bin:/usr/local/opt/curl/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:/usr/local/opt/openjdk@8/bin:$PATH:$PATH:$GOPATH/bin:/usr/local/anaconda3/bin"
-
+if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
+    FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
+fi
 
 # Lazyload Function
 
@@ -277,6 +285,8 @@ docker-kill-all() {
 
 cfdns="@1.0.0.1 +tcp"
 
+alias restart_bluetooth="sudo pkill bluetoothd && sudo launchctl start com.apple.bluetoothd"
+
 hash -d desktop="$HOME/Desktop"
 hash -d music="$HOME/Music"
 hash -d pictures="$HOME/Pictures"
@@ -289,6 +299,8 @@ hash -d dropbox="$HOME/Dropbox"
 hash -d services="$HOME/Services"
 hash -d projects="$HOME/Project"
 hash -d project="$HOME/Project"
+hash -d work="$HOME/Work"
+hash -d works="$HOME/Works"
 hash -d tools="$HOME/Tools"
 hash -d tool="$HOME/Tools"
 hash -d applications="/Applications"
@@ -348,9 +360,8 @@ Please input Git Email: "
 Done!
 ===================================
 "
-    # global alias
-    git config --global alias.lg "log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\""
 
+    # git config --global alias.lg "log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\""
     git config --global user.name "${username}"
     git config --global user.email "${email}"
 }
@@ -508,21 +519,25 @@ if (( $+commands[gulp] )) &>/dev/null; then
     compdef _gulp_completion gulp
 fi
 
+# pnpm
 # pnpm completion
 if (( $+commands[pnpm] )) &>/dev/null; then
     _pnpm_completion() {
         local reply
         local si=$IFS
 
-        IFS=$'\n'
-        reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
+        IFS=$'\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
         IFS=$si
 
-        _describe 'values' reply
+        if [ "$reply" = "__tabtab_complete_files__" ]; then
+          _files
+        else
+          _describe 'values' reply
+        fi
     }
-
     compdef _pnpm_completion pnpm
 fi
+# pnpm end
 
 # npm completion
 if (( $+commands[npm] )) &>/dev/null; then
@@ -536,6 +551,11 @@ if (( $+commands[npm] )) &>/dev/null; then
     IFS=$si
   }
   compdef _npm_completion npm
+fi
+
+# fzf
+if (( $+commands[fzf] )) &>/dev/null; then
+  [[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.zsh" 2> /dev/null
 fi
 
 # goenv
@@ -584,6 +604,11 @@ if (( $+commands[conda] )) &>/dev/null; then
 
     unfunction __sukka_load_conda
   }
+fi
+
+# github copilot cli
+if (( $+commands[github-copilot-cli] )) &>/dev/null; then
+  # eval "$(github-copilot-cli alias -- "$0")"
 fi
 
 # zsh-osx-autoproxy (self use)
@@ -682,28 +707,63 @@ osx-shadow() {
     fi
 }
 
+wg_ip="162.159.192.1"
+
+mtu() {
+    [ -z $1 ] && echo "specifying host is a must" && return
+
+    echo "Getting the best MTU value..."
+    lan_ip=$(ipconfig getifaddr en0)
+
+    mtu_result=1500
+
+    ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1
+    until [[ $? = 0 || ${mtu_result} -le $(( 1280 )) ]]; do
+      mtu_result=$(( ${mtu_result} - 16))
+      echo "Run ${mtu_result}"
+      ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1
+    done
+
+    if [[ "${mtu_result}" -eq $(( 1500 )) ]]; then
+      # do nothing
+    elif [[ "${mtu_result}" -le $(( 1360 )) ]]; then
+      mtu_result=$(( 1280 ))
+    else
+      for (( i=0; i<16; i++ )); do
+        (( mtu_result++ ))
+        echo "Run ${mtu_result}"
+        ( ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
+      done
+      (( mtu_result-- ))
+    fi
+
+    echo "MTU: ${mtu_result}. WireGuard MTU: $(( mtu_result - 80))"
+}
+
 # Add npm package manager prompt to powerlevel10k
 prompt_sukka_npm_type() {
-    _p9k_upglob yarn.lock
-    (( $? == 1 )) && {
-        p10k segment -s "YARN" -f blue -t "yarn"
-        return
-    }
-    _p9k_upglob pnpm-lock.yaml
-    (( $? == 1 )) && {
-        p10k segment -s "PNPM" -f yellow -t "pnpm"
-        return
-    }
-    _p9k_upglob package-lock.json
-    (( $? == 1 )) && {
-        p10k segment -s "NPM" -f red -t "npm"
-        return
-    }
-    _p9k_upglob package.json
-    (( $? == 1 )) && {
-        p10k segment -s "NPM" -f red -t "npm"
-        return
-    }
+    if (( $+commands[node] || $+commands[yarn] || $+commands[npm] || $+commands[pnpm] )) &>/dev/null; then
+        _p9k_upglob yarn.lock
+        (( $? == 1 )) && {
+            p10k segment -s "YARN" -f blue -t "yarn"
+            return
+        }
+        _p9k_upglob pnpm-lock.yaml
+        (( $? == 1 )) && {
+            p10k segment -s "PNPM" -f yellow -t "pnpm"
+            return
+        }
+        _p9k_upglob package-lock.json
+        (( $? == 1 )) && {
+            p10k segment -s "NPM" -f red -t "npm"
+            return
+        }
+        _p9k_upglob package.json
+        (( $? == 1 )) && {
+            p10k segment -s "NPM" -f red -t "npm"
+            return
+        }
+    fi
 }
 
 # This speeds up pasting w/ autosuggest
@@ -712,7 +772,6 @@ pasteinit() {
   OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
   zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
 }
-
 pastefinish() {
   zle -N self-insert $OLD_SELF_INSERT
 }
@@ -720,9 +779,11 @@ zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 # https://github.com/zsh-users/zsh-autosuggestions/issues/351
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste accept-line)
-ZSH_AUTOSUGGEST_MANUAL_REBIND=""
+# Enable completion in zsh-autosuggestions
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
+if (( $SUKKA_ENABLE_PERFORMANCE_PROFILING )); then
     unsetopt XTRACE
     exec 2>&3 3>&-
 
@@ -757,7 +818,7 @@ if [[ "${SUKKA_ENABLE_PERFORMANCE_PROFILING:-}" == "true" ]]; then
     zprof() {
         unfunction zprof
 
-        parse_zsh_profiling $__sukka_zsh_profiling_logfile | head -n 30
+        parse_zsh_profiling $__sukka_zsh_profiling_logfile | head -n 50
 
         echo ""
         echo "========================================"
