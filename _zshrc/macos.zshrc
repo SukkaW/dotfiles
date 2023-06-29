@@ -710,34 +710,41 @@ osx-shadow() {
 wg_ip="162.159.192.1"
 
 mtu() {
-    [ -z $1 ] && echo "specifying host is a must" && return
+    [ -z $1 ] && echo "[MTU] Specifying host is a must" && return
 
-    echo "Getting the best MTU value..."
-    lan_ip=$(ipconfig getifaddr en0)
+    echo "[MTU] Getting the best MTU value for $1..."
+    # lan_ip=$(ipconfig getifaddr en0)
+    # lan_ip=$(osascript -e "IPv4 address of (system info)")
+    lan_ip=$(ifconfig | awk '/inet /&&!/127.0.0.1/{print $2;exit}')
+    echo "[MTU] Source IP ${lan_ip}..."
 
     mtu_result=1500
 
-    ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1
-    until [[ $? = 0 || ${mtu_result} -le $(( 1280 )) ]]; do
-      mtu_result=$(( ${mtu_result} - 16))
-      echo "Run ${mtu_result}"
-      ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1
+    "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
+    until [[ $? = 0 || ${mtu_result} -le 1000 ]]; do
+      mtu_result=$(( ${mtu_result} - 32))
+      echo "[MTU] Ping ${mtu_result}"
+      "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
     done
 
-    if [[ "${mtu_result}" -eq $(( 1500 )) ]]; then
+    if [[ "${mtu_result}" -eq 1500 ]]; then
       # do nothing
-    elif [[ "${mtu_result}" -le $(( 1360 )) ]]; then
-      mtu_result=$(( 1280 ))
+    elif [[ "${mtu_result}" -le 1000 ]]; then
+      mtu_result=1000
     else
-      for (( i=0; i<16; i++ )); do
+      for (( i=0; i<32; i++ )); do
         (( mtu_result++ ))
-        echo "Run ${mtu_result}"
-        ( ping -c1 -W1 -D -s ${mtu_result} "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
+        echo "[MTU] Ping ${mtu_result}"
+        ( "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
       done
       (( mtu_result-- ))
     fi
 
-    echo "MTU: ${mtu_result}. WireGuard MTU: $(( mtu_result - 80))"
+    echo "[MTU] MTU: ${mtu_result}. WireGuard MTU: $(( mtu_result - 80 ))"
+}
+
+mtrskk() {
+    "sudo" mtr -b -z -a $(ifconfig | awk '/inet /&&!/127.0.0.1/{print $2;exit}') $@ | nali
 }
 
 # Add npm package manager prompt to powerlevel10k
