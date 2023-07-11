@@ -162,7 +162,6 @@ export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
 export BAT_THEME="Monokai Extended Bright"
-export HOMEBREW_NO_AUTO_UPDATE=1
 
 # if (( ! $PATH[(I)/usr/local/bin] )) &>/dev/null; then
 #     export PATH=""
@@ -709,13 +708,17 @@ osx-shadow() {
 
 wg_ip="162.159.192.1"
 
+sukka_local_ip() {
+    echo $(ifconfig | awk '/inet /&&!/inet 127.0.0.1/&&!/inet 198.1/{print $2;exit}')
+}
+
 mtu() {
     [ -z $1 ] && echo "[MTU] Specifying host is a must" && return
 
     echo "[MTU] Getting the best MTU value for $1..."
     # lan_ip=$(ipconfig getifaddr en0)
     # lan_ip=$(osascript -e "IPv4 address of (system info)")
-    lan_ip=$(ifconfig | awk '/inet /&&!/127.0.0.1/{print $2;exit}')
+    lan_ip=$(sukka_local_ip)
     echo "[MTU] Source IP ${lan_ip}..."
 
     mtu_result=1500
@@ -744,7 +747,7 @@ mtu() {
 }
 
 mtrskk() {
-    "sudo" mtr -b -z -a $(ifconfig | awk '/inet /&&!/127.0.0.1/{print $2;exit}') $@ | nali
+    "sudo" mtr -b -z -a $(sukka_local_ip) $@ | nali
 }
 
 # Add npm package manager prompt to powerlevel10k
