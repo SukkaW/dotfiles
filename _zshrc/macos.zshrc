@@ -84,13 +84,13 @@ HIST_STAMPS="yyyy-mm-dd"
 
 # Cache Freq Use Variables
 ## Homebrew prefix
-__SUKKA_HOMWBREW__PREFIX="/usr/local"
+__SUKKA_HOMEBREW__PREFIX="/usr/local"
 ## pyenv prefix
 __SUKKA_HOMEBREW_PYENV_PREFIX="/usr/local/opt/pyenv"
 ## Box Name used for my zsh-theme
 # __SUKKA_BOX_NAME=${HOST/.local/}
 # Homebrew zsh completion path
-__SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions"
+__SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions"
 # zsh-completion fpath
 __SUKKA_ZSH_COMPLETION_SRC="$ZSH/custom/plugins/zsh-completions/src"
 
@@ -123,7 +123,7 @@ plugins=(
 ## https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
 ## Add a check avoiding duplicated fpath
 if (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
-    FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
+    FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
 ## https://github.com/zsh-users/zsh-completions
 [[ -d ${__SUKKA_ZSH_COMPLETION_SRC} ]] && FPATH="${__SUKKA_ZSH_COMPLETION_SRC}:$FPATH"
@@ -176,7 +176,7 @@ if (( $+commands[fnm] )); then
 fi
 
 if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
-    FPATH=${__SUKKA_HOMWBREW__PREFIX}/share/zsh/site-functions:$FPATH
+    FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
 
 # Lazyload Function
