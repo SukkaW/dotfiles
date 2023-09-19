@@ -138,11 +138,10 @@ install_nodejs() {
   __npm_global_pkgs=(
     @cloudflare/wrangler
     @upimg/cli
+    @githubnext/github-copilot-cli@0.1.33
     0x
     cf-firewall-rules-generator
     clinic
-    hexo-cli
-    ipip-cli
     nali-cli@next
     vercel
     npm-why
