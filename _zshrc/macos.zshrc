@@ -87,7 +87,7 @@ HIST_STAMPS="yyyy-mm-dd"
 __SUKKA_HOMEBREW__PREFIX="/usr/local"
 if [[ "$(uname -sm)" = "Darwin arm64" ]] then __SUKKA_HOMEBREW__PREFIX="/opt/homebrew"; fi
 ## pyenv prefix
-__SUKKA_HOMEBREW_PYENV_PREFIX="/usr/local/opt/pyenv"
+__SUKKA_HOMEBREW_PYENV_PREFIX="${__SUKKA_HOMEBREW__PREFIX}/opt/pyenv"
 ## Box Name used for my zsh-theme
 # __SUKKA_BOX_NAME=${HOST/.local/}
 # Homebrew zsh completion path
@@ -124,7 +124,7 @@ plugins=(
 ## https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 ## https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
 ## Add a check avoiding duplicated fpath
-if (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
+if (( ( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] ) && $+commands[brew] )) &>/dev/null; then
     FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
 ## https://github.com/zsh-users/zsh-completions
@@ -170,7 +170,7 @@ export BAT_THEME="Monokai Extended Bright"
 # fi
 
 # Path should be set before fnm
-export PATH="/usr/local/opt/llvm/bin:/usr/local/opt/whois/bin:/usr/local/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:/usr/local/opt/openjdk/bin:/usr/local/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
 # fnm
 if (( $+commands[fnm] )); then
@@ -391,7 +391,7 @@ find_folder_by_name() {
     local dir="$1"
     local name="$2"
     if (( $+commands[fd] )) &>/dev/null; then
-        fd --color "never" -H -g --type d $name $dir
+        fd --color=never -H -I -g --type d $name $dir
     else
         find $dir -type d -name $name
     fi
@@ -555,9 +555,17 @@ if (( $+commands[npm] )) &>/dev/null; then
   compdef _npm_completion npm
 fi
 
+# bun completions
+if (( $+commands[bun] )) &>/dev/null; then
+  _sukka_lazyload_completion_bun() {
+    [ -s "/Users/sukka/.bun/_bun" ] && source "/Users/sukka/.bun/_bun"
+  }
+  sukka_lazyload_add_completion bun
+fi
+
 # fzf
 if (( $+commands[fzf] )) &>/dev/null; then
-  [[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.zsh" 2> /dev/null
+  [[ $- == *i* ]] && source "${__SUKKA_HOMEBREW__PREFIX}/opt/fzf/shell/completion.zsh" 2> /dev/null
 fi
 
 # goenv
@@ -709,10 +717,41 @@ osx-shadow() {
     fi
 }
 
-wg_ip="162.159.192.1"
+warp_ip="162.159.192.1"
 
 sukka_local_ip() {
-    echo $(ifconfig | awk '/inet /&&!/inet 127.0.0.1/&&!/inet 198.1/{print $2;exit}')
+    # Get the list of network services and their corresponding devices, remove extra characters
+    # Use a while loop with read to iterate over each line
+    local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+
+    for device ($=services); do
+        local info=$(ifconfig $device 2>/dev/null)
+        if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) )); then
+            local ip=$(awk '/inet /{print $2;exit}' <<< $info)
+            if (( $+ip )); then
+                echo "$ip"
+                return 0
+            fi
+        fi
+    done
+
+    echo "256.256.256.256" # output invalid ip
+    return 1
+}
+
+sukka_primary_interface() {
+    local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+
+    for device ($=services); do
+        # Check if the device is active
+        local info=$(ifconfig $device 2>/dev/null)
+        if (( $info[(I)status: active] )); then
+            echo "$device"
+            return 0
+        fi
+    done
+
+    return 1
 }
 
 mtu() {
@@ -757,17 +796,32 @@ traceskk() {
     "sudo" "nexttrace" --always-rdns --source $(sukka_local_ip) $@
 }
 
+pastefile() {
+  for filepath in "$@"
+  do
+    echo $(curl -F "reqtype=fileupload" --progress-bar -F "time=1h" -F "fileToUpload=@$filepath" https://litterbox.catbox.moe/resources/internals/api.php)
+    # echo $(curl --progress-bar -F "file=@$filepath" https://tmpfiles.org/api/v1/upload) # server error when uploading some files
+    # echo $(curl --progress-bar -F "file=@$filepath" https://temp.sh/upload)
+  done
+}
+alias tmpfile="pastefile"
+
 # Add npm package manager prompt to powerlevel10k
 prompt_sukka_npm_type() {
-    if (( $+commands[node] || $+commands[yarn] || $+commands[npm] || $+commands[pnpm] )) &>/dev/null; then
-        _p9k_upglob yarn.lock
-        (( $? == 1 )) && {
-            p10k segment -s "YARN" -f blue -t "yarn"
-            return
-        }
+    if (( $+commands[node] || $+commands[yarn] || $+commands[npm] || $+commands[pnpm] || $+commands[bun] )) &>/dev/null; then
         _p9k_upglob pnpm-lock.yaml
         (( $? == 1 )) && {
             p10k segment -s "PNPM" -f yellow -t "pnpm"
+            return
+        }
+        _p9k_upglob bun.lockb
+        (( $? == 1 )) && {
+            p10k segment -s "BUN" -f white -t "bun"
+            return
+        }
+        _p9k_upglob yarn.lock
+        (( $? == 1 )) && {
+            p10k segment -s "YARN" -f blue -t "yarn"
             return
         }
         _p9k_upglob package-lock.json
@@ -781,6 +835,43 @@ prompt_sukka_npm_type() {
             return
         }
     fi
+}
+# Add my ip prompt to powerlevel10k
+prompt_sukka_custom_ip() {
+  local -i len=$#_p9k__prompt _p9k__has_upglob
+  local ip='${_p9k__public_ip:-$_POWERLEVEL9K_PUBLIC_IP_NONE}'
+  _p9k_prompt_segment "$0" "$_p9k_color1" "$_p9k_color2" PUBLIC_IP_ICON 1 $ip $ip
+  (( _p9k__has_upglob )) || typeset -g "_p9k__segment_val_${_p9k__prompt_side}[_p9k__segment_index]"=$_p9k__prompt[len+1,-1]
+}
+_p9k_prompt_sukka_custom_ip_init() {
+  typeset -g _p9k__=
+  typeset -gF _p9k__public_ip_next_time=0
+  _p9k__async_segments_compute+='_p9k_worker_invoke public_ip _p9k_prompt_sukka_custom_ip_compute'
+}
+_p9k_prompt_sukka_custom_ip_compute() {
+  (( EPOCHREALTIME >= _p9k__public_ip_next_time )) || return
+  _p9k_worker_async _p9k_prompt_sukka_custom_ip_async _p9k_prompt_sukka_custom_ip_sync
+}
+_p9k_prompt_sukka_custom_ip_async() {
+  local ip
+  local -F start=EPOCHREALTIME
+  local -F next='start + 5'
+  if (( $+commands[curl] )); then
+    ip="$(curl --max-time 5 -w '\n' "https://plain-sky-8db5.skk.workers.dev" 2>/dev/null)"
+  fi
+  if (( $+ip )); then
+    next=$((start + 240))
+  fi
+  _p9k__public_ip_next_time=$next
+  _p9k_print_params _p9k__public_ip_next_time
+  [[ $_p9k__public_ip == $ip ]] && return
+  _p9k__public_ip=$ip
+  _p9k_print_params _p9k__public_ip
+  echo -E - 'reset=1'
+}
+_p9k_prompt_sukka_custom_ip_sync() {
+  eval $REPLY
+  _p9k_worker_reply $REPLY
 }
 
 # This speeds up pasting w/ autosuggest
@@ -862,3 +953,5 @@ function __fd18et_save_last_successed() {
 add-zsh-hook zshaddhistory __fd18et_prevent_write
 add-zsh-hook precmd __fd18et_save_last_successed
 add-zsh-hook zshexit __fd18et_save_last_successed
+
+bindkey '^[^M' self-insert-unmeta

@@ -107,7 +107,7 @@
     newline
     # ip                    # ip address and bandwidth usage for a specified network interface
     # public_ip             # public IP address
-    my_custom_ip
+    sukka_custom_ip
     proxy                 # system-wide http/https/ftp proxy
     # battery               # internal battery
     # wifi                  # wifi speed
@@ -1454,7 +1454,7 @@
   ###############################[ public_ip: public IP address ]###############################
   # Public IP color.
   typeset -g POWERLEVEL9K_PUBLIC_IP_FOREGROUND=94
-  typeset -g POWERLEVEL9K_MY_CUSTOM_IP_FOREGROUND=94
+  typeset -g POWERLEVEL9K_SUKKA_CUSTOM_IP_FOREGROUND=94
   # Custom icon.
   # typeset -g POWERLEVEL9K_PUBLIC_IP_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
@@ -1560,46 +1560,6 @@
   # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS. It displays an icon and orange text greeting the user.
   #
   # Type `p10k help segment` for documentation and a more sophisticated example.
-  prompt_my_custom_ip() {
-    local -i len=$#_p9k__prompt _p9k__has_upglob
-    local ip='${_p9k__public_ip:-$_POWERLEVEL9K_PUBLIC_IP_NONE}'
-    _p9k_prompt_segment "$0" "$_p9k_color1" "$_p9k_color2" PUBLIC_IP_ICON 1 $ip $ip
-    (( _p9k__has_upglob )) || typeset -g "_p9k__segment_val_${_p9k__prompt_side}[_p9k__segment_index]"=$_p9k__prompt[len+1,-1]
-  }
-
-  _p9k_prompt_my_custom_ip_init() {
-    typeset -g _p9k__=
-    typeset -gF _p9k__public_ip_next_time=0
-    _p9k__async_segments_compute+='_p9k_worker_invoke public_ip _p9k_prompt_my_custom_ip_compute'
-  }
-
-  _p9k_prompt_my_custom_ip_compute() {
-    (( EPOCHREALTIME >= _p9k__public_ip_next_time )) || return
-    _p9k_worker_async _p9k_prompt_my_custom_ip_async _p9k_prompt_my_custom_ip_sync
-  }
-
-  _p9k_prompt_my_custom_ip_async() {
-    local ip
-    local -F start=EPOCHREALTIME
-    local -F next='start + 5'
-    if (( $+commands[curl] )); then
-      ip="$(curl --max-time 5 -w '\n' "https://cool-wind-4f8a.ipdb.workers.dev" 2>/dev/null)"
-    fi
-    if [[ -n $ip ]]; then
-      next=$((start + 240))
-    fi
-    _p9k__public_ip_next_time=$next
-    _p9k_print_params _p9k__public_ip_next_time
-    [[ $_p9k__public_ip == $ip ]] && return
-    _p9k__public_ip=$ip
-    _p9k_print_params _p9k__public_ip
-    echo -E - 'reset=1'
-  }
-
-  _p9k_prompt_my_custom_ip_sync() {
-    eval $REPLY
-    _p9k_worker_reply $REPLY
-  }
 
   # User-defined prompt segments may optionally provide an instant_prompt_* function. Its job
   # is to generate the prompt segment for display in instant prompt. See
