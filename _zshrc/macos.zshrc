@@ -83,9 +83,16 @@ HIST_STAMPS="yyyy-mm-dd"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Cache Freq Use Variables
+## Result of uname -sm
+__SUKKA_UNAME_SM=$(uname -sm)
+## Is currently on macOS
+__SUKKA_IS_DARWIN=$__SUKKA_UNAME_SM[(I)Darwin]
+## Is currently on macOS M chip
+local __sukka_darwin_64_str="Darwin arm64"
+__SUKKA_IS_DARWIN_ARM64=$__SUKKA_UNAME_SM[(I)$__sukka_darwin_64_str]
 ## Homebrew prefix
 __SUKKA_HOMEBREW__PREFIX="/usr/local"
-if [[ "$(uname -sm)" = "Darwin arm64" ]] then __SUKKA_HOMEBREW__PREFIX="/opt/homebrew"; fi
+if (( $__SUKKA_IS_DARWIN_ARM64 )) then __SUKKA_HOMEBREW__PREFIX="/opt/homebrew"; fi
 ## pyenv prefix
 __SUKKA_HOMEBREW_PYENV_PREFIX="${__SUKKA_HOMEBREW__PREFIX}/opt/pyenv"
 ## Box Name used for my zsh-theme
@@ -174,7 +181,15 @@ export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PRE
 
 # fnm
 if (( $+commands[fnm] )); then
+  # fnm is installed through package manager
+  eval "$(fnm env --use-on-cd --shell zsh)"
+else
+  FNM_PATH="${HOME}/.local/share/fnm"
+  if [[ -d "$FNM_PATH" ]]; then
+    # fnm is installed through the shell script
+    export PATH="$FNM_PATH:$PATH"
     eval "$(fnm env --use-on-cd --shell zsh)"
+  fi
 fi
 
 if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
@@ -457,18 +472,6 @@ update_ohmyzsh_custom_plugins() {
     done
 }
 
-eval "__sukka_original_$(which omz)"
-unfunction omz
-
-omz() {
-    if [[ $1 == update ]]; then
-        __sukka_original_omz update
-        update_ohmyzsh_custom_plugins
-    else
-        __sukka_original_omz $@
-    fi
-}
-
 # Load zsh-async worker
 # source ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-async/async.zsh
 # async_init
@@ -676,7 +679,9 @@ noproxy() {
     unset FTP_PROXY
 }
 
-zsh-osx-autoproxy
+if (( $__SUKKA_IS_DARWIN )); then
+    zsh-osx-autoproxy
+fi
 alias proxy="zsh-osx-autoproxy"
 
 # Add OSX-like shadow to image
@@ -720,36 +725,51 @@ osx-shadow() {
 warp_ip="162.159.192.1"
 
 sukka_local_ip() {
-    # Get the list of network services and their corresponding devices, remove extra characters
-    # Use a while loop with read to iterate over each line
-    local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+    if (( $__SUKKA_IS_DARWIN )); then
+        # Get the list of network services and their corresponding devices, remove extra characters
+        # Use a while loop with read to iterate over each line
+        local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
 
-    for device ($=services); do
-        local info=$(ifconfig $device 2>/dev/null)
-        if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) )); then
-            local ip=$(awk '/inet /{print $2;exit}' <<< $info)
-            if (( $+ip )); then
-                echo "$ip"
-                return 0
+        for device ($=services); do
+            local info=$(ifconfig $device 2>/dev/null)
+            if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) )); then
+                local ip=$(awk '/inet /{print $2;exit}' <<< $info)
+                if (( $+ip )); then
+                    echo "$ip"
+                    return 0
+                fi
             fi
+        done
+    else
+        local ip=$(ip route get "223.5.5.5" | grep -Po '(?<=(src ))(\S+)')
+        if (( $+ip )); then
+            echo "$ip"
+            return 0
         fi
-    done
-
+    fi
     echo "256.256.256.256" # output invalid ip
     return 1
 }
 
 sukka_primary_interface() {
-    local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+    if (( $__SUKKA_IS_DARWIN )); then
+        local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
 
-    for device ($=services); do
-        # Check if the device is active
-        local info=$(ifconfig $device 2>/dev/null)
-        if (( $info[(I)status: active] )); then
+        for device ($=services); do
+            # Check if the device is active
+            local info=$(ifconfig $device 2>/dev/null)
+            if (( $info[(I)status: active] )); then
+                echo "$device"
+                return 0
+            fi
+        done
+    else
+        local device=$(ip route get "223.5.5.5" | grep -Po '(?<=(dev ))(\S+)')
+        if (( $+device )); then
             echo "$device"
             return 0
         fi
-    done
+    fi
 
     return 1
 }
@@ -789,7 +809,7 @@ mtu() {
 }
 
 mtrskk() {
-    "sudo" mtr -b -z -a $(sukka_local_ip) $@ | nali
+    "sudo" mtr -b -z -e -m 63 -a $(sukka_local_ip) $@ | nali
 }
 
 traceskk() {
