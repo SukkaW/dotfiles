@@ -177,7 +177,7 @@ export BAT_THEME="Monokai Extended Bright"
 # fi
 
 # Path should be set before fnm
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
 # fnm
 if (( $+commands[fnm] )); then
@@ -741,7 +741,7 @@ sukka_local_ip() {
             fi
         done
     else
-        local ip=$(ip route get "223.5.5.5" | grep -Po '(?<=(src ))(\S+)')
+        local ip=$(ip route show default | grep -Po '(?<=(src ))(\S+)')
         if (( $+ip )); then
             echo "$ip"
             return 0
@@ -764,7 +764,7 @@ sukka_primary_interface() {
             fi
         done
     else
-        local device=$(ip route get "223.5.5.5" | grep -Po '(?<=(dev ))(\S+)')
+        local device=$(ip route show default | grep -Po '(?<=(dev ))(\S+)')
         if (( $+device )); then
             echo "$device"
             return 0
