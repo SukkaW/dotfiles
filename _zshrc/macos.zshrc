@@ -192,6 +192,11 @@ else
   fi
 fi
 
+# rust
+if [[ -d "${HOME}/.cargo/bin" ]]; then
+  export PATH="${HOME}/.cargo/bin:${PATH}"
+fi
+
 if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
     FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
@@ -561,7 +566,7 @@ fi
 # bun completions
 if (( $+commands[bun] )) &>/dev/null; then
   _sukka_lazyload_completion_bun() {
-    [ -s "/Users/sukka/.bun/_bun" ] && source "/Users/sukka/.bun/_bun"
+    [[ -f "${HOME}/.bun/_bun" ]] && source "${HOME}/.bun/_bun"
   }
   sukka_lazyload_add_completion bun
 fi
@@ -605,7 +610,7 @@ if (( $+commands[conda] )) &>/dev/null; then
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/usr/local/anaconda3/etc/profile.d/conda.sh" ]; then
+        if [[ -f "/usr/local/anaconda3/etc/profile.d/conda.sh" ]]; then
         . "/usr/local/anaconda3/etc/profile.d/conda.sh"
         else
             export PATH="/usr/local/anaconda3/bin:$PATH"
