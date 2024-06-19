@@ -197,6 +197,12 @@ if [[ -d "${HOME}/.cargo/bin" ]]; then
   export PATH="${HOME}/.cargo/bin:${PATH}"
 fi
 
+# open-cli
+# only on non-macOS + open-cli exists
+if (( (! ${__SUKKA_IS_DARWIN}) && $+commands[open-cli] )); then
+    alias open="open-cli"
+fi
+
 if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
     FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
