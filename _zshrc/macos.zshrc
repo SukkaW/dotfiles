@@ -674,8 +674,11 @@ zsh-osx-autoproxy() {
     fi
 
     if (( $proxy_enabled )); then
-        export NO_PROXY="127.0.0.0/8, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 100.64.0.0/10, 162.14.0.0/16, localhost, *.local"
-        export no_proxy="127.0.0.0/8, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 100.64.0.0/10, 162.14.0.0/16, localhost, *.local"
+        local -A raw_scutil_noproxy=(${=${(M)${(f)scutil_output}:#  [0-9 ]# : [^ ]#}/:})
+        local _noproxy=${(j:, :)raw_scutil_noproxy}
+
+        export NO_PROXY=$_noproxy
+        export no_proxy=$_noproxy
     fi
 }
 
