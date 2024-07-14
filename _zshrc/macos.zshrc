@@ -747,7 +747,7 @@ sukka_local_ip() {
         for device ($=services); do
             local info=$(ifconfig $device 2>/dev/null)
 
-            if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) )); then
+            if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) && ( $info[(I)inet ] ) )); then
                 local ip=$(awk '/inet /{print $2;exit}' <<< $info)
                 if (( ${#ip} )); then
                     if [[ $ip != "" ]]; then
@@ -775,7 +775,7 @@ sukka_primary_interface() {
         for device ($=services); do
             # Check if the device is active
             local info=$(ifconfig $device 2>/dev/null)
-            if (( $info[(I)status: active] )); then
+            if (( ( $info[(I)status: active] ) && ( $info[(I)inet ] ) )); then
                 echo "$device"
                 return 0
             fi
