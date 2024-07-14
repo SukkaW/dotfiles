@@ -675,7 +675,7 @@ zsh-osx-autoproxy() {
 
     if (( $proxy_enabled )); then
         local -A raw_scutil_noproxy=(${=${(M)${(f)scutil_output}:#  [0-9 ]# : [^ ]#}/:})
-        local _noproxy=${(j:, :)raw_scutil_noproxy}
+        local _noproxy=${(j:, :)${(o)raw_scutil_noproxy}}
 
         export NO_PROXY=$_noproxy
         export no_proxy=$_noproxy
@@ -742,15 +742,18 @@ sukka_local_ip() {
     if (( $__SUKKA_IS_DARWIN )); then
         # Get the list of network services and their corresponding devices, remove extra characters
         # Use a while loop with read to iterate over each line
-        local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+        local services=$(networksetup -listnetworkserviceorder | awk -F': ' '/Device:/ {gsub(/)/, "", $3); print $3}')
 
         for device ($=services); do
             local info=$(ifconfig $device 2>/dev/null)
+
             if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) )); then
                 local ip=$(awk '/inet /{print $2;exit}' <<< $info)
-                if (( $+ip )); then
-                    echo "$ip"
-                    return 0
+                if (( ${#ip} )); then
+                    if [[ $ip != "" ]]; then
+                        echo "$ip"
+                        return 0
+                    fi
                 fi
             fi
         done
@@ -767,7 +770,7 @@ sukka_local_ip() {
 
 sukka_primary_interface() {
     if (( $__SUKKA_IS_DARWIN )); then
-        local services=$(networksetup -listnetworkserviceorder | awk -F'(, )|(: )|(\))' '/Hardware Port/ {print $4}')
+        local services=$(networksetup -listnetworkserviceorder | awk -F': ' '/Device:/ {gsub(/)/, "", $3); print $3}')
 
         for device ($=services); do
             # Check if the device is active
@@ -839,6 +842,20 @@ pastefile() {
   done
 }
 alias tmpfile="pastefile"
+
+ramdisk() {
+    case $1 in
+        "on") # osx-shadow --rm|-r src.png dist.png
+            convert $2 -crop +50+34 -crop -50-66 $3
+            ;;
+        "off") # osx-shadow --rm|-r src.png
+            convert $2 -crop +50+34 -crop -50-66 ${2%.*}-croped.png
+            ;;
+        *)
+            help
+            ;;
+    esac
+}
 
 # Add npm package manager prompt to powerlevel10k
 prompt_sukka_npm_type() {
