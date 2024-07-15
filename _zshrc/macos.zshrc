@@ -164,8 +164,10 @@ fi
 
 # Set NPM Global Path
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-# Create .npm-global folder if not exists
-[[ ! -d "$HOME/.npm-global" ]] && mkdir -p $HOME/.npm-global
+[[ ! -d "$NPM_CONFIG_PREFIX" ]] && mkdir -p $NPM_CONFIG_PREFIX
+
+export PNPM_HOME="$HOME/Library/pnpm"
+[[ ! -d "$PNPM_HOME" ]] && mkdir -p $PNPM_HOME
 
 export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
@@ -177,7 +179,7 @@ export BAT_THEME="Monokai Extended Bright"
 # fi
 
 # Path should be set before fnm
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$PNPM_HOME:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
 # fnm
 if (( $+commands[fnm] )); then
