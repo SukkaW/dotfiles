@@ -86,13 +86,13 @@ HIST_STAMPS="yyyy-mm-dd"
 ## Result of uname -sm
 __SUKKA_UNAME_SM=$(uname -sm)
 ## Is currently on macOS
-__SUKKA_IS_DARWIN=$__SUKKA_UNAME_SM[(I)Darwin]
+__SUKKA_IS_DARWIN=$OSTYPE[(I)darwin]
+__SUKKA_IS_LINUX=$OSTYPE[(I)linux-gnu]
 ## Is currently on macOS M chip
 local __sukka_darwin_64_str="Darwin arm64"
 __SUKKA_IS_DARWIN_ARM64=$__SUKKA_UNAME_SM[(I)$__sukka_darwin_64_str]
 ## Homebrew prefix
-__SUKKA_HOMEBREW__PREFIX="/usr/local"
-if (( $__SUKKA_IS_DARWIN_ARM64 )) then __SUKKA_HOMEBREW__PREFIX="/opt/homebrew"; fi
+(( $__SUKKA_IS_DARWIN_ARM64 )) && __SUKKA_HOMEBREW__PREFIX="/opt/homebrew" || __SUKKA_HOMEBREW__PREFIX="/usr/local"
 ## pyenv prefix
 __SUKKA_HOMEBREW_PYENV_PREFIX="${__SUKKA_HOMEBREW__PREFIX}/opt/pyenv"
 ## Box Name used for my zsh-theme
@@ -100,7 +100,8 @@ __SUKKA_HOMEBREW_PYENV_PREFIX="${__SUKKA_HOMEBREW__PREFIX}/opt/pyenv"
 # Homebrew zsh completion path
 __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions"
 # zsh-completion fpath
-__SUKKA_ZSH_COMPLETION_SRC="$ZSH/custom/plugins/zsh-completions/src"
+# git clone https://github.com/zsh-users/zsh-completions $ZSH/custom/plugins/zsh-completions/
+__SUKKA_ZSH_COMPLETION_SRC="${ZSH}/custom/plugins/zsh-completions/src"
 
 # This speed up zsh-autosuggetions by a lot
 export ZSH_AUTOSUGGEST_USE_ASYNC="true"
@@ -131,11 +132,13 @@ plugins=(
 ## https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 ## https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
 ## Add a check avoiding duplicated fpath
-if (( ( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] ) && $+commands[brew] )) &>/dev/null; then
-    FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
+if [[ -d ${__SUKKA_HOMEBREW_ZSH_COMPLETION} ]] && (( ! $FPATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] )); then
+    FPATH=${__SUKKA_HOMEBREW_ZSH_COMPLETION}:$FPATH
 fi
 ## https://github.com/zsh-users/zsh-completions
-[[ -d ${__SUKKA_ZSH_COMPLETION_SRC} ]] && FPATH="${__SUKKA_ZSH_COMPLETION_SRC}:$FPATH"
+if [[ -d ${__SUKKA_ZSH_COMPLETION_SRC} ]] && (( ! $FPATH[(I)${__SUKKA_ZSH_COMPLETION_SRC}] )); then
+    FPATH="${__SUKKA_ZSH_COMPLETION_SRC}:$FPATH"
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
@@ -166,7 +169,19 @@ fi
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 [[ ! -d "$NPM_CONFIG_PREFIX" ]] && mkdir -p $NPM_CONFIG_PREFIX
 
-export PNPM_HOME="$HOME/Library/pnpm"
+# pnpm add -g <package-name> fails with corepack · Issue #434 · nodejs/corepack
+if (( $+XDG_DATA_HOME )) then
+  # XDG_HOME is set
+  export PNPM_HOME="$XDG_DATA_HOME/pnpm/store"
+elif (( $__SUKKA_IS_LINUX )); then
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+elif (( $__SUKKA_IS_DARWIN )); then
+  export PNPM_HOME="$HOME/Library/pnpm"
+elif (( $OSTYPE[(I)cygwin] || $OSTYPE[(I)win32] || $OSTYPE[(I)msys] )); then
+  export PNPM_HOME="$HOME/AppData/Local/pnpm/store"
+elif (( $OSTYPE[(I)freebsd] )); then
+  export PNPM_HOME="$HOME/.pnpm-global"
+fi
 [[ ! -d "$PNPM_HOME" ]] && mkdir -p $PNPM_HOME
 
 export GOENV_ROOT="$HOME/.goenv"
@@ -174,23 +189,19 @@ export GOPATH="$HOME/go"
 
 export BAT_THEME="Monokai Extended Bright"
 
-# if (( ! $PATH[(I)/usr/local/bin] )) &>/dev/null; then
-#     export PATH=""
-# fi
-
-# Path should be set before fnm
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$HOME/.yarn/bin:$NPM_CONFIG_PREFIX/bin:$PNPM_HOME:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+# Path should be set before fnm (fnm prepend path automatically)
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$PNPM_HOME:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
 # fnm
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
-  eval "$(fnm env --use-on-cd --shell zsh)"
-else
+  eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --shell zsh)"
+elif (( $__SUKKA_IS_LINUX] )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
-    eval "$(fnm env --use-on-cd --shell zsh)"
+    eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --shell zsh)"
   fi
 fi
 
@@ -203,10 +214,6 @@ fi
 # only on non-macOS + open-cli exists
 if (( (! ${__SUKKA_IS_DARWIN}) && $+commands[open-cli] )); then
     alias open="open-cli"
-fi
-
-if (( ! $PATH[(I)${__SUKKA_HOMEBREW_ZSH_COMPLETION}] && $+commands[brew] )) &>/dev/null; then
-    FPATH=${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions:$FPATH
 fi
 
 # Lazyload Function
@@ -561,11 +568,7 @@ fi
 if (( $+commands[npm] )) &>/dev/null; then
   _npm_completion() {
     local si=$IFS
-    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
-                 COMP_LINE=$BUFFER \
-                 COMP_POINT=0 \
-                 npm completion -- "${words[@]}" \
-                 2>/dev/null)
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) COMP_LINE=$BUFFER COMP_POINT=0 npm completion -- "${words[@]}" 2>/dev/null)
     IFS=$si
   }
   compdef _npm_completion npm
