@@ -747,15 +747,18 @@ sukka_local_ip() {
     if (( $__SUKKA_IS_DARWIN )); then
         # Get the list of network services and their corresponding devices, remove extra characters
         # Use a while loop with read to iterate over each line
-        local services=$(networksetup -listnetworkserviceorder | awk -F': ' '/Device:/ {gsub(/)/, "", $3); print $3}')
+        local line device deviceinfo ip
 
-        for device ($=services); do
-            local info=$(ifconfig $device 2>/dev/null)
+        local match=", Device: "
 
-            if (( ( $info[(I)status: active] ) && ( ! $info[(I)127.] ) && ( ! $info[(I)198.] ) && ( $info[(I)inet ] ) )); then
-                local ip=$(awk '/inet /{print $2;exit}' <<< $info)
-                if (( ${#ip} )); then
-                    if [[ $ip != "" ]]; then
+        for line in ${${${(f)"$(networksetup -listnetworkserviceorder)"}##[[:space:]]#}%%[[:space:]]#}; do
+            if (( $line[(I)$match] )); then
+                device=${${line#*$match}:0:-1}
+                deviceinfo=$(ifconfig $device 2>/dev/null)
+
+                if (( ( $deviceinfo[(I)status: active] ) && ( ! $deviceinfo[(I)127.] ) && ( ! $deviceinfo[(I)198.] ) && ( $deviceinfo[(I)inet ] ) )); then
+                    ip=$(ipconfig getifaddr $device 2>/dev/null)
+                    if (( ${#ip} )); then
                         echo "$ip"
                         return 0
                     fi
@@ -775,17 +778,23 @@ sukka_local_ip() {
 
 sukka_primary_interface() {
     if (( $__SUKKA_IS_DARWIN )); then
-        local services=$(networksetup -listnetworkserviceorder | awk -F': ' '/Device:/ {gsub(/)/, "", $3); print $3}')
+        local line device deviceinfo ip
 
-        for device ($=services); do
-            # Check if the device is active
-            local info=$(ifconfig $device 2>/dev/null)
-            if (( ( $info[(I)status: active] ) && ( $info[(I)inet ] ) )); then
-                echo "$device"
-                return 0
+        local match=", Device: "
+
+        for line in ${${${(f)"$(networksetup -listnetworkserviceorder)"}##[[:space:]]#}%%[[:space:]]#}; do
+            if (( $line[(I)$match] )); then
+                device=${${line#*$match}:0:-1}
+                deviceinfo=$(ifconfig $device 2>/dev/null)
+
+                if (( ( $deviceinfo[(I)status: active] ) && ( $deviceinfo[(I)inet ] ) )); then
+                    echo "$device"
+                    return 0
+                fi
             fi
         done
     else
+        # local route=$(ip route show default)
         local device=$(ip route show default | grep -Po '(?<=(dev ))(\S+)')
         if (( $+device )); then
             echo "$device"
@@ -800,18 +809,17 @@ mtu() {
     [ -z $1 ] && echo "[MTU] Specifying host is a must" && return
 
     echo "[MTU] Getting the best MTU value for $1..."
-    # lan_ip=$(ipconfig getifaddr en0)
     # lan_ip=$(osascript -e "IPv4 address of (system info)")
     lan_ip=$(sukka_local_ip)
     echo "[MTU] Source IP ${lan_ip}..."
 
     mtu_result=1500
 
-    "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
+    command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
     until [[ $? = 0 || ${mtu_result} -le 1000 ]]; do
-      mtu_result=$(( ${mtu_result} - 32))
+      mtu_result=$(( ${mtu_result} - 16))
       echo "[MTU] Ping ${mtu_result}"
-      "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
+      command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
     done
 
     if [[ "${mtu_result}" -eq 1500 ]]; then
@@ -819,10 +827,10 @@ mtu() {
     elif [[ "${mtu_result}" -le 1000 ]]; then
       mtu_result=1000
     else
-      for (( i=0; i<32; i++ )); do
+      for (( i=0; i<16; i++ )); do
         (( mtu_result++ ))
         echo "[MTU] Ping ${mtu_result}"
-        ( "ping" -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
+        ( command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
       done
       (( mtu_result-- ))
     fi
@@ -847,20 +855,6 @@ pastefile() {
   done
 }
 alias tmpfile="pastefile"
-
-ramdisk() {
-    case $1 in
-        "on") # osx-shadow --rm|-r src.png dist.png
-            convert $2 -crop +50+34 -crop -50-66 $3
-            ;;
-        "off") # osx-shadow --rm|-r src.png
-            convert $2 -crop +50+34 -crop -50-66 ${2%.*}-croped.png
-            ;;
-        *)
-            help
-            ;;
-    esac
-}
 
 # Add npm package manager prompt to powerlevel10k
 prompt_sukka_npm_type() {
