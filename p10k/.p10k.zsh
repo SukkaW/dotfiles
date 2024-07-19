@@ -26,7 +26,7 @@
   unset -m '(POWERLEVEL9K_*|DEFAULT_USER)~POWERLEVEL9K_GITSTATUS_DIR'
 
   # Zsh >= 5.1 is required.
-  autoload -Uz is-at-least && is-at-least 5.1 || return
+  [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
@@ -98,7 +98,7 @@
     load                  # CPU load
     # disk_usage            # disk usage
     ram                   # free RAM
-    swap                  # used swap
+    # swap                  # used swap
     # todo                    # todo items (https://github.com/todotxt/todo.txt-cli)
     # timewarrior             # timewarrior tracking status (https://timewarrior.net/)
     # taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
@@ -238,7 +238,7 @@
     .java-version
     .perl-version
     .php-version
-    .tool-version
+    .tool-versions
     .shorten_folder_marker
     .svn
     .terraform
@@ -287,7 +287,7 @@
 
   # The default icon shown next to non-writable and non-existent directories when
   # POWERLEVEL9K_DIR_SHOW_WRITABLE is set to v3.
-  # typeset -g POWERLEVEL9K_LOCK_ICON='⭐'
+  typeset -g POWERLEVEL9K_LOCK_ICON='∅'
 
   # POWERLEVEL9K_DIR_CLASSES allows you to specify custom icons and colors for different
   # directories. It must be an array with 3 * N elements. Each triplet consists of:
@@ -715,7 +715,13 @@
   typeset -g POWERLEVEL9K_NORDVPN_{DISCONNECTED,CONNECTING,DISCONNECTING}_CONTENT_EXPANSION=
   typeset -g POWERLEVEL9K_NORDVPN_{DISCONNECTED,CONNECTING,DISCONNECTING}_VISUAL_IDENTIFIER_EXPANSION=
   # Custom icon.
-  # typeset -g POWERLEVEL9K_NORDVPN_VISUAL_IDENTIFIER_EXPANSION='⭐'
+  typeset -g POWERLEVEL9K_NORDVPN_VISUAL_IDENTIFIER_EXPANSION='nord'
+
+  ####################[ yazi: yazi shell (https://github.com/sxyazi/yazi) ]#####################
+  # Yazi shell color.
+  typeset -g POWERLEVEL9K_YAZI_FOREGROUND=3
+  # Custom icon.
+  typeset -g POWERLEVEL9K_YAZI_VISUAL_IDENTIFIER_EXPANSION='▲'
 
   #################[ ranger: ranger shell (https://github.com/ranger/ranger) ]##################
   # Ranger shell color.
