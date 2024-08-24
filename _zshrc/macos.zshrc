@@ -262,6 +262,9 @@ alias lg="lazygit"
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
+alias python="python3.11"
+alias pip="pip3.11"
+
 # Git Delete Local Merged
 git-delete-local-merged() {
     red=$(tput setaf 1)
@@ -301,15 +304,6 @@ alias nslookup="nali-nslookup"
 # Enable sudo in aliased
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
-
-# Avoid stupidity with trash-cli:
-# https://github.com/sindresorhus/trash-cli
-# or use default rm -i
-if (( $+commands[trash] )); then
-  alias rm='trash'
-else
-  alias rm='rm -i'
-fi
 
 alias q="cd $HOME && clear"
 
@@ -546,12 +540,11 @@ fi
 
 # pnpm
 if (( $+commands[pnpm] )) &>/dev/null; then
-  # pnpm completions
   _pnpm_completion () {
     local reply
     local si=$IFS
 
-    IFS=$'\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" pnpm completion -- "${words[@]}"))
+    IFS=$'\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" SHELL=zsh pnpm completion-server -- "${words[@]}"))
     IFS=$si
 
     if [ "$reply" = "__tabtab_complete_files__" ]; then
@@ -560,6 +553,7 @@ if (( $+commands[pnpm] )) &>/dev/null; then
       _describe 'values' reply
     fi
   }
+
   compdef _pnpm_completion pnpm
 fi
 # pnpm end
