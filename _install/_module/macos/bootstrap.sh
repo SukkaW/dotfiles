@@ -236,6 +236,8 @@ sudo tmutil addexclusion -p "${HOME}/Project/"
 sudo tmutil addexclusion -p "${HOME}/Works/"
 sudo tmutil addexclusion -p "${HOME}/Tools/"
 sudo tmutil addexclusion -p "${HOME}/Movies/Wondershare UniConverter/Downloaded"
+sudo tmutil addexclusion -p "/tmp/"
+sudo tmutil addexclusion -p "/private/tmp/"
 
 
 ###############################################################################
