@@ -61,8 +61,21 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 ###############################################################################
+# Energy saving                                                               #
+###############################################################################
+
+# Sleep the display after 2 minutes
+sudo pmset -a displaysleep 2
+
+###############################################################################
 # Screen                                                                      #
 ###############################################################################
+
+# Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
+defaults write com.apple.screencapture type -string "png"
+
+# Save screenshots to the specified directory
+defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
 
 # Enable HiDPI display modes (requires restart)
 # sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
@@ -110,9 +123,16 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
   OpenWith -bool true \
   Privileges -bool true
 
+# Use list view in all Finder windows by default
+# Four-letter codes for the other view modes: `icnv`, `clmv`, `glyv`
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
 ###############################################################################
 # Dock, Dashboard, and hot corners                                            #
 ###############################################################################
+
+# Show indicator lights for open applications in the Dock
+defaults write com.apple.dock show-process-indicators -bool true
 
 # Remove the auto-hiding Dock delay
 defaults write com.apple.dock autohide-delay -float 0
@@ -148,11 +168,29 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 # Add a context menu item for showing the Web Inspector in web views
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
+# Enable continuous spellchecking
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+# Disable auto-correct
+defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
+
 # Warn about fraudulent websites
 defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
 
 # Enable “Do Not Track”
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+
+# Update extensions automatically
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+
+###############################################################################
+# Terminal & iTerm 2                                                          #
+###############################################################################
+
+# Only use UTF-8 in Terminal.app
+defaults write com.apple.terminal StringEncodings -array 4
+
+# Disable the annoying line marks
+defaults write com.apple.Terminal ShowLineMarks -int 0
 
 ###############################################################################
 # Time Machine                                                                #
@@ -185,6 +223,9 @@ sudo tmutil addexclusion -p "${HOME}/.cocoapods"
 sudo tmutil addexclusion -p "${HOME}/.composer"
 sudo tmutil addexclusion -p "${HOME}/.electron"
 sudo tmutil addexclusion -p "${HOME}/.gradle"
+sudo tmutil addexclusion -p "${HOME}/.gluon"
+sudo tmutil addexclusion -p "${HOME}/.nuget"
+sudo tmutil addexclusion -p "${HOME}/.ollama"
 sudo tmutil addexclusion -p "${HOME}/.kerl"
 sudo tmutil addexclusion -p "${HOME}/.local"
 sudo tmutil addexclusion -p "${HOME}/.m2"
@@ -208,6 +249,13 @@ sudo tmutil addexclusion -p "${HOME}/vagrant.d"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/JetBrains"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Steam/SteamApps"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Caches"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Caches"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedData"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedExtensionVSIXs"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Cache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Signal/update-cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Android"
 sudo tmutil addexclusion -p "${HOME}/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
@@ -238,7 +286,9 @@ sudo tmutil addexclusion -p "${HOME}/Tools/"
 sudo tmutil addexclusion -p "${HOME}/Movies/Wondershare UniConverter/Downloaded"
 sudo tmutil addexclusion -p "/tmp/"
 sudo tmutil addexclusion -p "/private/tmp/"
-
+sudo tmutil addexclusion -p "/System/Library/Caches/"
+# necessary to ignore recursively checking the same directories again
+sudo tmutil addexclusion -p "/System/Volumes/"
 
 ###############################################################################
 # Activity Monitor                                                            #
@@ -253,6 +303,23 @@ defaults write com.apple.ActivityMonitor ShowCategory -int 0
 # Sort Activity Monitor results by CPU usage
 defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
 defaults write com.apple.ActivityMonitor SortDirection -int 0
+
+# Visualize CPU usage in the Activity Monitor Dock icon
+defaults write com.apple.ActivityMonitor IconType -int 5
+
+###############################################################################
+# Address Book, Dashboard, iCal, TextEdit, and Disk Utility                   #
+###############################################################################
+
+# Use plain text mode for new TextEdit documents
+defaults write com.apple.TextEdit RichText -int 0
+# Open and save files as UTF-8 in TextEdit
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+# Enable the debug menu in Disk Utility
+defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
+defaults write com.apple.DiskUtility advanced-image-options -bool true
 
 ###############################################################################
 # Mac App Store                                                               #
