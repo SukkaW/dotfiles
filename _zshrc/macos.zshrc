@@ -295,6 +295,16 @@ git-delete-local-merged() {
     echo "${green}Done!${reset}"
 }
 
+# homebrew
+# brew why
+function brew() {
+    if [[ $1 == "why" ]]; then
+        brew uses --installed $2
+    else
+        command brew "$@"
+    fi
+}
+
 alias ping="nali-ping"
 alias dig="nali-dig"
 alias traceroute="nali-traceroute"
