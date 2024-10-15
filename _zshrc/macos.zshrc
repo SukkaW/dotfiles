@@ -195,13 +195,13 @@ export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PRE
 # fnm
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
-  eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --shell zsh)"
+  eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
 elif (( $__SUKKA_IS_LINUX] )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
-    eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --shell zsh)"
+    eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
 fi
 
@@ -745,6 +745,16 @@ osx-shadow() {
     fi
 }
 
+digrange() {
+    red=$(tput setaf 1)
+    blue=$(tput setaf 4)
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+
+    echo "${green}$@${reset}"
+    dig $@
+}
+
 warp_ip="162.159.192.1"
 
 sukka_local_ip() {
@@ -843,11 +853,11 @@ mtu() {
 }
 
 mtrskk() {
-    "sudo" mtr -b -z -e -m 63 -a $(sukka_local_ip) $@ | nali
+    "sudo" mtr -b -z -e -m 63 -I $(sukka_primary_interface) $@ | nali
 }
 
 traceskk() {
-    "sudo" "nexttrace" --always-rdns --source $(sukka_local_ip) $@
+    "sudo" "nexttrace" --always-rdns --dev $(sukka_primary_interface) $@
 }
 
 pastefile() {
