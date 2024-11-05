@@ -239,8 +239,10 @@ sudo tmutil addexclusion -p "${HOME}/.gradle"
 sudo tmutil addexclusion -p "${HOME}/.virtualenvs"
 sudo tmutil addexclusion -p "${HOME}/.venv"
 sudo tmutil addexclusion -p "${HOME}/.pyenv"
+sudo tmutil addexclusion -p "${HOME}/.pnpm-global/"
 sudo tmutil addexclusion -p "${HOME}/.node-gyp/"
 sudo tmutil addexclusion -p "${HOME}/.npm/"
+sudo tmutil addexclusion -p "${HOME}/.npm-global/"
 sudo tmutil addexclusion -p "${HOME}/.nuget/"
 sudo tmutil addexclusion -p "${HOME}/.lima/"
 sudo tmutil addexclusion -p "${HOME}/.ollma/"
@@ -256,6 +258,7 @@ sudo tmutil addexclusion -p "${HOME}/.vpython-root/"
 sudo tmutil addexclusion -p "${HOME}/.vscode/"
 sudo tmutil addexclusion -p "${HOME}/.vscode-insiders/"
 sudo tmutil addexclusion -p "${HOME}/.go"
+sudo tmutil addexclusion -p "${HOME}/.goenv"
 sudo tmutil addexclusion -p "${HOME}/go"
 sudo tmutil addexclusion -p "${HOME}/vagrant.d"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/JetBrains"
@@ -268,6 +271,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Signal/update-cache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/fnm"
 sudo tmutil addexclusion -p "${HOME}/Library/Application\ Support/PixelFlasher/"
 sudo tmutil addexclusion -p "${HOME}/Library/Android"
 sudo tmutil addexclusion -p "${HOME}/Library/Caches"
@@ -365,3 +369,13 @@ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
 # Prevent Photos from opening automatically when devices are plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+
+###############################################################################
+# Google Chrome                                                               #
+###############################################################################
+
+# Prevents Google Chrome from ever asking for being default browser
+defaults write com.google.Chrome.plist DefaultBrowserSettingEnabled -bool false
+
+# Force enable MV2
+defaults write com.google.Chrome.plist ExtensionManifestV2Availability -int 2
