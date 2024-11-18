@@ -101,7 +101,7 @@ __SUKKA_HOMEBREW_PYENV_PREFIX="${__SUKKA_HOMEBREW__PREFIX}/opt/pyenv"
 __SUKKA_HOMEBREW_ZSH_COMPLETION="${__SUKKA_HOMEBREW__PREFIX}/share/zsh/site-functions"
 # zsh-completion fpath
 # git clone https://github.com/zsh-users/zsh-completions $ZSH/custom/plugins/zsh-completions/
-__SUKKA_ZSH_COMPLETION_SRC="${ZSH}/custom/plugins/zsh-completions/src"
+__SUKKA_ZSH_COMPLETION_SRC="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
 
 # This speed up zsh-autosuggetions by a lot
 export ZSH_AUTOSUGGEST_USE_ASYNC="true"
@@ -165,6 +165,10 @@ fi
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# Node.js
+# enable compile cache globally
+export NODE_COMPILE_CACHE=~/.cache/nodejs-compile-cache/v1
+
 # Set NPM Global Path
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 [[ ! -d "$NPM_CONFIG_PREFIX" ]] && mkdir -p $NPM_CONFIG_PREFIX
@@ -196,13 +200,51 @@ export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PRE
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
   eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
-elif (( $__SUKKA_IS_LINUX] )); then
+elif (( $__SUKKA_IS_LINUX )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
     eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
+fi
+
+if (( $+commands[fnm] )); then
+  function fnm() {
+    if [[ $1 == "upgrade" ]]; then
+        local matched_verions=()
+        local pattern_match_version="* v$2"
+        local pattern_match_system="* system $2"
+
+        local is_system=0
+        local line=""
+
+        command fnm ls | while read LINE; do
+            line=${LINE}
+
+            if (( $line[(I)$pattern_match_version] )); then
+                matched_verions+=${${${line#* v}%% *}%% default}
+            fi
+
+            if (( $line[(I)$pattern_match_system] )); then
+                is_system=1
+            fi
+        done
+
+        for version in $matched_verions; do
+            command fnm uninstall $version
+        done
+
+        command fnm install "$2"
+
+        if (( $is_system )); then
+            echo "Re-alias system default version"
+            command fnm alias system $2
+        fi
+    else
+      command fnm "$@"
+    fi
+  }
 fi
 
 # rust
@@ -827,7 +869,7 @@ mtu() {
     lan_ip=$(sukka_local_ip)
     echo "[MTU] Source IP ${lan_ip}..."
 
-    mtu_result=1500
+    mtu_result=1800
 
     command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
     until [[ $? = 0 || ${mtu_result} -le 1000 ]]; do
