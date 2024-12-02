@@ -210,9 +210,11 @@ sudo tmutil addexclusion -p "/private/var/db/diagnostics"
 sudo tmutil addexclusion -p "/private/var/db/oah"
 sudo tmutil addexclusion -p "/private/var/vm/sleepimage"
 sudo tmutil addexclusion -p "/private/var/folders"
-sudo tmutil addexclusion -p "/tmp"
-sudo tmutil addexclusion -p "/nix/store"
-sudo tmutil addexclusion -p "/nix/var"
+
+sudo tmutil addexclusion -p "/tmp/"
+sudo tmutil addexclusion -p "/nix/store/"
+sudo tmutil addexclusion -p "/nix/var/"
+
 sudo tmutil addexclusion -p "/opt/X11/var/cache/"
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.byterc"
@@ -292,22 +294,27 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/OpenMTP/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/update/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/sdk_storage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
-
-sudo tmutil addexclusion -p "${HOME}/Library/Android"
-sudo tmutil addexclusion -p "${HOME}/Library/Caches"
-sudo tmutil addexclusion -p "${HOME}/Library/CloudStorage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/DeveloperDiskImages"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.docker.docker"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorreporting"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
 
+# Infuse Library DB
+sudo tmutil addexclusion -p "${HOME}/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Android"
+sudo tmutil addexclusion -p "${HOME}/Library/Caches"
+sudo tmutil addexclusion -p "${HOME}/Library/CloudStorage/"
 sudo tmutil addexclusion -p "${HOME}/Library/pnpm"
 sudo tmutil addexclusion -p "${HOME}/Library/Logs"
-sudo tmutil addexclusion -p "${HOME}/Library/CloudStorage"
 
 sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
 
@@ -338,9 +345,7 @@ sudo tmutil addexclusion -p "${HOME}/Project/"
 sudo tmutil addexclusion -p "${HOME}/Works/"
 sudo tmutil addexclusion -p "${HOME}/Tools/"
 sudo tmutil addexclusion -p "${HOME}/Movies/Wondershare UniConverter/Downloaded"
-sudo tmutil addexclusion -p "/tmp/"
-sudo tmutil addexclusion -p "/nix/store/"
-sudo tmutil addexclusion -p "/nix/var/"
+
 sudo tmutil addexclusion -p "/System/Library/Caches/"
 # necessary to ignore recursively checking the same directories again
 sudo tmutil addexclusion -p "/System/Volumes/"
