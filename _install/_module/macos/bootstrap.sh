@@ -351,6 +351,18 @@ sudo tmutil addexclusion -p "/System/Library/Caches/"
 sudo tmutil addexclusion -p "/System/Volumes/"
 
 ###############################################################################
+# Custom NTP Server                                                           #
+###############################################################################
+sudo systemsetup -setnetworktimeserver time.cloudflare.com
+sudo systemsetup -setusingnetworktime on
+
+# cat <<'EOF' > /etc/ntp.conf
+# server time.cloudflare.com
+# server time.apple.com
+# server time.xtracloud.net
+# EOF
+
+###############################################################################
 # Activity Monitor                                                            #
 ###############################################################################
 
