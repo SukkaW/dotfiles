@@ -209,6 +209,7 @@ sudo tmutil addexclusion -p "/private/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/diagnostics"
 sudo tmutil addexclusion -p "/private/var/db/oah"
 sudo tmutil addexclusion -p "/private/var/db/spindump"
+sudo tmutil addexclusion -p "/private/var/db/uuidtext"
 sudo tmutil addexclusion -p "/private/var/vm/sleepimage"
 sudo tmutil addexclusion -p "/private/var/folders"
 
@@ -217,6 +218,7 @@ sudo tmutil addexclusion -p "/nix/store/"
 sudo tmutil addexclusion -p "/nix/var/"
 
 sudo tmutil addexclusion -p "/opt/X11/var/cache/"
+sudo tmutil addexclusion -p "/opt/homebrew/var/cache/"
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.byterc"
 sudo tmutil addexclusion -p "${HOME}/.dropbox"
@@ -282,6 +284,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedExte
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Crashpad/completed"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/History/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
@@ -299,19 +302,27 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/modules
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/OpenMTP/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/update/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/sdk_storage/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/OptimizeImage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/ScriptCache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Crashpad/completed/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/NIM/NIM/log/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.TablePlus-setapp/Cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 
-sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/DeveloperDiskImages"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.diagnosticextensions.osx.systemprofile/Data/tmp/TemporaryItems/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.docker.docker"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Caches"
@@ -319,8 +330,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Dat
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorreporting"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/UpdatePackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
-
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
 
 # Infuse Library DB
