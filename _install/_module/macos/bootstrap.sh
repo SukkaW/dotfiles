@@ -317,6 +317,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.Tab
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
+sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/cache
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
@@ -327,11 +329,15 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.diagnosticexte
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.docker.docker"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Documents/storage/Logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Documents/storage/UALogs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorreporting"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/.wxapplet"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/UpdatePackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.openspeedtest.server/Data/tmp/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
 
 # Infuse Library DB
