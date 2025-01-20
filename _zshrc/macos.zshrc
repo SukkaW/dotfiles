@@ -212,11 +212,18 @@ fi
 if (( $+commands[fnm] )); then
   function fnm() {
     if [[ $1 == "upgrade" ]]; then
+        if [[ $2 == "" ]]; then
+            echo "Missing the version! Usage: fnm upgrade [major_version]"
+            return 1
+        fi
+
         local matched_verions=()
         local pattern_match_version="* v$2"
-        local pattern_match_system="* system $2"
+        local pattern_match_system="system"
+        local pattern_match_default="default"
 
         local is_system=0
+        local is_default=0
         local line=""
 
         command fnm ls | while read LINE; do
@@ -229,6 +236,9 @@ if (( $+commands[fnm] )); then
             if (( $line[(I)$pattern_match_system] )); then
                 is_system=1
             fi
+            if (( $line[(I)$pattern_match_default] )); then
+                is_default=1
+            fi
         done
 
         for version in $matched_verions; do
@@ -238,9 +248,15 @@ if (( $+commands[fnm] )); then
         command fnm install "$2"
 
         if (( $is_system )); then
-            echo "Re-alias system default version"
-            command fnm alias system $2
+            echo "Re-alias system version"
+            command fnm alias $2 system
         fi
+        if (( $is_default )); then
+            echo "Re-alias default version"
+            command fnm alias $2 default
+        fi
+
+        command fnm use
     else
       command fnm "$@"
     fi
