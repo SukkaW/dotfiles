@@ -515,18 +515,25 @@ extract() {
     fi
 }
 
-gitgc() {
-    red=$(tput setaf 1)
+sukka_run_git_maintainance_in_folder() {
+    blue=$(tput setaf 4)
     reset=$(tput sgr0)
 
+    find_folder_by_name $1 ".git" | while read LINE; do
+        echo "$blue$LINE$reset"
+        cd ${LINE:h}
+        git maintenance run
+    done
+}
+
+gitgc() {
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
     (
-        cd $HOME/project
-        find_folder_by_name "$HOME/project" ".git" | while read LINE; do
-            echo "$red$LINE$reset"
-            cd ${LINE:h}
-            git gc
-        done
-    ) && echo "${red}Done!${reset}"
+        sukka_run_git_maintainance_in_folder "$HOME/project"
+        sukka_run_git_maintainance_in_folder "$HOME/works"
+        sukka_run_git_maintainance_in_folder "${ZSH_CUSTOM:-$ZSH/custom}/plugins"
+    ) && echo "${green}Done!${reset}"
 }
 
 # override "omz update"
