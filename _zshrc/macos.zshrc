@@ -194,20 +194,28 @@ export GOPATH="$HOME/go"
 export BAT_THEME="Monokai Extended Bright"
 
 # Path should be set before fnm (fnm prepend path automatically)
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$PNPM_HOME:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+
+export FNM_COREPACK_ENABLED=false
 
 # fnm
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
-  eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
+  eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
 elif (( $__SUKKA_IS_LINUX )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
-    eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
+    eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
 fi
+
+# prepend pnpm path afterwards so that globally installed corepack override fnm
+export PATH="$PNPM_HOME:$PATH"
+
+
+trap "[[ -v FNM_MULTISHELL_PATH && ${#FNM_MULTISHELL_PATH} -gt 0 ]] && rm -rf ${FNM_MULTISHELL_PATH}" EXIT
 
 if (( $+commands[fnm] )); then
   function fnm() {
@@ -230,14 +238,17 @@ if (( $+commands[fnm] )); then
             line=${LINE}
 
             if (( $line[(I)$pattern_match_version] )); then
-                matched_verions+=${${${line#* v}%% *}%% default}
-            fi
+                local version=${${${line#* v}%% *}%% default}
 
-            if (( $line[(I)$pattern_match_system] )); then
-                is_system=1
-            fi
-            if (( $line[(I)$pattern_match_default] )); then
-                is_default=1
+                echo "Found version: ${version}"
+                matched_verions+=${version}
+
+                if (( $line[(I)$pattern_match_system] )); then
+                    is_system=1
+                fi
+                if (( $line[(I)$pattern_match_default] )); then
+                    is_default=1
+                fi
             fi
         done
 
@@ -1064,6 +1075,102 @@ if (( $SUKKA_ENABLE_PERFORMANCE_PROFILING )); then
         zprof $@
     }
 fi
+
+function openapp() {
+  RED='\033[0;31m'
+  GRN='\033[0;32m'
+  BLU='\033[0;34m'
+  NC='\033[0m'
+
+  echo ""
+  echo -e "---------------------------------------------------------------------"
+  echo -e "应用打不开？GateKeeper 辅助工具，由 ${RED}Sukka${NC} 制作"
+  echo ""
+  echo -e "https://skk.moe | https://blog.skk.moe"
+  echo -e "---------------------------------------------------------------------"
+  echo -e "${BLU}1: 全局禁用 macOS 中的 GateKeeper${NC}"
+  echo -e "${RED}非常不建议，会导致 macOS 暴露于风险之中 >> 仅供专业用户使用${NC}"
+  echo ""
+  echo -e "${BLU}2: 全局启用 macOS 中的 GateKeeper${NC}"
+  echo -e "全局启用 GateKeeper，并撤销所有绕过、重置白名单"
+  echo -e "${GRN}非常安全 >> 你可以用这个选项撤销对 GateKeeper 的所有改动${NC}"
+  echo ""
+  echo -e "${BLU}3: 允许某一个应用文件绕过 GateKeeper${NC}"
+  echo -e "如果你不想全局禁用 GateKeeper 的话，可以为某一个应用添加白名单"
+  echo -e "${GRN}相对安全 >> 推荐所有用户使用${NC}"
+  echo ""
+  echo -e "${BLU}4: 为某一个应用文件重新签名${NC}"
+  echo -e "如果 macOS 提示应用损坏无法打开，先别急着禁用 SIP、可以试试这个选项"
+  echo -e "---------------------------------------------------------------------"
+  PS3='请输入你的选择 (1-5): '
+  options=("全局禁用 macOS 中的 GateKeeper" "全局启用 macOS 中的 GateKeeper" "允许某一个应用绕过 GateKeeper" "为某一个应用文件重新签名" "退出")
+  select opt in "${options[@]}"; do
+    case $opt in
+    "全局禁用 macOS 中的 GateKeeper")
+      echo ""
+      echo -e "${RED}你选择了全局禁用 macOS 的 GateKeeper${NC}"
+      echo ""
+      echo -e "${RED}请输入你的登陆密码以继续${NC}"
+      echo ""
+      sudo spctl --master-disable
+      break
+      ;;
+    "全局启用 macOS 中的 GateKeeper")
+      echo ""
+      echo -e "${GRN}你选择了启用 macOS 的 GateKeeper${NC}"
+      echo ""
+      echo -e "${RED}请输入你的登陆密码以继续${NC}"
+      echo ""
+      sudo spctl --master-enable
+      break
+      ;;
+    "允许某一个应用绕过 GateKeeper")
+      echo ""
+      echo -e "${GRN}你选择了允许某一个应用绕过 GateKeeper${NC}"
+      echo ""
+      echo "请将需要绕过 GateKeeper 的 .app 文件 拖动到终端中"
+      echo "当终端中显示 .app 文件的绝对路径后，按 Return (Enter) 继续"
+      echo ""
+      read -e -p "文件路径：" FILEPATH
+      echo ""
+      echo -e "${RED}请输入你的登陆密码以继续${NC}"
+      echo ""
+      sudo xattr -rd com.apple.quarantine "$FILEPATH"
+      break
+      ;;
+    "为某一个应用文件重新签名")
+      echo ""
+      echo -e "${BLU}你选择了为某个 .app 文件重新签名${NC}"
+      echo ""
+      if command -v codesign >/dev/null; then
+        echo "请将需要重新签名的 .app 文件 拖动到终端中"
+        echo "当终端中显示 .app 文件的绝对路径后，按 Return (Enter) 继续"
+        echo ""
+        read -e -p "文件路径：" FILEPATH
+        echo ""
+        echo -e "${RED}请输入你的登陆密码以继续${NC}"
+        echo ""
+        sudo codesign --force --deep --sign - "$FILEPATH"
+        echo ""
+        echo -e "${BLU}如果你看到了 - replacing existing signature - 就说明签名成功${NC}"
+        echo ""
+        echo -e "${BLU}如果没有，说明你的 .app 文件可能已经损坏、或者 .app 文件的路径错误${NC}"
+        echo ""
+      else
+        echo -e "${RED}你的 macOS 中没有安装 Xcode 命令行工具，无法使用签名功能！${NC}"
+        echo -e "请在终端中执行 ${BLU}xcode-select --install${NC} 命令后再使用本工具！"
+      fi
+  
+      break
+      ;;
+    "退出")
+      echo "在看到 [Process completed] 后，就可以关闭终端窗口了"
+      break
+      ;;
+    *) echo -e "${RED}你选的这个 ($REPLY) 是什么 xx 玩意儿？重新选一个！${NC}" ;;
+    esac
+  done
+}
 
 # Store commands in history only if successful
 # CREDITS:
