@@ -230,6 +230,7 @@ sudo tmutil addexclusion -p "${HOME}/.bundle"
 sudo tmutil addexclusion -p "${HOME}/.cache"
 sudo tmutil addexclusion -p "${HOME}/.cargo"
 sudo tmutil addexclusion -p "${HOME}/.cocoapods"
+sudo tmutil addexclusion -p "${HOME}/.codemod"
 sudo tmutil addexclusion -p "${HOME}/.colima"
 sudo tmutil addexclusion -p "${HOME}/.composer"
 sudo tmutil addexclusion -p "${HOME}/.diffusionbee"
@@ -324,6 +325,10 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Ca
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.TablePlus-setapp/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.idleassetsd/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
