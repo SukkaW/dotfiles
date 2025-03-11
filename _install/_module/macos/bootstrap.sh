@@ -278,6 +278,8 @@ sudo tmutil addexclusion -p "${HOME}/Virtual Machines/"
 sudo tmutil addexclusion -p "${HOME}/Virtual Machines.localized/"
 sudo tmutil addexclusion -p "${HOME}/vagrant.d"
 
+sudo tmutil addexclusion -p "${HOME}/Downloads"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/JetBrains"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Steam/SteamApps"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Caches"
@@ -327,9 +329,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.Tab
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
 
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.idleassetsd/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
+sudo tmutil addexclusion -p ${HOME}/Library/Containers/*/Data/Library/OneTrack/
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
@@ -366,6 +366,9 @@ sudo tmutil addexclusion -p "${HOME}/Library/pnpm"
 sudo tmutil addexclusion -p "${HOME}/Library/Logs"
 
 sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
+sudo tmutil addexclusion -p "/Library/Application Support/com.apple.idleassetsd/"
+sudo tmutil addexclusion -p "/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
 
 sudo tmutil addexclusion -p "${HOME}/FinalCutRaw"
 sudo tmutil addexclusion -p "${HOME}/Music"
