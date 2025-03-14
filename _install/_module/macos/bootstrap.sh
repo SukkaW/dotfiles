@@ -474,3 +474,26 @@ defaults write com.google.Chrome.plist DefaultBrowserSettingEnabled -bool false
 
 # Force enable MV2
 defaults write com.google.Chrome.plist ExtensionManifestV2Availability -int 2
+
+###############################################################################
+# Brave Browser                                                               #
+###############################################################################
+
+# Force enable MV2
+defaults write com.brave.Browser ExtensionManifestV2Availability -int 2
+
+# Disable Leo AI
+defaults write com.brave.Browser BraveAIChatEnabled -bool false
+defaults write com.brave.Browser BraveLeoEnabled -bool false
+defaults write com.brave.Browser BraveChatEnabled -bool false
+defaults write com.brave.Browser BraveAIEnabled -bool false
+
+# Disable Brave Wallet
+defaults write com.brave.Browser BraveWalletDisabled -bool true
+defaults write com.brave.Browser CryptoWalletEnabled -bool false
+
+# Disable Brave Rewards
+defaults write com.brave.Browser BraveRewardsDisabled -bool true
+
+# Disable Brave VPN
+defaults write com.brave.Browser BraveVPNDisabled -bool true
