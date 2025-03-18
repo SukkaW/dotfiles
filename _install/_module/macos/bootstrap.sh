@@ -227,6 +227,7 @@ sudo tmutil addexclusion -p "${HOME}/Google Drive/"
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.asdf"
 sudo tmutil addexclusion -p "${HOME}/.bundle"
+sudo tmutil addexclusion -p "${HOME}/.bytertc/monitor/bytertc_log/"
 sudo tmutil addexclusion -p "${HOME}/.cache"
 sudo tmutil addexclusion -p "${HOME}/.cargo"
 sudo tmutil addexclusion -p "${HOME}/.chomp/cache"
@@ -298,6 +299,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Signal/update-cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/fnm"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/balenaEtcher/DawnWebGPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Code Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/DawnCache"
@@ -312,6 +314,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/sdk_s
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/OptimizeImage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/Service Worker/CacheStorage/"
+sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/users/*/profile_main/Service\ Worker/CacheStorage/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
