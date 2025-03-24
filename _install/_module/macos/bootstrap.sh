@@ -356,6 +356,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/UpdatePackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.openspeedtest.server/Data/tmp/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.Safari.CacheDeleteExtension/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
 
