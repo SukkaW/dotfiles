@@ -219,6 +219,8 @@ sudo tmutil addexclusion -p "/nix/var/"
 
 sudo tmutil addexclusion -p "/opt/X11/var/cache/"
 sudo tmutil addexclusion -p "/opt/homebrew/var/cache/"
+sudo tmutil addexclusion -p /opt/homebrew/lib/python*/site-packages/pip/_vendor/*/__pycache__/
+
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.byterc"
 sudo tmutil addexclusion -p "${HOME}/.dropbox"
@@ -318,12 +320,18 @@ sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/Google/Chrome/Default/WebStorage/*/CacheStorage
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/ScriptCache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Shared Dictionary/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Crashpad/completed/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Snapshots/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/ScriptCache"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/NIM/NIM/log/"
@@ -336,7 +344,7 @@ sudo tmutil addexclusion -p ${HOME}/Library/Containers/*/Data/Library/OneTrack/
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
-sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/cache
+sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
 
