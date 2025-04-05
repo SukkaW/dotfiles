@@ -167,7 +167,7 @@ fi
 
 # Node.js
 # enable compile cache globally
-export NODE_COMPILE_CACHE=~/.cache/nodejs-compile-cache/v1
+# export NODE_COMPILE_CACHE=~/.cache/nodejs-compile-cache/v1
 
 # Set NPM Global Path
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
@@ -334,6 +334,9 @@ alias tree="tree -aC"
 alias python="python3.11"
 alias pip="pip3.11"
 
+# VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
+alias code="open $1 -a 'Visual Studio Code'"
+
 # Git Delete Local Merged
 git-delete-local-merged() {
     red=$(tput setaf 1)
@@ -379,6 +382,10 @@ alias dig="nali-dig"
 alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
+
+function doggo() {
+    command doggo "$@" | nali
+}
 
 # Enable sudo in aliased
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
@@ -444,10 +451,7 @@ clear_dns_cache() {
 alias flushdns="clear_dns_cache"
 
 ci-edit-update() {
-    (
-        cd "$HOME/ci_edit"
-        git pull
-    ) && sudo "$HOME/ci_edit/install.sh"
+    git --git-dir="$HOME/ci_edit/.git" pull && sudo "$HOME/ci_edit/install.sh"
 }
 
 git-config() {
@@ -532,8 +536,7 @@ sukka_run_git_maintainance_in_folder() {
 
     find_folder_by_name $1 ".git" | while read LINE; do
         echo "$blue$LINE$reset"
-        cd ${LINE:h}
-        git maintenance run
+        git --git-dir="${LINE}" maintenance run
     done
 }
 
@@ -544,6 +547,7 @@ gitgc() {
         sukka_run_git_maintainance_in_folder "$HOME/project"
         sukka_run_git_maintainance_in_folder "$HOME/works"
         sukka_run_git_maintainance_in_folder "${ZSH_CUSTOM:-$ZSH/custom}/plugins"
+        sukka_run_git_maintainance_in_folder "${__SUKKA_HOMEBREW__PREFIX}/Library/Taps"
     ) && echo "${green}Done!${reset}"
 }
 
@@ -868,8 +872,10 @@ sukka_local_ip() {
 
 sukka_primary_interface() {
     if (( $__SUKKA_IS_DARWIN )); then
-        local line device deviceinfo ip
-
+        local line
+        local device
+        local deviceinfo
+        local ip
         local match=", Device: "
 
         for line in ${${${(f)"$(networksetup -listnetworkserviceorder)"}##[[:space:]]#}%%[[:space:]]#}; do
