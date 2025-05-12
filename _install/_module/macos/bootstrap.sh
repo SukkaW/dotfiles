@@ -210,6 +210,9 @@ sudo tmutil addexclusion -p "/private/var/db/diagnostics"
 sudo tmutil addexclusion -p "/private/var/db/oah"
 sudo tmutil addexclusion -p "/private/var/db/spindump"
 sudo tmutil addexclusion -p "/private/var/db/uuidtext"
+sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/root/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/vm/sleepimage"
 sudo tmutil addexclusion -p "/private/var/folders"
 
@@ -280,6 +283,7 @@ sudo tmutil addexclusion -p "${HOME}/go"
 sudo tmutil addexclusion -p "${HOME}/Virtual Machines/"
 sudo tmutil addexclusion -p "${HOME}/Virtual Machines.localized/"
 sudo tmutil addexclusion -p "${HOME}/vagrant.d"
+sudo tmutil addexclusion -p "${HOME}/.snipaste/history/"
 
 sudo tmutil addexclusion -p "${HOME}/Downloads"
 
@@ -331,7 +335,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/B
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/ScriptCache"
-
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/NIM/NIM/log/"
@@ -340,11 +345,16 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.Tab
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
 
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/VirtualBuddy/_Downloads/"
+
 sudo tmutil addexclusion -p ${HOME}/Library/Containers/*/Data/Library/OneTrack/
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
 sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/
+sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/appstore/account-*/postbox/media/
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/Wallpapers/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
 
@@ -378,6 +388,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/pnpm"
 sudo tmutil addexclusion -p "${HOME}/Library/Logs"
 
 sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
+sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
+
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.idleassetsd/"
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
