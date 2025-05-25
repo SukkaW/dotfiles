@@ -210,8 +210,17 @@ sudo tmutil addexclusion -p "/private/var/db/diagnostics"
 sudo tmutil addexclusion -p "/private/var/db/oah"
 sudo tmutil addexclusion -p "/private/var/db/spindump"
 sudo tmutil addexclusion -p "/private/var/db/uuidtext"
+
+sudo tmutil addexclusion -p /private/var/db/*/Library/Caches/
+
+sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Caches/"
+sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Caches/"
+
 sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Containers/com.apple.geod/Data/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/root/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/db/accessoryupdater/Library/Containers/com.apple.geod/Data/tmp/"
+
 sudo tmutil addexclusion -p "/private/var/root/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/vm/sleepimage"
 sudo tmutil addexclusion -p "/private/var/folders"
@@ -290,6 +299,7 @@ sudo tmutil addexclusion -p "${HOME}/Downloads"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/JetBrains"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Steam/SteamApps"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Caches"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedData"
@@ -298,6 +308,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Crashpad/completed"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/History/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globalStorage/github.copilot-chat/logContextRecordings/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
@@ -331,10 +342,13 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/D
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Shared Dictionary/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Crashpad/completed/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Snapshots/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUpdater/crx_cache/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/ScriptCache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/extensions_crx_cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
@@ -344,6 +358,9 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Ca
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.TablePlus-setapp/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.TCC/AdhocSignatureCache/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/instances/1.21.4/minecraft/baritone/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/VirtualBuddy/_Downloads/"
 
@@ -370,6 +387,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Dat
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorreporting"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/.wxapplet"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResource/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/UpdatePackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
