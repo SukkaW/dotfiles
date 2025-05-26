@@ -33,7 +33,7 @@ brew "dufs"
 brew "dust"
 brew "fastfetch"
 brew "fd"
-brew "python@3.12"
+brew "python@3.12", link: false
 brew "ffmpeg"
 brew "fnm"
 brew "libtool"
@@ -116,8 +116,6 @@ cask "knockknock"
 cask "latest"
 cask "localsend"
 cask "microsoft-auto-update"
-cask "microsoft-outlook"
-cask "microsoft-powerpoint"
 cask "moonlight"
 cask "motrix"
 cask "obsidian"
@@ -143,6 +141,7 @@ cask "setapp"
 cask "snipaste"
 cask "surge"
 cask "suspicious-package"
+cask "teamspeak-client"
 cask "telegram"
 cask "temurin@21"
 cask "tencent-meeting"
@@ -154,7 +153,6 @@ cask "webpquicklook"
 cask "winbox"
 cask "wireshark"
 cask "xquartz"
-cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259
 mas "AmorphousDiskMark", id: 1168254295
@@ -164,6 +162,8 @@ mas "FastZip", id: 1565629813
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
+mas "Microsoft Outlook", id: 985367838
+mas "Microsoft PowerPoint", id: 462062816
 mas "NatDetectionGUI", id: 6474285494
 mas "Numbers", id: 409203825
 mas "OpenSpeedTest-Server", id: 1579499874
@@ -182,12 +182,10 @@ vscode "bierner.comment-tagged-templates"
 vscode "bradlc.vscode-tailwindcss"
 vscode "christian-kohler.path-intellisense"
 vscode "clinyong.vscode-css-modules"
-vscode "crazyfluff.bettermaterialthemedarkerhighcontrast"
 vscode "dbaeumer.vscode-eslint"
 vscode "dgeibi.alias-tool"
 vscode "docker.docker"
 vscode "donjayamanne.githistory"
-vscode "dprint.dprint"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "fabiospampinato.vscode-diff"
