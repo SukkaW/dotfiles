@@ -218,6 +218,7 @@ sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Caches/"
 
 sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Containers/com.apple.geod/Data/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/root/Library/Containers/com.apple.geod/Data/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/accessoryupdater/Library/Containers/com.apple.geod/Data/tmp/"
 
@@ -307,6 +308,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedExte
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Crashpad/completed"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Service Worker/CacheStorage"
+sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/Code/WebStorage/*/CacheStorage
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/History/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globalStorage/github.copilot-chat/logContextRecordings/"
 
@@ -334,7 +336,9 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/users/*/profile_main/Service\ Worker/CacheStorage/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/asc.onlyoffice.ONLYOFFICE/data/cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/Google/Chrome/Default/WebStorage/*/CacheStorage
@@ -346,12 +350,16 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUp
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/extensions_crx_cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/ScriptCache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/extensions_crx_cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/MediaCache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/SetappIcons/com.onevcat.Kingfisher.ImageCache.setapp/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/NIM/NIM/log/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Cache/"
@@ -371,6 +379,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keep
 sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/
 sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/appstore/account-*/postbox/media/
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/Wallpapers/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/trlottie-animations/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
