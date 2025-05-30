@@ -212,14 +212,15 @@ sudo tmutil addexclusion -p "/private/var/db/spindump"
 sudo tmutil addexclusion -p "/private/var/db/uuidtext"
 
 sudo tmutil addexclusion -p /private/var/db/*/Library/Caches/
-
 sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Caches/"
+sudo tmutil addexclusion -p "/private/var/db/accessoryupdater/Library/Caches/"
 
 sudo tmutil addexclusion -p "/private/var/db/cmiodalassistants/Library/Containers/com.apple.geod/Data/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/tmp/"
 sudo tmutil addexclusion -p "/private/var/db/locationd/Library/Containers/com.apple.geod/Data/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/root/Library/Containers/com.apple.geod/Data/tmp/"
+sudo tmutil addexclusion -p "/private/var/root/Library/Containers/com.apple.geod/Data/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/db/accessoryupdater/Library/Containers/com.apple.geod/Data/tmp/"
 
 sudo tmutil addexclusion -p "/private/var/root/Library/Caches/"
@@ -340,20 +341,48 @@ sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/u
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/asc.onlyoffice.ONLYOFFICE/data/cache/"
 
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/CacheStorage"
-sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/Google/Chrome/Default/WebStorage/*/CacheStorage
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Service Worker/ScriptCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Default/Shared Dictionary/cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Crashpad/completed/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/Chrome/Snapshots/"
+# Define browser base paths
+CHROMIUM_BROWSERS=(
+  "Google/Chrome"
+  "BraveSoftware/Brave-Browser"
+  "Thorium"
+)
+
+CHROMIUM_CACHE_PATHS=(
+  "Default/Service Worker/CacheStorage"
+  "Default/Service Worker/ScriptCache"
+  "Default/Shared Dictionary/cache/"
+  "Default/WebStorage/*/CacheStorage"
+  "Crashpad/"
+  "Snapshots/"
+  "component_crx_cache/"
+  "extensions_crx_cache/"
+  "ShaderCache/"
+  "GrShaderCache/"
+  "GraphiteDawnCache/"
+  "GPUCache/"
+  "DawnCache/"
+  "optimization_guide_hint_cache_store/"
+)
+
+local temp_tm_exclude_browser_full_path=""
+
+# Loop through browsers and cache paths
+for browser in "${CHROMIUM_BROWSERS[@]}"; do
+  for cache_path in "${CHROMIUM_CACHE_PATHS[@]}"; do
+    if [[ "$cache_path" == *"*"* ]]; then
+      # Handle paths with wildcards using zsh's $~variable expansion
+      temp_tm_exclude_browser_full_path="${HOME}/Library/Application Support/${browser}/${cache_path}"
+      sudo tmutil addexclusion -p $~temp_tm_exclude_browser_full_path
+    else
+      # Handle regular paths with quotes
+      sudo tmutil addexclusion -p "${HOME}/Library/Application Support/${browser}/${cache_path}"
+    fi
+  done
+done
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUpdater/crx_cache/"
 
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/Default/Service Worker/ScriptCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/Brave-Browser/extensions_crx_cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/CacheStorage"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/Default/Service Worker/ScriptCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Thorium/extensions_crx_cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
@@ -366,8 +395,23 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Ca
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.TablePlus-setapp/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Code Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.TCC/AdhocSignatureCache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Motrix/DawnCache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/balena-etcher/GPUCache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Orion/Defaults/ContentRules/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/bilibili/"
 
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Telegram Desktop/tdata/emoji/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkInternational/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/assets/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/java/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/meta/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/instances/1.21.4/minecraft/baritone/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/VirtualBuddy/_Downloads/"
@@ -397,6 +441,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorrepor
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/.wxapplet"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResource/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResourcePackage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/UpdatePackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/"
@@ -407,6 +452,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLC
 
 # Infuse Library DB
 sudo tmutil addexclusion -p "${HOME}/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Preferences/.wrangler/logs/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Android"
 sudo tmutil addexclusion -p "${HOME}/Library/Caches"
