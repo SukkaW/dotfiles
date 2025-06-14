@@ -227,6 +227,8 @@ sudo tmutil addexclusion -p "/private/var/root/Library/Caches/"
 sudo tmutil addexclusion -p "/private/var/vm/sleepimage"
 sudo tmutil addexclusion -p "/private/var/folders"
 
+sudo tmutil addexclusion -p "/.Spotlight-V100/"
+
 sudo tmutil addexclusion -p "/tmp/"
 sudo tmutil addexclusion -p "/nix/store/"
 sudo tmutil addexclusion -p "/nix/var/"
@@ -338,6 +340,7 @@ sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
 
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.wiheads.paste-setapp/backup/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/asc.onlyoffice.ONLYOFFICE/data/cache/"
 
