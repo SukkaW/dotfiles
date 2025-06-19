@@ -320,7 +320,6 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Signal/update-cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/fnm"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/balenaEtcher/DawnWebGPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Code Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Cache/"
