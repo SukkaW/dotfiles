@@ -331,9 +331,6 @@ alias lg="lazygit"
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
-alias python="python3.11"
-alias pip="pip3.11"
-
 # VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
 alias code="open $1 -a 'Visual Studio Code'"
 
@@ -371,7 +368,7 @@ git-delete-local-merged() {
 # brew why
 function brew() {
     if [[ $1 == "why" ]]; then
-        brew uses --installed $2
+        command brew uses --installed $2
     else
         command brew "$@"
     fi
@@ -540,10 +537,29 @@ sukka_run_git_maintainance_in_folder() {
     done
 }
 
+function git_commit_date_now() {
+    # In the git repo, this command will change the date of the latest commit to now
+    if [[ -d .git ]]; then
+        git commit --amend --no-edit --date "$(date +%Y-%m-%dT%H:%M:%S%z)"
+    else
+        echo "Not in a git repository" && return 1
+    fi
+}
+
+function pnpm() {
+    if [[ $1 == "maintenance" ]]; then
+        command pnpm dedupe
+        command pnpm prune
+    else
+        command pnpm "$@"
+    fi
+}
+
 gitgc() {
     green=$(tput setaf 2)
     reset=$(tput sgr0)
     (
+        sukka_run_git_maintainance_in_folder "/opt/homebrew/"
         sukka_run_git_maintainance_in_folder "$HOME/project"
         sukka_run_git_maintainance_in_folder "$HOME/works"
         sukka_run_git_maintainance_in_folder "${ZSH_CUSTOM:-$ZSH/custom}/plugins"
@@ -1020,6 +1036,24 @@ _p9k_prompt_sukka_custom_ip_sync() {
   _p9k_worker_reply $REPLY
 }
 
+# Replace p10k built-in proxy prompt with mine, this time no print IP and port
+
+typeset -g POWERLEVEL9K_SUKKA_PROXY_FOREGROUND=68
+typeset -g POWERLEVEL9K_SUKKA_PROXY_VISUAL_IDENTIFIER_EXPANSION='proxy'
+
+function prompt_sukka_proxy() {
+  local -U p=(
+    $all_proxy $http_proxy $https_proxy $ftp_proxy
+    $ALL_PROXY $HTTP_PROXY $HTTPS_PROXY $FTP_PROXY)
+  p=(${(@)${(@)${(@)p#*://}##*@}%%/*})
+  (( $#p == 1 )) || p=("")
+  _p9k_prompt_segment $0 $_p9k_color1 blue SUKKA_PROXY_ICON 0 '' ''
+}
+
+_p9k_prompt_sukka_proxy_init() {
+  typeset -g "_p9k__segment_cond_${_p9k__prompt_side}[_p9k__segment_index]"='$all_proxy$http_proxy$https_proxy$ftp_proxy$ALL_PROXY$HTTP_PROXY$HTTPS_PROXY$FTP_PROXY'
+}
+
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {
@@ -1082,7 +1116,7 @@ if (( $SUKKA_ENABLE_PERFORMANCE_PROFILING )); then
     }
 fi
 
-function openapp() {
+function fixapp() {
   RED='\033[0;31m'
   GRN='\033[0;32m'
   BLU='\033[0;34m'
