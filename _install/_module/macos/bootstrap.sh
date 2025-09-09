@@ -338,6 +338,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/users/*/profile_main/Service\ Worker/CacheStorage/
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
 sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/zoom.us/data/VirtualBkgnd_Video/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.wiheads.paste-setapp/backup/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
@@ -383,6 +384,8 @@ for browser in "${CHROMIUM_BROWSERS[@]}"; do
   done
 done
 
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/component_crx_cache/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUpdater/crx_cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
@@ -417,6 +420,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/m
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PrismLauncher/instances/1.21.4/minecraft/baritone/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/VirtualBuddy/_Downloads/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Mindustry/cache/"
 
 sudo tmutil addexclusion -p ${HOME}/Library/Containers/*/Data/Library/OneTrack/
 
@@ -442,6 +446,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Dat
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorreporting"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/.wxapplet"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Documents/app_data/log/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResource/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResourcePackage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
@@ -451,6 +456,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.openspeedtest.server
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.Safari.CacheDeleteExtension/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Parallels/Downloads/"
 
 # Infuse Library DB
 sudo tmutil addexclusion -p "${HOME}/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
