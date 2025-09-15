@@ -106,6 +106,9 @@ __SUKKA_ZSH_COMPLETION_SRC="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/s
 # This speed up zsh-autosuggetions by a lot
 export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 
+# Enable Concurrent download for Homebrew -- https://github.com/Homebrew/brew/issues/18278
+export HOMEBREW_DOWNLOAD_CONCURRENCY=16
+
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -332,7 +335,10 @@ alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
 # VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
-alias code="open $1 -a 'Visual Studio Code'"
+function code() {
+    # passes the rest of args (if any) to --args command of "open"
+    open $1 -a 'Visual Studio Code' --args "${(@)argv[2,-1]}" --new-window
+}
 
 # Git Delete Local Merged
 git-delete-local-merged() {
@@ -506,6 +512,17 @@ find_folder_by_name() {
     fi
 }
 
+find_folder_by_child_item() {
+    local dir="$1"
+    local child="$2"
+
+    if (( $+commands[fd] )) &>/dev/null; then
+        fd "$child" "$dir" --type f --exec dirname {}
+    else
+        find "$dir" -type f -name "$child" -exec dirname {}
+    fi
+}
+
 extract() {
     if [[ -f $1 ]]; then
         case $1 in
@@ -527,16 +544,6 @@ extract() {
     fi
 }
 
-sukka_run_git_maintainance_in_folder() {
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-
-    find_folder_by_name $1 ".git" | while read LINE; do
-        echo "$blue$LINE$reset"
-        git --git-dir="${LINE}" maintenance run
-    done
-}
-
 function git_commit_date_now() {
     # In the git repo, this command will change the date of the latest commit to now
     if [[ -d .git ]]; then
@@ -546,13 +553,14 @@ function git_commit_date_now() {
     fi
 }
 
-function pnpm() {
-    if [[ $1 == "maintenance" ]]; then
-        command pnpm dedupe
-        command pnpm prune
-    else
-        command pnpm "$@"
-    fi
+sukka_run_git_maintainance_in_folder() {
+    blue=$(tput setaf 4)
+    reset=$(tput sgr0)
+
+    find_folder_by_name $1 ".git" | while read LINE; do
+        echo "$blue$LINE$reset"
+        git --git-dir="${LINE}" maintenance run
+    done
 }
 
 gitgc() {
@@ -565,6 +573,35 @@ gitgc() {
         sukka_run_git_maintainance_in_folder "${ZSH_CUSTOM:-$ZSH/custom}/plugins"
         sukka_run_git_maintainance_in_folder "${__SUKKA_HOMEBREW__PREFIX}/Library/Taps"
     ) && echo "${green}Done!${reset}"
+}
+
+sukka_run_pnpm_prune_in_folder() {
+    blue=$(tput setaf 4)
+    reset=$(tput sgr0)
+
+    find_folder_by_child_item $1 "pnpm-lock.yaml" | while read LINE; do
+        echo "$blue$LINE$reset"
+        (
+           cd "$LINE" && pnpm prune
+        )
+    done
+    find_folder_by_child_item $1 "package-lock.json" | while read LINE; do
+        echo "$blue$LINE$reset"
+        (
+           cd "$LINE" && npm dedupe
+        )
+    done
+}
+
+pnpmgc() {
+    green=$(tput setaf 2)
+    reset=$(tput sgr0)
+    (
+        sukka_run_pnpm_prune_in_folder "$HOME/project"
+        sukka_run_pnpm_prune_in_folder "$HOME/works"
+    )
+    pnpm store prune
+    echo "${green}Done!${reset}"
 }
 
 # override "omz update"
@@ -1019,7 +1056,7 @@ _p9k_prompt_sukka_custom_ip_async() {
   local -F start=EPOCHREALTIME
   local -F next='start + 5'
   if (( $+commands[curl] )); then
-    ip="$(curl --max-time 5 -w '\n' "https://plain-sky-8db5.skk.workers.dev" 2>/dev/null)"
+    ip="$(curl --max-time 5 -w '\n' "https://ip.api.skk.moe/shell-prompt" 2>/dev/null)"
   fi
   if (( $+ip )); then
     next=$((start + 240))
@@ -1143,7 +1180,13 @@ function fixapp() {
   echo -e "如果 macOS 提示应用损坏无法打开，先别急着禁用 SIP、可以试试这个选项"
   echo -e "---------------------------------------------------------------------"
   PS3='请输入你的选择 (1-5): '
-  options=("全局禁用 macOS 中的 GateKeeper" "全局启用 macOS 中的 GateKeeper" "允许某一个应用绕过 GateKeeper" "为某一个应用文件重新签名" "退出")
+  options=(
+    "全局禁用 macOS 中的 GateKeeper"
+    "全局启用 macOS 中的 GateKeeper"
+    "允许某一个应用绕过 GateKeeper"
+    "为某一个应用文件重新签名"
+    "退出"
+  )
   select opt in "${options[@]}"; do
     case $opt in
     "全局禁用 macOS 中的 GateKeeper")
@@ -1200,14 +1243,16 @@ function fixapp() {
         echo -e "${RED}你的 macOS 中没有安装 Xcode 命令行工具，无法使用签名功能！${NC}"
         echo -e "请在终端中执行 ${BLU}xcode-select --install${NC} 命令后再使用本工具！"
       fi
-  
+
       break
       ;;
     "退出")
       echo "在看到 [Process completed] 后，就可以关闭终端窗口了"
       break
       ;;
-    *) echo -e "${RED}你选的这个 ($REPLY) 是什么 xx 玩意儿？重新选一个！${NC}" ;;
+    *)
+      echo -e "${RED}你选的这个 ($REPLY) 是什么 xx 玩意儿？重新选一个！${NC}"
+      ;;
     esac
   done
 }
