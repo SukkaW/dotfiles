@@ -7,17 +7,21 @@ osascript -e 'tell application "System Settings" to quit'
 # Ask for the administrator password upfront
 sudo -
 
-# /Library/KeyBindings/DefaultKeyBinding.dict
-# {
-#     "\UF729" = "moveToBeginningOfLine:";
-#     "\UF72B"   = "moveToEndOfLine:";
-#     "$\UF729" = moveToBeginningOfLineAndModifySelection:; // shift-home
-#     "$\UF72B" = moveToEndOfLineAndModifySelection:; // shift-end
-#     "^\UF729" = moveToBeginningOfDocument:; // ctrl-home
-#     "^\UF72B" = moveToEndOfDocument:; // ctrl-end
-#     "^$\UF729" = moveToBeginningOfDocumentAndModifySelection:; // ctrl-shift-home
-#     "^$\UF72B" = moveToEndOfDocumentAndModifySelection:; // ctrl-shift-end
-# }
+# Map [Home] and [End] key behavior
+mkdir -p "$HOME/Library/KeyBindings"
+
+cat <<'EOF' > "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
+{
+    "\UF729"   = "moveToBeginningOfLine:";
+    "\UF72B"   = "moveToEndOfLine:";
+    "$\UF729"  = moveToBeginningOfLineAndModifySelection:; // shift-home
+    "$\UF72B"  = moveToEndOfLineAndModifySelection:; // shift-end
+    "^\UF729"  = moveToBeginningOfDocument:; // ctrl-home
+    "^\UF72B"  = moveToEndOfDocument:; // ctrl-end
+    "^$\UF729" = moveToBeginningOfDocumentAndModifySelection:; // ctrl-shift-home
+    "^$\UF72B" = moveToEndOfDocumentAndModifySelection:; // ctrl-shift-end
+}
+EOF
 
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 # while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
