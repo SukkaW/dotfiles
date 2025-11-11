@@ -576,10 +576,13 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 ###############################################################################
 
 # Prevents Google Chrome from ever asking for being default browser
-defaults write com.google.Chrome.plist DefaultBrowserSettingEnabled -bool false
+defaults write com.google.Chrome DefaultBrowserSettingEnabled -bool false
 
 # Force enable MV2
-defaults write com.google.Chrome.plist ExtensionManifestV2Availability -int 2
+defaults write com.google.Chrome ExtensionManifestV2Availability -int 2
+
+# Disable DoH
+defaults write com.google.Chrome DNSOverHTTPSMode -string "off"
 
 ###############################################################################
 # Brave Browser                                                               #
@@ -603,3 +606,9 @@ defaults write com.brave.Browser BraveRewardsDisabled -bool true
 
 # Disable Brave VPN
 defaults write com.brave.Browser BraveVPNDisabled -bool true
+
+# Disable Brave Password Manager
+defaults write com.brave.Browser PasswordManagerEnabled -bool false
+
+# Disable DoH
+defaults write com.brave.Browser DNSOverHTTPSMode -string "off"
