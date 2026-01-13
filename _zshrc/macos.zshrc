@@ -107,7 +107,9 @@ __SUKKA_ZSH_COMPLETION_SRC="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/s
 export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 
 # Enable Concurrent download for Homebrew -- https://github.com/Homebrew/brew/issues/18278
-export HOMEBREW_DOWNLOAD_CONCURRENCY=16
+export HOMEBREW_DOWNLOAD_CONCURRENCY=36
+# Enable new Homebrew "Internal" API
+export HOMEBREW_USE_INTERNAL_API=true
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -197,9 +199,9 @@ export GOPATH="$HOME/go"
 export BAT_THEME="Monokai Extended Bright"
 
 # Path should be set before fnm (fnm prepend path automatically)
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="$HOME/.antigravity/antigravity/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
-export FNM_COREPACK_ENABLED=false
+export FNM_COREPACK_ENABLED=true
 
 # fnm
 if (( $+commands[fnm] )); then
@@ -336,8 +338,13 @@ alias tree="tree -aC"
 
 # VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
 function code() {
-    # passes the rest of args (if any) to --args command of "open"
-    open $1 -a 'Visual Studio Code' --args "${(@)argv[2,-1]}" --new-window
+    # if first arg starts with "-", passthru all arguments to "command code"
+    if [[ "$1" == "-"* ]]; then
+        command code "$@"
+    else
+      # passes the rest of args (if any) to --args command of "open"
+      open $1 -a 'Visual Studio Code' --args "${(@)argv[2,-1]}" --new-window
+    fi
 }
 
 # Git Delete Local Merged
@@ -567,7 +574,7 @@ gitgc() {
     green=$(tput setaf 2)
     reset=$(tput sgr0)
     (
-        sukka_run_git_maintainance_in_folder "/opt/homebrew/"
+        sukka_run_git_maintainance_in_folder "$__SUKKA_HOMEBREW__PREFIX"
         sukka_run_git_maintainance_in_folder "$HOME/project"
         sukka_run_git_maintainance_in_folder "$HOME/works"
         sukka_run_git_maintainance_in_folder "${ZSH_CUSTOM:-$ZSH/custom}/plugins"
@@ -775,6 +782,27 @@ fi
 # github copilot cli
 if (( $+commands[github-copilot-cli] )) &>/dev/null; then
   # eval "$(github-copilot-cli alias -- "$0")"
+fi
+
+# mise - when installed via homebrew it exists under homebrew bin
+export MISE_EXPERIMENTAL=true
+export MISE_ENV=development
+export MISE_NPM_PACKAGE_MANAGER=pnpm
+
+if (( $+commands[mise] )) &>/dev/null; then
+    _sukka_lazyload_command_mise() {
+        eval "$($HOME/.local/bin/mise activate zsh)"
+    }
+    sukka_lazyload_add_command mise
+fi
+
+# mole - https://github.com/tw93/Mole/issues
+if (( $+commands[mole] )) &>/dev/null; then
+    _sukka_lazyload_completion_mole() {
+        eval "$($__SUKKA_HOMEBREW__PREFIX/bin/mole completion zsh 2>/dev/null)"
+    }
+
+    sukka_lazyload_add_completion mole
 fi
 
 # zsh-osx-autoproxy (self use)
@@ -992,10 +1020,10 @@ mtrskk() {
 }
 
 traceskk() {
-    "sudo" "nexttrace" --always-rdns --dev $(sukka_primary_interface) $@
+    "sudo" "nexttrace" --always-rdns --dot-server dnssb --dev $(sukka_primary_interface) $@
 }
 
-pastefile() {
+tmpfile() {
   for filepath in "$@"
   do
     echo $(curl -F "reqtype=fileupload" --progress-bar -F "time=1h" -F "fileToUpload=@$filepath" https://litterbox.catbox.moe/resources/internals/api.php)
@@ -1003,7 +1031,7 @@ pastefile() {
     # echo $(curl --progress-bar -F "file=@$filepath" https://temp.sh/upload)
   done
 }
-alias tmpfile="pastefile"
+alias pastefile="tmpfile"
 
 # Add npm package manager prompt to powerlevel10k
 prompt_sukka_npm_type() {
