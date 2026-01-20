@@ -239,7 +239,6 @@ sudo tmutil addexclusion -p "/nix/var/"
 
 sudo tmutil addexclusion -p "/opt/X11/var/cache/"
 sudo tmutil addexclusion -p "/opt/homebrew/var/cache/"
-sudo tmutil addexclusion -p /opt/homebrew/lib/python*/site-packages/pip/_vendor/*/__pycache__/
 
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.byterc"
@@ -297,6 +296,7 @@ sudo tmutil addexclusion -p "${HOME}/.wakatime/"
 sudo tmutil addexclusion -p "${HOME}/.go"
 sudo tmutil addexclusion -p "${HOME}/.goenv"
 sudo tmutil addexclusion -p "${HOME}/go"
+sudo tmutil addexclusion -p "${HOME}/.rustup"
 sudo tmutil addexclusion -p "${HOME}/Virtual Machines/"
 sudo tmutil addexclusion -p "${HOME}/Virtual Machines.localized/"
 sudo tmutil addexclusion -p "${HOME}/vagrant.d"
@@ -315,9 +315,11 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/CachedExte
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Crashpad/completed"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/Service Worker/CacheStorage"
-sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/Code/WebStorage/*/CacheStorage
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/WebStorage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/History/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globalStorage/github.copilot-chat/logContextRecordings/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Antigravity/CachedData/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
@@ -334,15 +336,13 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/GPUCach
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/modules.log"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/OpenMTP/Cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/update/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/sdk_storage/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/OptimizeImage/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/Cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/iron/Service Worker/CacheStorage/"
-sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/iron/users/*/profile_main/Service\ Worker/CacheStorage/
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/media_center/video_cache/"
-sudo tmutil addexclusion -p ${HOME}/Library/Application\ Support/LarkShell/aha/users/*/profile_explorer/Service\ Worker/CacheStorage/
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/zoom.us/data/VirtualBkgnd_Video/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/boot_images4/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/factory_images/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/logs/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/tmp/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.wiheads.paste-setapp/backup/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
@@ -359,7 +359,6 @@ CHROMIUM_CACHE_PATHS=(
   "Default/Service Worker/CacheStorage"
   "Default/Service Worker/ScriptCache"
   "Default/Shared Dictionary/cache/"
-  "Default/WebStorage/*/CacheStorage"
   "Crashpad/"
   "Snapshots/"
   "component_crx_cache/"
@@ -428,12 +427,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Mindustry/cache
 
 sudo tmutil addexclusion -p ${HOME}/Library/Containers/*/Data/Library/OneTrack/
 
-sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/logs/"
-sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/temp/"
-sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-*/postbox/media/
-sudo tmutil addexclusion -p ${HOME}/Library/Group\ Containers/6N38VWS5BX.ru.keepcoder.Telegram/appstore/account-*/postbox/media/
-sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/Wallpapers/"
-sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/trlottie-animations/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
@@ -459,6 +453,10 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.utmapp.UTM/Data/Libr
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.openspeedtest.server/Data/tmp/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.Safari.CacheDeleteExtension/"
 
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/Service Worker/CacheStorage/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/Code Cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/logs/"
+
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Parallels/Downloads/"
 
@@ -479,6 +477,7 @@ sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.idleassetsd/"
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/aerials/videos/"
 
 sudo tmutil addexclusion -p "${HOME}/FinalCutRaw"
 sudo tmutil addexclusion -p "${HOME}/Music"
@@ -506,7 +505,6 @@ sudo tmutil addexclusion -p "/Applications/Microsoft PowerPoint.app"
 sudo tmutil addexclusion -p "${HOME}/Project/"
 sudo tmutil addexclusion -p "${HOME}/Works/"
 sudo tmutil addexclusion -p "${HOME}/Tools/"
-sudo tmutil addexclusion -p "${HOME}/Movies/Wondershare UniConverter/Downloaded"
 
 sudo tmutil addexclusion -p "/System/Library/Caches/"
 # necessary to ignore recursively checking the same directories again
@@ -515,7 +513,7 @@ sudo tmutil addexclusion -p "/System/Volumes/"
 ###############################################################################
 # Custom NTP Server                                                           #
 ###############################################################################
-sudo systemsetup -setnetworktimeserver time.cloudflare.com
+sudo systemsetup -setnetworktimeserver time.windows.com
 sudo systemsetup -setusingnetworktime on
 
 # cat <<'EOF' > /etc/ntp.conf
