@@ -13,14 +13,14 @@
 SUKKA_ENABLE_PERFORMANCE_PROFILING=0
 
 if (( $SUKKA_ENABLE_PERFORMANCE_PROFILING )); then
-    rm -rf zsh_profile*
+    rm -rf $HOME/_zsh_profile_output*
     zmodload zsh/zprof
 
     zmodload zsh/datetime
 
     setopt PROMPT_SUBST
     PS4='+$EPOCHREALTIME %N:%i> '
-    __sukka_zsh_profiling_logfile=$(mktemp zsh_profile.XXXXXX)
+    __sukka_zsh_profiling_logfile=$(mktemp $HOME/_zsh_profile_output.XXXXXX)
     echo "Logging to $__sukka_zsh_profiling_logfile"
     exec 3>&2 2>$__sukka_zsh_profiling_logfile
 
@@ -130,7 +130,12 @@ plugins=(
     zsh-z
     # zsh-interactive-cd
     fzf-tab
+    zsh-fnm
+    zsh-osx-autoproxy
 )
+
+typeset -U path
+typeset -U fpath
 
 # ZSH completions
 ## For homebrew, is must be added before oh-my-zsh is called.
@@ -174,10 +179,6 @@ fi
 # enable compile cache globally
 # export NODE_COMPILE_CACHE=~/.cache/nodejs-compile-cache/v1
 
-# Set NPM Global Path
-export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-[[ ! -d "$NPM_CONFIG_PREFIX" ]] && mkdir -p $NPM_CONFIG_PREFIX
-
 # pnpm add -g <package-name> fails with corepack · Issue #434 · nodejs/corepack
 if (( $+XDG_DATA_HOME )) then
   # XDG_HOME is set
@@ -193,179 +194,56 @@ elif (( $OSTYPE[(I)freebsd] )); then
 fi
 [[ ! -d "$PNPM_HOME" ]] && mkdir -p $PNPM_HOME
 
-export GOENV_ROOT="$HOME/.goenv"
 export GOPATH="$HOME/go"
 
 export BAT_THEME="Monokai Extended Bright"
 
-# Path should be set before fnm (fnm prepend path automatically)
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$HOME/.antigravity/antigravity/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
-
-export FNM_COREPACK_ENABLED=true
+# PATH should be set before fnm (fnm prepend path automatically)
+# append low priority path
+export PATH="$PATH:$HOME/.antigravity/antigravity/bin"
+# prepend /usr/local
+# avoid duplicated /usr/local/bin and /usr/local/sbin in PATH
+if (( ! $PATH[(I)/usr/local/sbin] )); then
+    export PATH="/usr/local/sbin:$PATH"
+fi
+if (( ! $PATH[(I)/usr/local/bin] )); then
+    export PATH="/usr/local/bin:$PATH"
+fi
+# ~/bin and ~/.local/bin
+export PATH="${HOME}/.local/bin:${HOME}/bin:$PATH"
+# homebrew
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/bin:${__SUKKA_HOMEBREW__PREFIX}/sbin:$PATH"
+# prefer homebrew version over macOS built-in util
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:$PATH"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$PATH"
+# go
+export PATH="$GOPATH/bin:$PATH"
+# rust
+export PATH="${HOME}/.cargo/bin:$PATH"
 
 # fnm
+export FNM_COREPACK_ENABLED="true"
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
-  eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
+  eval "$(command fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
 elif (( $__SUKKA_IS_LINUX )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
-    eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
+    eval "$(command fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
 fi
 
-# prepend pnpm path afterwards so that globally installed corepack override fnm
+# After ensure fnm is initialized, we initialize zsh-fnm plugin
+zsh_fnm
+
+# prepend pnpm path afterward fnm init, so that pnpm-globally-installed corepack override fnm-built-in corepack
 export PATH="$PNPM_HOME:$PATH"
-
-if (( $+commands[fnm] )); then
-  # clear fnm per-session folders
-  trap "[[ -v FNM_MULTISHELL_PATH && ${#FNM_MULTISHELL_PATH} -gt 0 ]] && rm -rf ${FNM_MULTISHELL_PATH}" EXIT
-
-  function fnm() {
-    if [[ $1 == "upgrade" ]]; then
-        # Local helper to upgrade a single major version (reuses logic)
-        function _sukka_fnm_upgrade_single_major() {
-            local major="$1"
-            echo "[*] Upgrading major: $major"
-
-            local matched_versions=()
-            local pattern_match_version="* v$major"
-            local pattern_match_system="system"
-            local pattern_match_default="default"
-
-            local is_system=0
-            local is_default=0
-            local line=""
-
-            # Collect installed versions reliably
-            local lines=("${(f)$(command fnm ls)}")
-            for LINE in "${lines[@]}"; do
-                line=${LINE}
-
-                if (( $line[(I)$pattern_match_version] )); then
-                    local version=${${${line#* v}%% *}%% default}
-
-                    echo "[+] Found locally installed version: ${version}"
-                    matched_versions+=${version}
-
-                    if (( $line[(I)$pattern_match_system] )); then
-                        is_system=1
-                    fi
-                    if (( $line[(I)$pattern_match_default] )); then
-                        is_default=1
-                    fi
-                fi
-            done
-
-            if (( ${#matched_versions} == 0 )); then
-                echo "[!] No installed versions for major $major found locally, skipping."
-                return 1
-            fi
-
-            # Get latest remote version for this major (eg: 24 -> 24.13.0)
-            local remote_latest_version=""
-            local remote_latest_line=""
-
-            read -r remote_latest_line < <(command fnm list-remote --latest --filter="$major" 2>/dev/null)
-
-            if [[ -n $remote_latest_line ]]; then
-                remote_latest_version=${${remote_latest_line#v}%% *}
-                echo "[+] Latest available remote version for $major: ${remote_latest_version}"
-            fi
-
-            # If latest version is already installed, keep it and skip uninstalling/reinstalling it
-            local keep_latest=0
-            local remaining_versions=()
-            if [[ -n $remote_latest_version ]]; then
-                for v in ${matched_versions[@]}; do
-                    if [[ "$v" == "$remote_latest_version" ]]; then
-                        echo "[*] Latest version $v is already installed, skipping"
-                        keep_latest=1
-                    else
-                        remaining_versions+=${v}
-                    fi
-                done
-            else
-                remaining_versions=(${matched_versions[@]})
-            fi
-
-            for version in ${remaining_versions[@]}; do
-                command fnm uninstall $version
-            done
-
-            if [[ -z $remote_latest_version ]] || (( ! $keep_latest )); then
-                command fnm install "$major"
-            else
-                echo "[*] Skipping install: latest version $remote_latest_version already installed"
-            fi
-
-            local alias_target
-            if (( $keep_latest )); then
-                alias_target=$remote_latest_version
-            else
-                # Prefer remote latest if available, otherwise fall back to major
-                alias_target=${remote_latest_version:-$major}
-            fi
-
-            if (( $is_system )); then
-                echo "[*] Re-alias system version"
-                command fnm alias $alias_target system
-            fi
-            if (( $is_default )); then
-                echo "[*] Re-alias default version"
-                command fnm alias $alias_target default
-            fi
-        }
-
-        # If no argument provided, collect all installed major versions and upgrade each
-        if [[ $2 == "" ]]; then
-            typeset -a majors
-            typeset -U majors
-
-            local lines=("${(f)$(command fnm ls)}")
-            local pattern_match_version_all="* v*"
-            local line=""
-
-            for LINE in "${lines[@]}"; do
-                line=${LINE}
-                if (( $line[(I)$pattern_match_version_all] )); then
-                    local ver=${${${line#* v}%% *}%% default}
-                    local major=${ver%%.*}
-                    (( ${#major} )) && majors+=${major}
-                fi
-            done
-
-            if (( ${#majors} == 0 )); then
-                echo "[!] No upgradable versions found."
-                return 1
-            fi
-
-            for major in ${majors[@]}; do
-                _sukka_fnm_upgrade_single_major $major
-                echo "" # newline between majors
-            done
-
-            command fnm use
-        else
-            _sukka_fnm_upgrade_single_major $2
-            command fnm use
-        fi
-    else
-      command fnm "$@"
-    fi
-  }
-fi
-
-# rust
-if [[ -d "${HOME}/.cargo/bin" ]]; then
-  export PATH="${HOME}/.cargo/bin:${PATH}"
-fi
 
 # open-cli
 # only on non-macOS + open-cli exists
-if (( (! ${__SUKKA_IS_DARWIN}) && $+commands[open-cli] )); then
+if (( ! __SUKKA_IS_DARWIN && $+commands[open-cli] )); then
     alias open="open-cli"
 fi
 
@@ -404,7 +282,6 @@ else
     alias zshconfig="nano $HOME/.zshrc"
 fi
 
-
 alias rmrf="rm -rf"
 alias gitcm="git commit -m"
 alias gitp="git push"
@@ -427,34 +304,34 @@ function code() {
 }
 
 # Git Delete Local Merged
-git-delete-local-merged() {
-    red=$(tput setaf 1)
-    blue=$(tput setaf 4)
-    green=$(tput setaf 2)
-    reset=$(tput sgr0)
-
-    branches=($(git branch --merged master | grep -v "\*\|master\|unstable\|develop"))
-
-    (( ! $#branches )) && printf "${green}\nNo merged branches to delete!${reset}\n"
-
-    command="git branch -d $branches"
-
-    echo ""
-    printf "%s" "$branches"
-    echo ""
-
-    printf "\n${blue}Delete merged branches locally? Press [Enter] to continue...${reset}"
-    read _
-
-    echo ""
-    echo "Safely deleting merged local branches..."
-
-    for branch ($branches); do
-        git branch -d $branch
-    done
-
-    echo "${green}Done!${reset}"
-}
+# git-delete-local-merged() {
+#     red=$(tput setaf 1)
+#     blue=$(tput setaf 4)
+#     green=$(tput setaf 2)
+#     reset=$(tput sgr0)
+#
+#     branches=($(git branch --merged master | grep -v "\*\|master\|unstable\|develop"))
+#
+#     (( ! $#branches )) && printf "${green}\nNo merged branches to delete!${reset}\n"
+#
+#     command="git branch -d $branches"
+#
+#     echo ""
+#     printf "%s" "$branches"
+#     echo ""
+#
+#     printf "\n${blue}Delete merged branches locally? Press [Enter] to continue...${reset}"
+#     read _
+#
+#     echo ""
+#     echo "Safely deleting merged local branches..."
+#
+#     for branch ($branches); do
+#         git branch -d $branch
+#     done
+#
+#     echo "${green}Done!${reset}"
+# }
 
 # homebrew
 # brew why
@@ -471,10 +348,6 @@ alias dig="nali-dig"
 alias traceroute="nali-traceroute"
 alias tracepath="nali-tracepath"
 alias nslookup="nali-nslookup"
-
-function doggo() {
-    command doggo "$@" | nali
-}
 
 # Enable sudo in aliased
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
@@ -512,7 +385,6 @@ hash -d tool="$HOME/Tools"
 hash -d applications="/Applications"
 hash -d application="/Applications"
 hash -d surge="$HOME/Library/Application Support/Surge/Profiles"
-hash -d smartdns="$HOME/.config/smartdns"
 
 alias finder_show="defaults write com.apple.finder AppleShowAllFiles YES"
 alias finder_hide="defaults write com.apple.finder AppleShowAllFiles NO"
@@ -540,7 +412,7 @@ clear_dns_cache() {
 alias flushdns="clear_dns_cache"
 
 ci-edit-update() {
-    git --git-dir="$HOME/ci_edit/.git" pull && sudo "$HOME/ci_edit/install.sh"
+    git --git-dir="$HOME/ci_edit/.git" --work-tree="$HOME/ci_edit" pull --rebase && sudo "$HOME/ci_edit/install.sh"
 }
 
 git-config() {
@@ -690,9 +562,16 @@ pnpmgc() {
     echo "${green}Done!${reset}"
 }
 
-# override "omz update"
+# Override `omz` to add `omz plugin update` extension while preserving original behavior
+# - Saves original `omz` function (if present) as `__omz_original`
+# - When `omz plugin update` is called, runs `update_ohmyzsh_custom_plugins` first,
+#   then delegates to the original implementation so nothing else breaks.
+if (( $+functions[omz] )); then
+  eval "${$(typeset -f omz)/omz/__omz_original}" 2>/dev/null || true
+  unfunction omz
+fi
 
-update_ohmyzsh_custom_plugins() {
+_update_ohmyzsh_custom_plugins() {
     red=$(tput setaf 1)
     blue=$(tput setaf 4)
     green=$(tput setaf 2)
@@ -701,23 +580,31 @@ update_ohmyzsh_custom_plugins() {
     echo ""
     printf "${blue}%s${reset}\n" "Upgrading custom plugins"
 
+    local p=""
+
     find_folder_by_name "${ZSH_CUSTOM:-$ZSH/custom}" ".git" | while read LINE; do
         p=${LINE:h}
-        pushd -q "${p}"
 
-        if git pull --rebase; then
-            git gc # > /dev/null 2>&1
+        printf "${blue}%s${reset}\n" "${p:t}"
+
+        if git --git-dir="${LINE}" --work-tree="${p}" pull --rebase; then
+            git --git-dir="${LINE}" maintenance run
             printf "${green}%s${reset}\n" "${p:t} has been updated and/or is at the current version."
         else
             printf "${red}%s${reset}\n" "There was an error updating ${p:t}. Try again later?"
         fi
-        popd -q
     done
 }
 
-# Load zsh-async worker
-# source ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-async/async.zsh
-# async_init
+omz() {
+  if [[ "$1" == "plugin" && "$2" == "update" ]]; then
+    # First, update custom plugins (defined by update_ohmyzsh_custom_plugins)
+    _update_ohmyzsh_custom_plugins
+  else
+    # For all other subcommands, delegate to original implementation (function or command)
+    __omz_original "$@"
+  fi
+}
 
 ## Lazyload thefuck
 if (( $+commands[thefuck] )) &>/dev/null; then
@@ -728,32 +615,31 @@ if (( $+commands[thefuck] )) &>/dev/null; then
     sukka_lazyload_add_command fuck
 fi
 
-## Lazyload pyenv
-if (( $+commands[pyenv] )) &>/dev/null; then
-    _sukka_lazyload_command_pyenv() {
-        export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}" # pyenv init --path
-        eval "$(command pyenv init -)"
-    }
-    sukka_lazyload_add_command pyenv
-
-    _sukka_lazyload_completion_pyenv() {
-        source "${__SUKKA_HOMEBREW_PYENV_PREFIX}/completions/pyenv.zsh"
-    }
-    sukka_lazyload_add_completion pyenv
-
-    export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
-fi
+# ## Lazyload pyenv
+# if (( $+commands[pyenv] )) &>/dev/null; then
+#     _sukka_lazyload_command_pyenv() {
+#         export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}" # pyenv init --path
+#         eval "$(command pyenv init -)"
+#     }
+#     sukka_lazyload_add_command pyenv
+#
+#     _sukka_lazyload_completion_pyenv() {
+#         source "${__SUKKA_HOMEBREW_PYENV_PREFIX}/completions/pyenv.zsh"
+#     }
+#     sukka_lazyload_add_completion pyenv
+#
+#     export PYENV_ROOT="${PYENV_ROOT:=${HOME}/.pyenv}"
+# fi
 
 # hexo completion
-if (( $+commands[hexo] )) &>/dev/null; then
-    _hexo_completion() {
-        compls=$(hexo --console-list)
-        completions=(${=compls})
-        compadd -- $completions
-    }
-
-    compdef _hexo_completion hexo
-fi
+# if (( $+commands[hexo] )) &>/dev/null; then
+#     _hexo_completion() {
+#         compls=$(hexo --console-list)
+#         completions=(${=compls})
+#         compadd -- $completions
+#     }
+#     compdef _hexo_completion hexo
+# fi
 
 # pnpm
 if (( $+commands[pnpm] )) &>/dev/null; then
@@ -872,115 +758,37 @@ if (( $+commands[mole] )) &>/dev/null; then
     sukka_lazyload_add_completion mole
 fi
 
-# zsh-osx-autoproxy (self use)
-zsh-osx-autoproxy() {
-    emulate -L zsh -o extended_glob
-    # export https_proxy=http://127.0.0.1:6152
-    # export http_proxy=http://127.0.0.1:6152
-    # export all_proxy=socks5://127.0.0.1:6153
-
-    # Cache the output of scutil --proxy
-    local scutil_output=$(scutil --proxy)
-    local -A info=(${=${(M)${(f)scutil_output}:#[A-Za-z ]# : [^ ]#}/:})
-
-    local proxy_enabled=0
-
-    if (( $info[HTTPEnable] )); then
-        export http_proxy=http://$info[HTTPProxy]:$info[HTTPPort]
-        export HTTP_PROXY=http://$info[HTTPProxy]:$info[HTTPPort]
-        proxy_enabled=1
-    fi
-    if (( $info[HTTPSEnable] )); then
-        export https_proxy=http://$info[HTTPSProxy]:$info[HTTPSPort]
-        export HTTPS_PROXY=http://$info[HTTPSProxy]:$info[HTTPSPort]
-        proxy_enabled=1
-    fi
-    if (( $info[FTPSEnable] )); then
-        export ftp_proxy=http://$info[SOCKSProxy]:$info[SOCKSPort]
-        export FTP_PROXY=http://$info[SOCKSProxy]:$info[SOCKSPort]
-        proxy_enabled=1
-    fi
-    if (( $info[SOCKSEnable] )); then
-        export all_proxy=socks5://$info[SOCKSProxy]:$info[SOCKSPort]
-        export ALL_PROXY=socks5://$info[SOCKSProxy]:$info[SOCKSPort]
-        proxy_enabled=1
-    elif (( $info[HTTPEnable] )); then
-        export all_proxy=http://$info[HTTPProxy]:$info[HTTPPort]
-        export ALL_PROXY=http://$info[HTTPProxy]:$info[HTTPPort]
-        proxy_enabled=1
-    fi
-
-    if (( $proxy_enabled )); then
-        local -A raw_scutil_noproxy=(${=${(M)${(f)scutil_output}:#  [0-9 ]# : [^ ]#}/:})
-        local _noproxy=${(j:, :)${(o)raw_scutil_noproxy}}
-
-        export NO_PROXY=$_noproxy
-        export no_proxy=$_noproxy
-    fi
-}
-
-noproxy() {
-    unset http_proxy
-    unset HTTP_PROXY
-    unset https_proxy
-    unset HTTPS_PROXY
-    unset all_proxy
-    unset ALL_PROXY
-    unset ftp_proxy
-    unset FTP_PROXY
-}
-
-if (( $__SUKKA_IS_DARWIN )); then
-    zsh-osx-autoproxy
-fi
 alias proxy="zsh-osx-autoproxy"
+alias noproxy="proxy_off"
 
 # Add OSX-like shadow to image
-# USAGE: osx-shadow [--rm|-r] <original.png> [result.png]
+# USAGE: osx-shadow <original.png> [result.png]
 osx-shadow() {
+    if (( ! $+commands[magick] )); then
+        echo "ImageMagick 'magick' command not found. Please install ImageMagick first."
+        return 1
+    fi
+
     # Help message
     function help {
         echo "Wrong number of arguments have been entered."
-        echo "USAGE: osx-shadow [--rm|-r] <original.png> [result.png]"
+        echo "USAGE: osx-shadow <original.png> [result.png]"
     }
 
-    if [[ $1 == --rm || $1 == -r ]]; then
-        # Remove shadow
-        case $# in
-            3) # osx-shadow --rm|-r src.png dist.png
-                convert $2 -crop +50+34 -crop -50-66 $3
-                ;;
-            2) # osx-shadow --rm|-r src.png
-                convert $2 -crop +50+34 -crop -50-66 ${2%.*}-croped.png
-                ;;
-            *)
-                help
-                ;;
-        esac
-    else
-        # Add shadow
-        case $# in
-            2) # osx-shadow src.png dist.png
-                convert $1 \( +clone -background gray -shadow 100x40+0+16 \) +swap -background none -layers merge +repage $2
-                ;;
-            1) # osx-shadow src.png
-                convert $1 \( +clone -background gray -shadow 100x40+0+16 \) +swap -background none -layers merge +repage ${1%.*}-shadow.png
-                ;;
-            *)
-                help
-                ;;
-        esac
-    fi
-}
+    # convert test.png \( +clone -background black -shadow 40x50+0+36 \) +swap -background transparent -layers merge +repage test-shadow.png
 
-digrange() {
-    red=$(tput setaf 1)
-    blue=$(tput setaf 4)
-    green=$(tput setaf 2)
-    reset=$(tput sgr0)
-
-    echo "${green}$@${reset}"
-    dig $@
+    # Add shadow
+    case $# in
+        2) # osx-shadow src.png dist.png
+            magick $1 \( +clone -background black -shadow 70x40+0+16 \) +swap -background transparent -bordercolor none -layers merge -border 32 +repage $2
+            ;;
+        1) # osx-shadow src.png
+            magick $1 \( +clone -background black -shadow 70x40+0+16 \) +swap -background transparent -bordercolor none -layers merge -border 32 +repage ${1%.*}-shadow.png
+            ;;
+        *)
+            help
+            ;;
+    esac
 }
 
 warp_ip="162.159.192.1"
@@ -1050,7 +858,7 @@ sukka_primary_interface() {
 }
 
 mtu() {
-    [ -z $1 ] && echo "[MTU] Specifying host is a must" && return
+    (( ! $+1 )) && echo "[MTU] Specifying host is a must" && return
 
     echo "[MTU] Getting the best MTU value for $1..."
     # lan_ip=$(osascript -e "IPv4 address of (system info)")
