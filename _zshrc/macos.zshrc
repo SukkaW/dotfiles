@@ -199,7 +199,7 @@ export GOPATH="$HOME/go"
 export BAT_THEME="Monokai Extended Bright"
 
 # Path should be set before fnm (fnm prepend path automatically)
-export PATH="$HOME/.antigravity/antigravity/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/llvm@16/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
+export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$NPM_CONFIG_PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/bin:$__SUKKA_HOMEBREW__PREFIX/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$GOENV_ROOT/bin:${HOME}/.local/bin:$HOME/.antigravity/antigravity/bin:$GOENV_ROOT/shims:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk/bin:${__SUKKA_HOMEBREW__PREFIX}/opt/openjdk@8/bin:$PATH:$GOPATH/bin"
 
 export FNM_COREPACK_ENABLED=true
 
@@ -219,60 +219,139 @@ fi
 # prepend pnpm path afterwards so that globally installed corepack override fnm
 export PATH="$PNPM_HOME:$PATH"
 
-
-trap "[[ -v FNM_MULTISHELL_PATH && ${#FNM_MULTISHELL_PATH} -gt 0 ]] && rm -rf ${FNM_MULTISHELL_PATH}" EXIT
-
 if (( $+commands[fnm] )); then
+  # clear fnm per-session folders
+  trap "[[ -v FNM_MULTISHELL_PATH && ${#FNM_MULTISHELL_PATH} -gt 0 ]] && rm -rf ${FNM_MULTISHELL_PATH}" EXIT
+
   function fnm() {
     if [[ $1 == "upgrade" ]]; then
-        if [[ $2 == "" ]]; then
-            echo "Missing the version! Usage: fnm upgrade [major_version]"
-            return 1
-        fi
+        # Local helper to upgrade a single major version (reuses logic)
+        function _sukka_fnm_upgrade_single_major() {
+            local major="$1"
+            echo "[*] Upgrading major: $major"
 
-        local matched_verions=()
-        local pattern_match_version="* v$2"
-        local pattern_match_system="system"
-        local pattern_match_default="default"
+            local matched_versions=()
+            local pattern_match_version="* v$major"
+            local pattern_match_system="system"
+            local pattern_match_default="default"
 
-        local is_system=0
-        local is_default=0
-        local line=""
+            local is_system=0
+            local is_default=0
+            local line=""
 
-        command fnm ls | while read LINE; do
-            line=${LINE}
+            # Collect installed versions reliably
+            local lines=("${(f)$(command fnm ls)}")
+            for LINE in "${lines[@]}"; do
+                line=${LINE}
 
-            if (( $line[(I)$pattern_match_version] )); then
-                local version=${${${line#* v}%% *}%% default}
+                if (( $line[(I)$pattern_match_version] )); then
+                    local version=${${${line#* v}%% *}%% default}
 
-                echo "Found version: ${version}"
-                matched_verions+=${version}
+                    echo "[+] Found locally installed version: ${version}"
+                    matched_versions+=${version}
 
-                if (( $line[(I)$pattern_match_system] )); then
-                    is_system=1
+                    if (( $line[(I)$pattern_match_system] )); then
+                        is_system=1
+                    fi
+                    if (( $line[(I)$pattern_match_default] )); then
+                        is_default=1
+                    fi
                 fi
-                if (( $line[(I)$pattern_match_default] )); then
-                    is_default=1
-                fi
+            done
+
+            if (( ${#matched_versions} == 0 )); then
+                echo "[!] No installed versions for major $major found locally, skipping."
+                return 1
             fi
-        done
 
-        for version in $matched_verions; do
-            command fnm uninstall $version
-        done
+            # Get latest remote version for this major (eg: 24 -> 24.13.0)
+            local remote_latest_version=""
+            local remote_latest_line=""
 
-        command fnm install "$2"
+            read -r remote_latest_line < <(command fnm list-remote --latest --filter="$major" 2>/dev/null)
 
-        if (( $is_system )); then
-            echo "Re-alias system version"
-            command fnm alias $2 system
+            if [[ -n $remote_latest_line ]]; then
+                remote_latest_version=${${remote_latest_line#v}%% *}
+                echo "[+] Latest available remote version for $major: ${remote_latest_version}"
+            fi
+
+            # If latest version is already installed, keep it and skip uninstalling/reinstalling it
+            local keep_latest=0
+            local remaining_versions=()
+            if [[ -n $remote_latest_version ]]; then
+                for v in ${matched_versions[@]}; do
+                    if [[ "$v" == "$remote_latest_version" ]]; then
+                        echo "[*] Latest version $v is already installed, skipping"
+                        keep_latest=1
+                    else
+                        remaining_versions+=${v}
+                    fi
+                done
+            else
+                remaining_versions=(${matched_versions[@]})
+            fi
+
+            for version in ${remaining_versions[@]}; do
+                command fnm uninstall $version
+            done
+
+            if [[ -z $remote_latest_version ]] || (( ! $keep_latest )); then
+                command fnm install "$major"
+            else
+                echo "[*] Skipping install: latest version $remote_latest_version already installed"
+            fi
+
+            local alias_target
+            if (( $keep_latest )); then
+                alias_target=$remote_latest_version
+            else
+                # Prefer remote latest if available, otherwise fall back to major
+                alias_target=${remote_latest_version:-$major}
+            fi
+
+            if (( $is_system )); then
+                echo "[*] Re-alias system version"
+                command fnm alias $alias_target system
+            fi
+            if (( $is_default )); then
+                echo "[*] Re-alias default version"
+                command fnm alias $alias_target default
+            fi
+        }
+
+        # If no argument provided, collect all installed major versions and upgrade each
+        if [[ $2 == "" ]]; then
+            typeset -a majors
+            typeset -U majors
+
+            local lines=("${(f)$(command fnm ls)}")
+            local pattern_match_version_all="* v*"
+            local line=""
+
+            for LINE in "${lines[@]}"; do
+                line=${LINE}
+                if (( $line[(I)$pattern_match_version_all] )); then
+                    local ver=${${${line#* v}%% *}%% default}
+                    local major=${ver%%.*}
+                    (( ${#major} )) && majors+=${major}
+                fi
+            done
+
+            if (( ${#majors} == 0 )); then
+                echo "[!] No upgradable versions found."
+                return 1
+            fi
+
+            for major in ${majors[@]}; do
+                _sukka_fnm_upgrade_single_major $major
+                echo "" # newline between majors
+            done
+
+            command fnm use
+        else
+            _sukka_fnm_upgrade_single_major $2
+            command fnm use
         fi
-        if (( $is_default )); then
-            echo "Re-alias default version"
-            command fnm alias $2 default
-        fi
-
-        command fnm use
     else
       command fnm "$@"
     fi
@@ -676,18 +755,6 @@ if (( $+commands[hexo] )) &>/dev/null; then
     compdef _hexo_completion hexo
 fi
 
-# gulp completion
-if (( $+commands[gulp] )) &>/dev/null; then
-    _gulp_completion() {
-        # Grab tasks
-        compls=$(gulp --tasks-simple)
-        completions=(${=compls})
-        compadd -- $completions
-    }
-
-    compdef _gulp_completion gulp
-fi
-
 # pnpm
 if (( $+commands[pnpm] )) &>/dev/null; then
   _pnpm_completion () {
@@ -762,7 +829,7 @@ if (( $+commands[conda] )) &>/dev/null; then
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
     __conda_setup="$('/usr/local/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if (( ! $? )); then
         eval "$__conda_setup"
     else
         if [[ -f "/usr/local/anaconda3/etc/profile.d/conda.sh" ]]; then
@@ -1041,11 +1108,6 @@ prompt_sukka_npm_type() {
             p10k segment -s "PNPM" -f yellow -t "pnpm"
             return
         }
-        _p9k_upglob bun.lockb
-        (( $? == 1 )) && {
-            p10k segment -s "BUN" -f white -t "bun"
-            return
-        }
         _p9k_upglob yarn.lock
         (( $? == 1 )) && {
             p10k segment -s "YARN" -f blue -t "yarn"
@@ -1054,6 +1116,16 @@ prompt_sukka_npm_type() {
         _p9k_upglob package-lock.json
         (( $? == 1 )) && {
             p10k segment -s "NPM" -f red -t "npm"
+            return
+        }
+        _p9k_upglob bun.lockb
+        (( $? == 1 )) && {
+            p10k segment -s "BUN" -f white -t "bun"
+            return
+        }
+        _p9k_upglob bun.lock
+        (( $? == 1 )) && {
+            p10k segment -s "BUN" -f white -t "bun"
             return
         }
         _p9k_upglob package.json
