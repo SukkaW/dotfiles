@@ -247,6 +247,7 @@ sudo tmutil addexclusion -p "${HOME}/Dropbox"
 sudo tmutil addexclusion -p "${HOME}/Google Drive/"
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.asdf"
+sudo tmutil addexclusion -p "${HOME}/.bun"
 sudo tmutil addexclusion -p "${HOME}/.bundle"
 sudo tmutil addexclusion -p "${HOME}/.bytertc/monitor/bytertc_log/"
 sudo tmutil addexclusion -p "${HOME}/.cache"
@@ -303,6 +304,7 @@ sudo tmutil addexclusion -p "${HOME}/vagrant.d"
 sudo tmutil addexclusion -p "${HOME}/.snipaste/history/"
 
 sudo tmutil addexclusion -p "${HOME}/Downloads"
+sudo tmutil addexclusion -p "${HOME}/Music/Podcasts"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/JetBrains"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Steam/SteamApps"
@@ -321,18 +323,9 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globa
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Antigravity/CachedData/"
 
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Cache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Code Cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Service Worker/CacheStorage"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Signal/update-cache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/fnm"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/balenaEtcher/DawnWebGPUCache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Code Cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/Cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/DawnCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/DawnGraphiteCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/DawnWebGPUCache"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/GPUCache"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/modules.log"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/OpenMTP/Cache/"
@@ -387,26 +380,53 @@ for browser in "${CHROMIUM_BROWSERS[@]}"; do
   done
 done
 
+# Define electron app base paths
+ELECTRON_APPS=(
+  "${HOME}/Library/Application Support/discord"
+  "${HOME}/Library/Application Support/Code"
+  "${HOME}/Library/Application Support/Antigravity"
+  "${HOME}/Library/Application Support/balenaEtcher"
+  "${HOME}/Library/Application Support/balena-etcher"
+  "${HOME}/Library/Application Support/Motrix"
+  "${HOME}/Library/Application Support/Termius"
+  "${HOME}/Library/Application Support/obsidian"
+  "${HOME}/Library/Application Support/electron-app"
+  "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack"
+  "${HOME}/Library/Application Support/Microsoft/Teams"
+)
+
+ELECTRON_CACHE_PATHS=(
+  "Cache/"
+  "Code Cache/"
+  "GPUCache/"
+  "DawnCache/"
+  "DawnWebGPUCache/"
+  "DawnGraphiteCache/"
+)
+
+# Loop through electron apps and cache paths
+for electron_app in "${ELECTRON_APPS[@]}"; do
+  for cache_path in "${ELECTRON_CACHE_PATHS[@]}"; do
+    # Handle regular paths with quotes
+    sudo tmutil addexclusion -p "${electron_app}/${cache_path}"
+  done
+done
+
+
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/component_crx_cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUpdater/crx_cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/MediaCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/SetappIcons/com.onevcat.Kingfisher.ImageCache.setapp/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/NIM/NIM/log/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/electron-app/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.tinyapp.TablePlus-setapp/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/GIMP/2.10/cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Cache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/obsidian/Code Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.TCC/AdhocSignatureCache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Motrix/DawnCache/"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/balena-etcher/GPUCache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Orion/Defaults/ContentRules/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/bilibili/"
 
@@ -431,6 +451,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keep
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/group.com.ubnt.unifinetwork/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/DeveloperDiskImages"
@@ -454,7 +475,6 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.openspeedtest.server
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.Safari.CacheDeleteExtension/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/Service Worker/CacheStorage/"
-sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/Code Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack/logs/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLCache/"
@@ -476,9 +496,7 @@ sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
 
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.idleassetsd/"
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.TVIdleScreen/TVIdleScreenSnapshotLog.plist"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
-sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/aerials/videos/"
-
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.wallpaper/"
 sudo tmutil addexclusion -p "${HOME}/FinalCutRaw"
 sudo tmutil addexclusion -p "${HOME}/Music"
 sudo tmutil addexclusion -p "${HOME}/Movies"
