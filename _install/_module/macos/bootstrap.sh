@@ -205,7 +205,8 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 # Set default folder exclusions
 # Fins all excluded folders:
-# sudo mdfind "com_apple_backup_excludeItem = 'com.apple.backupd'
+# sudo mdfind "com_apple_backup_excludeItem = 'com.apple.backupd'"
+# defaults read /Library/Preferences/com.apple.TimeMachine SkipPaths
 # Remove an exclusion:
 # sudo tmutil removeexclusion /path/to/directory
 
@@ -491,7 +492,6 @@ sudo tmutil addexclusion -p "${HOME}/Library/CloudStorage/"
 sudo tmutil addexclusion -p "${HOME}/Library/pnpm"
 sudo tmutil addexclusion -p "${HOME}/Library/Logs"
 
-sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
 sudo tmutil addexclusion -p "/.com.apple.templatemigration.boot-install/"
 
 sudo tmutil addexclusion -p "/Library/Application Support/com.apple.idleassetsd/"
