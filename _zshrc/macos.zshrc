@@ -137,7 +137,7 @@ plugins=(
 typeset -U path
 typeset -U fpath
 
-# ZSH completions
+# ZSH completions, needs to be added before oh-my-zsh
 ## For homebrew, is must be added before oh-my-zsh is called.
 ## https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 ## https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/github/README.md#homebrew-installation-note
@@ -222,16 +222,15 @@ export PATH="$GOPATH/bin:$PATH"
 export PATH="${HOME}/.cargo/bin:$PATH"
 
 # fnm
-export FNM_COREPACK_ENABLED="true"
 if (( $+commands[fnm] )); then
   # fnm is installed through package manager
-  eval "$(command fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
+  eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
 elif (( $__SUKKA_IS_LINUX )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
     export PATH="$FNM_PATH:$PATH"
-    eval "$(command fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
+    eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
 fi
 
@@ -291,6 +290,8 @@ alias lg="lazygit"
 # Git Undo
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
+
+alias taze="taze --concurrency 36"
 
 # VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
 function code() {
@@ -441,10 +442,6 @@ Done!
     git config --global user.email "${email}"
 }
 
-brew-why() {
-    brew uses --installed
-}
-
 # Kills a process running on a specified tcp port
 killport() {
   echo "Killing process on port: $1"
@@ -484,14 +481,14 @@ find_folder_by_child_item() {
 extract() {
     if [[ -f $1 ]]; then
         case $1 in
-        *.tar.bz2) tar xjf $1 ;;
-        *.tar.gz) tar xzf $1 ;;
+        *.tar.bz2) tar vxjf $1 ;;
+        *.tar.gz) tar vxzf $1 ;;
         *.bz2) bunzip2 $1 ;;
         *.rar) unrar e $1 ;;
         *.gz) gunzip $1 ;;
-        *.tar) tar xf $1 ;;
-        *.tbz2) tar xjf $1 ;;
-        *.tgz) tar xzf $1 ;;
+        *.tar) tar vxf $1 ;;
+        *.tbz2) tar vxjf $1 ;;
+        *.tgz) tar vxzf $1 ;;
         *.zip) unzip "$1" ;;
         *.Z) uncompress $1 ;;
         *.7z) 7z x $1 ;;
@@ -591,7 +588,19 @@ _update_ohmyzsh_custom_plugins() {
             git --git-dir="${LINE}" maintenance run
             printf "${green}%s${reset}\n" "${p:t} has been updated and/or is at the current version."
         else
+          # If error is due to unstaged changes, reset and retry
+          if git --git-dir="${LINE}" --work-tree="${p}" status --porcelain | grep -q '^ '; then
+            printf "${red}%s${reset}\n" "Unstaged changes detected in ${p:t}. Resetting and retrying..."
+            git --git-dir="${LINE}" --work-tree="${p}" reset --hard
+            if git --git-dir="${LINE}" --work-tree="${p}" pull --rebase; then
+              git --git-dir="${LINE}" maintenance run
+              printf "${green}%s${reset}\n" "${p:t} has been updated after reset."
+            else
+              printf "${red}%s${reset}\n" "Update failed again for ${p:t}. Manual intervention may be required."
+            fi
+          else
             printf "${red}%s${reset}\n" "There was an error updating ${p:t}. Try again later?"
+          fi
         fi
     done
 }
@@ -744,7 +753,7 @@ export MISE_NPM_PACKAGE_MANAGER=pnpm
 
 if (( $+commands[mise] )) &>/dev/null; then
     _sukka_lazyload_command_mise() {
-        eval "$($HOME/.local/bin/mise activate zsh)"
+        eval "$($__SUKKA_HOMEBREW__PREFIX/bin/mise activate zsh)"
     }
     sukka_lazyload_add_command mise
 fi
@@ -936,6 +945,16 @@ prompt_sukka_npm_type() {
             p10k segment -s "BUN" -f white -t "bun"
             return
         }
+        _p9k_upglob deno.lock
+        (( $? == 1 )) && {
+            p10k segment -s "DENO" -f white -t "deno"
+            return
+        }
+        _p9k_upglob deno.json
+        (( $? == 1 )) && {
+            p10k segment -s "DENO" -f white -t "deno"
+            return
+        }
         _p9k_upglob package.json
         (( $? == 1 )) && {
             p10k segment -s "NPM" -f red -t "npm"
@@ -1087,14 +1106,16 @@ function fixapp() {
   echo -e "${BLU}4: 为某一个应用文件重新签名${NC}"
   echo -e "如果 macOS 提示应用损坏无法打开，先别急着禁用 SIP、可以试试这个选项"
   echo -e "---------------------------------------------------------------------"
-  PS3='请输入你的选择 (1-5): '
-  options=(
+  PS3="请输入你的选择 (1-5): "
+
+  local options=(
     "全局禁用 macOS 中的 GateKeeper"
     "全局启用 macOS 中的 GateKeeper"
     "允许某一个应用绕过 GateKeeper"
     "为某一个应用文件重新签名"
     "退出"
   )
+
   select opt in "${options[@]}"; do
     case $opt in
     "全局禁用 macOS 中的 GateKeeper")
@@ -1122,7 +1143,8 @@ function fixapp() {
       echo "请将需要绕过 GateKeeper 的 .app 文件 拖动到终端中"
       echo "当终端中显示 .app 文件的绝对路径后，按 Return (Enter) 继续"
       echo ""
-      read -e -p "文件路径：" FILEPATH
+      printf "文件路径："
+      IFS= read -r FILEPATH
       echo ""
       echo -e "${RED}请输入你的登陆密码以继续${NC}"
       echo ""
@@ -1137,7 +1159,8 @@ function fixapp() {
         echo "请将需要重新签名的 .app 文件 拖动到终端中"
         echo "当终端中显示 .app 文件的绝对路径后，按 Return (Enter) 继续"
         echo ""
-        read -e -p "文件路径：" FILEPATH
+        printf "文件路径："
+        IFS= read -r FILEPATH
         echo ""
         echo -e "${RED}请输入你的登陆密码以继续${NC}"
         echo ""
