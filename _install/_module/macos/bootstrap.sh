@@ -342,6 +342,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/tm
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.wiheads.paste-setapp/backup/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.turborepo/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/asc.onlyoffice.ONLYOFFICE/data/cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.lanyeeee.bilibili-video-downloader/"
 
 # Define browser base paths
 CHROMIUM_BROWSERS=(
