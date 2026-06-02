@@ -246,21 +246,28 @@ sudo tmutil addexclusion -p "${HOME}/.byterc"
 sudo tmutil addexclusion -p "${HOME}/.dropbox"
 sudo tmutil addexclusion -p "${HOME}/Dropbox"
 sudo tmutil addexclusion -p "${HOME}/Google Drive/"
-sudo tmutil addexclusion -p "${HOME}/.android"
+sudo tmutil addexclusion -p "${HOME}/.antigravity"
+sudo tmutil addexclusion -p "${HOME}/.arcbox"
 sudo tmutil addexclusion -p "${HOME}/.asdf"
 sudo tmutil addexclusion -p "${HOME}/.bun"
 sudo tmutil addexclusion -p "${HOME}/.bundle"
-sudo tmutil addexclusion -p "${HOME}/.bytertc/monitor/bytertc_log/"
+sudo tmutil addexclusion -p "${HOME}/.bytertc"
 sudo tmutil addexclusion -p "${HOME}/.cache"
 sudo tmutil addexclusion -p "${HOME}/.cargo"
 sudo tmutil addexclusion -p "${HOME}/.chomp/cache"
 sudo tmutil addexclusion -p "${HOME}/.cocoapods"
 sudo tmutil addexclusion -p "${HOME}/.codemod"
+sudo tmutil addexclusion -p "${HOME}/.codeium"
+sudo tmutil addexclusion -p "${HOME}/.codex/.tmp"
 sudo tmutil addexclusion -p "${HOME}/.colima"
 sudo tmutil addexclusion -p "${HOME}/.composer"
+sudo tmutil addexclusion -p "${HOME}/.copilot/pkg"
+sudo tmutil addexclusion -p "${HOME}/.claude/projects/"
 sudo tmutil addexclusion -p "${HOME}/.diffusionbee"
 sudo tmutil addexclusion -p "${HOME}/.dlv"
 sudo tmutil addexclusion -p "${HOME}/.electron"
+sudo tmutil addexclusion -p "${HOME}/.EventSDK"
+sudo tmutil addexclusion -p "${HOME}/.gemini"
 sudo tmutil addexclusion -p "${HOME}/.gradle"
 sudo tmutil addexclusion -p "${HOME}/.gluon"
 sudo tmutil addexclusion -p "${HOME}/.nuget"
@@ -333,6 +340,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/OpenMTP/Cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/LarkShell/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/zoom.us/data/VirtualBkgnd_Video/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.apple.ap.promotedcontentd/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/boot_images4/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/PixelFlasher/factory_images/"
@@ -344,10 +352,22 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.turborepo.t
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/asc.onlyoffice.ONLYOFFICE/data/cache/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/com.lanyeeee.bilibili-video-downloader/"
 
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Claude/vm_bundles/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Claude/claude-code-vm/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Claude/Cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Claude/Code Cache/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/Express/UniversalMaps/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/Maps/"
+
+sudo tmutil addexclusion -p "${HOME}/Library/Preferences/Maxon/"
+
+
 # Define browser base paths
 CHROMIUM_BROWSERS=(
   "Google/Chrome"
   "BraveSoftware/Brave-Browser"
+  "BraveSoftware/Brave-Browser-Nightly"
   "Thorium"
 )
 
@@ -419,6 +439,7 @@ done
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/discord/component_crx_cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Google/GoogleUpdater/crx_cache/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/BraveSoftware/BraveUpdater/crx_cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Termius/session-logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Setapp/Default/Resources/"
