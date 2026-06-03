@@ -82,6 +82,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# https://github.com/agkozak/zsh-z#case-sensitivity
+ZSHZ_CASE=smart
+
 # Cache Freq Use Variables
 ## Result of uname -sm
 __SUKKA_UNAME_SM=$(uname -sm)
@@ -108,8 +111,7 @@ export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 
 # Enable Concurrent download for Homebrew -- https://github.com/Homebrew/brew/issues/18278
 export HOMEBREW_DOWNLOAD_CONCURRENCY=36
-# Enable new Homebrew "Internal" API
-export HOMEBREW_USE_INTERNAL_API=true
+export HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS="true"
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -165,6 +167,8 @@ export LANG=en_US.UTF-8
 # Preferred editor for local and remote sessions
 if (( $#SSH_CONNECTION )); then
     export EDITOR='vim'
+elif (( $+commands[micro] )); then
+    export EDITOR='micro'
 else
     export EDITOR='nano'
 fi
@@ -192,7 +196,6 @@ elif (( $OSTYPE[(I)cygwin] || $OSTYPE[(I)win32] || $OSTYPE[(I)msys] )); then
 elif (( $OSTYPE[(I)freebsd] )); then
   export PNPM_HOME="$HOME/.pnpm-global"
 fi
-[[ ! -d "$PNPM_HOME" ]] && mkdir -p $PNPM_HOME
 
 export GOPATH="$HOME/go"
 
@@ -238,7 +241,8 @@ fi
 zsh_fnm
 
 # prepend pnpm path afterward fnm init, so that pnpm-globally-installed corepack override fnm-built-in corepack
-export PATH="$PNPM_HOME:$PATH"
+# pnpm_home/bin (pnpm 11) in front of pnpm_home (pnpm 10)
+export PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 
 # open-cli
 # only on non-macOS + open-cli exists
@@ -291,7 +295,8 @@ alias lg="lazygit"
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
-alias taze="taze --concurrency 36"
+alias taze="taze --concurrency 24"
+alias ncdu="ncdu -t 8"
 
 # VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
 function code() {
@@ -870,31 +875,23 @@ mtu() {
     (( ! $+1 )) && echo "[MTU] Specifying host is a must" && return
 
     echo "[MTU] Getting the best MTU value for $1..."
-    # lan_ip=$(osascript -e "IPv4 address of (system info)")
-    lan_ip=$(sukka_local_ip)
-    echo "[MTU] Source IP ${lan_ip}..."
 
-    mtu_result=1800
+    primary_interface=$(sukka_primary_interface)
+    echo "[MTU] Primary interface: ${primary_interface}"
 
-    command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
-    until [[ $? = 0 || ${mtu_result} -le 1000 ]]; do
-      mtu_result=$(( ${mtu_result} - 16))
+    local mtu_lo=1000 mtu_hi=16384 mtu_result
+
+    while (( mtu_hi - mtu_lo > 1 )); do
+      mtu_result=$(( (mtu_lo + mtu_hi) / 2 ))
       echo "[MTU] Ping ${mtu_result}"
-      command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1
+      if command ping -c1 -W1 -D -s $((mtu_result - 28)) -b ${primary_interface} "$1" >/dev/null 2>&1; then
+        mtu_lo=${mtu_result}
+      else
+        mtu_hi=${mtu_result}
+      fi
     done
 
-    if [[ "${mtu_result}" -eq 1500 ]]; then
-      # do nothing
-    elif [[ "${mtu_result}" -le 1000 ]]; then
-      mtu_result=1000
-    else
-      for (( i=0; i<16; i++ )); do
-        (( mtu_result++ ))
-        echo "[MTU] Ping ${mtu_result}"
-        ( command ping -c1 -W1 -D -s $((mtu_result - 28)) "$1" -S ${lan_ip} >/dev/null 2>&1 ) || break
-      done
-      (( mtu_result-- ))
-    fi
+    mtu_result=${mtu_lo}
 
     echo "[MTU] MTU: ${mtu_result}. WireGuard MTU: $(( mtu_result - 80 ))"
 }
