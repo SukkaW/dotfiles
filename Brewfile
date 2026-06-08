@@ -1,190 +1,362 @@
 tap "badabing2005/pixelflasher"
-tap "buo/cask-upgrade"
 tap "cloudflare/cloudflare"
-tap "gmerlino/udffsck"
+tap "dr-emann/tap"
+tap "hashicorp/tap"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit"
-tap "minacle/chntpw"
+tap "lucasgelfond/zerobrew"
 tap "playcover/playcover"
 tap "pouriyajamshidi/tap"
-tap "rfidresearchgroup/proxmark3"
 tap "teamookla/speedtest"
+tap "valkyrie00/bbrew"
+# Search tool like grep, but optimized for programmers
 brew "ack"
-brew "acpica"
+# Zstandard is a real-time compression algorithm
 brew "zstd"
+# Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
+# ICC compatible color management system
 brew "argyll-cms"
+# Download with resuming and segmented downloading
 brew "aria2"
+# Record and share terminal sessions
 brew "asciinema"
+# Tool for generating GNU Standards-compliant Makefiles
 brew "automake"
+# Light UNIX download accelerator
 brew "axel"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Implementation of the DNS protocols
 brew "bind"
+# Cross-platform HTTP benchmarking tool
 brew "bombardier"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
+# Extract files from Microsoft cabinet files
 brew "cabextract"
+# Core application library for C
 brew "glib"
+# CD/DVD/Blu-ray premastering and recording software
 brew "cdrtools"
+# Statistics utility to count lines of code
 brew "cloc"
-brew "cmake"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Synchronize your DNS to multiple providers from a simple DSL
 brew "dnscontrol"
+# View disk space usage and delete unwanted data, fast
 brew "dua-cli"
-brew "dufs"
+# More intuitive version of du in rust
 brew "dust"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
+# Like neofetch, but much faster because written mostly in C
 brew "fastfetch"
+# Simple, fast and user-friendly alternative to find
 brew "fd"
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
+# Banner-like program prints strings as ASCII art
 brew "figlet"
+# Fast and simple Node.js version manager
 brew "fnm"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
 brew "gh"
-brew "libiconv"
+# Distributed revision control system
 brew "git"
+# Enable transparent encryption/decryption of files in a git repo
+brew "git-crypt"
+# Quickly rewrite git repository history
 brew "git-filter-repo"
+# Git extension for versioning large files
 brew "git-lfs"
+# Compute various size metrics for a Git repository
 brew "git-sizer"
+# Git LFS plugin that uploads and downloads using the Xet protocol
 brew "git-xet"
+# GNU implementation of the famous stream editor
 brew "gnu-sed"
+# Library for USB device access
 brew "libusb"
+# Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Library for manipulating JPEG-2000 images
 brew "jasper"
+# OpenType text shaping engine
 brew "harfbuzz"
-brew "icu4c@77"
+# Generic library support script
 brew "libtool"
+# Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
+# Improved top (interactive process viewer)
 brew "htop"
+# Display an interface's bandwidth usage
 brew "iftop"
+# Tools and libraries to manipulate images in select formats
+brew "imagemagick"
+# CLI for Infisical
 brew "infisical"
+# Tool to measure maximum TCP and UDP bandwidth
 brew "iperf"
+# Update of iperf: measures TCP, UDP, and SCTP bandwidth
+brew "iperf3"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Conversion library
+brew "libiconv"
+# Mac App Store command-line interface
 brew "mas"
+# Scalable distributed version control system
 brew "mercurial"
+# Syntax-aware git merge driver
 brew "mergiraf"
+# Modern and intuitive terminal-based text editor
+brew "micro"
+# High performance static file server
 brew "miniserve"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# Simple tool to make locally trusted development certificates
 brew "mkcert"
+# Deep clean and optimize your Mac
 brew "mole"
+# 'traceroute' and 'ping' in a single tool
 brew "mtr", args: ["HEAD"]
+# Free (GNU) replacement for the Pico text editor
 brew "nano"
+# NCurses Disk Usage
 brew "ncdu"
+# Open source visual route tracking CLI tool
 brew "nexttrace"
+# Small build system for use with gyp or CMake
 brew "ninja"
+# Port scanning utility for large networks
 brew "nmap"
+# Painless compression and decompression for your terminal
+brew "ouch"
+# 7-Zip (high compression file archiver) implementation
 brew "p7zip"
+# Android OTA payload dumper written in Go
 brew "payload-dumper-go"
+# Parallel gzip
 brew "pigz"
+# Parallel, indexed, xz compressor
 brew "pixz"
+# Generic machine emulator and virtualizer
+brew "qemu"
+# Transfer files to and from your computer by scanning a QR code
 brew "qrcp"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Safe, concurrent, practical language
 brew "rust"
-brew "rye"
-brew "scrcpy"
-brew "six"
+# SMART hard drive monitoring
 brew "smartmontools"
+# State of the art linter for the Go programming language
 brew "staticcheck"
+# User interface to the TELNET protocol
 brew "telnet"
+# Programmatically correct mistyped console commands
 brew "thefuck"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Command-line client for WebSockets
 brew "websocat"
+# Generate WireGuard profile from Cloudflare Warp account
 brew "wgcf"
+# Internet file retriever
 brew "wget"
+# Successor of GNU Wget, a file and recursive website downloader
 brew "wget2"
+# Lookup tool for domain names and other internet resources
 brew "whois"
+# Library to create, extract, and modify Windows Imaging files
 brew "wimlib"
+# UNIX shell (command interpreter)
 brew "zsh"
-brew "cloudflare/cloudflare/curl"
-brew "jesseduffield/lazydocker/lazydocker"
-brew "minacle/chntpw/chntpw"
-brew "pouriyajamshidi/tap/tcping"
-brew "teamookla/speedtest/speedtest"
+# Utility to export your existing Cloudflare resources as Terraform resources
+brew "cloudflare/cloudflare/cf-terraforming", trusted: true
+# A command-line interface for compressing and decompressing files using macos transparent compression
+brew "dr-emann/tap/applesauce", trusted: true
+# Terraform
+brew "hashicorp/tap/terraform", trusted: true
+# A simple terminal UI for docker, written in Go
+brew "jesseduffield/lazydocker/lazydocker", trusted: true
+# Fast package manager alternative to Homebrew, written in Rust
+brew "lucasgelfond/zerobrew/zerobrew", trusted: true
+# Ping TCP ports. Inspired by Linux's ping utility. Written in Go
+brew "pouriyajamshidi/tap/tcping", trusted: true
+# Ookla Speedtest
+brew "teamookla/speedtest/speedtest", trusted: true
+# Modern TUI for managing Homebrew packages and casks on macOS and Linux
+brew "valkyrie00/bbrew/bbrew", trusted: true
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
 cask "1password-cli"
+# Chromium-based web browser
 cask "alex313031-thorium"
-cask "alt-tab"
+# Android SDK component
 cask "android-platform-tools"
-cask "antigravity"
+# Inspect application bundles
 cask "apparency"
+# Application uninstaller
 cask "appcleaner"
+# Browse/extract images from .car files
+cask "asset-catalog-tinkerer"
+# Alternative GUI for Time Machine
+cask "backuploupe"
+# Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
-cask "brave-browser"
+# Send any size file between devices
+cask "blip"
+# Web browser focusing on privacy
+cask "brave-browser@nightly"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code@latest"
+# OpenAI's Codex desktop app for managing coding agents
+cask "codex-app"
+# UI for creating Windows installer ISO from UUPDump
 cask "crystalfetch"
+# Server and cloud storage browser
 cask "cyberduck"
-cask "deltachat"
+# Virtual monitor for screen sharing
 cask "deskpad"
+# Voice and text chat software
 cask "discord"
+# Client for emby media server
 cask "emby"
-cask "exifcleaner"
+# Web browser
 cask "firefox"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-noto-sans-cjk"
-cask "gimp"
+# Folder comparison and synchronization software
+cask "freefilesync"
+# Update maps and software, sync with Garmin Connect and register your device
+cask "garmin-express"
+# Cross-platform Git credential storage for multiple hosting providers
 cask "git-credential-manager"
+# Web browser
 cask "google-chrome"
+# Graphically shows disk usage within a file system
 cask "grandperspective"
+# Hex editor focussing on speed
 cask "hex-fiend"
+# Free and open-source media player
 cask "iina"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Automatically ejects external drives
 cask "jettison"
+# Open-source screen recorder built with web technology
 cask "kap"
+# File archiver
 cask "keka"
+# Helper application for the Keka file archiver
 cask "kekaexternalhelper"
+# Tool to show what is persistently installed on the computer
 cask "knockknock"
+# Project management software
+cask "lark"
+# Utility that shows the latest app updates
 cask "latest"
+# Open-source cross-platform alternative to AirDrop
 cask "localsend"
+# GameStream client
 cask "moonlight"
+# Open-source download manager
 cask "motrix"
+# Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Document editor
 cask "onlyoffice"
+# Local-first alternative to Logitech Options+ for HID++ devices
+cask "openlogi"
+# Android file transfer
 cask "openmtp"
+# Replacement for Docker Desktop
 cask "orbstack"
+# WebKit based web browser
 cask "orion"
+# Desktop virtualization software
 cask "parallels"
-cask "badabing2005/pixelflasher/pixelflasher"
-cask "playcover/playcover/playcover-community"
+# Pixel phone flashing GUI utility with features
+cask "badabing2005/pixelflasher/pixelflasher", trusted: true
+# Minecraft launcher
 cask "prismlauncher"
-cask "qlcolorcode"
+# Quick Look generator for Markdown files
 cask "qlmarkdown"
-cask "qlstephen"
-cask "qlvideo"
-cask "qlzipinfo"
-cask "quicklook-json"
-cask "quicklookase"
+# Thumbnails, static previews, cover art and metadata for video files
+cask "quicklook-video"
+# Imaging utility to install operating systems to a microSD card
+cask "raspberry-pi-imager"
+# Window snapping tool
 cask "rectangle-pro"
+# Advanced API Debugging Proxy
 cask "reqable"
+# Open source virtual/remote desktop application
 cask "rustdesk"
+# Menu bar app that enables system-wide navigation using side mouse buttons
 cask "sanesidebuttons"
+# Tool to reverse the direction of scrolling
 cask "scroll-reverser"
+# Collection of apps available by subscription
 cask "setapp"
+# Tool that provides consistent, highly configurable symbols for apps
+cask "sf-symbols"
+# Snip or pin screenshots
 cask "snipaste"
+# Network toolbox
 cask "surge"
+# Application for inspecting installer packages
 cask "suspicious-package"
+# Messaging app with a focus on speed and security
 cask "telegram"
+# JDK from the Eclipse Foundation (Adoptium)
 cask "temurin@21"
+# Cloud video conferencing
+cask "tencent-meeting"
+# SSH client
 cask "termius"
-cask "typeless"
+# Menu bar manager
+cask "thaw"
+# Time Machine log viewer & status inspector
+cask "thetimemachinemechanic"
+# Configurable document editor that supports Markdown
 cask "typora"
+# PKG software package uninstall tool
 cask "uninstallpkg"
+# NetEase UU remote desktop access and control tool
 cask "uuremote"
+# Dynamic island AI agent utility
+cask "vibe-island"
+# Open-source code editor
 cask "visual-studio-code"
-cask "vlc"
-cask "webpquicklook"
+# Network monitoring and troubleshooting tool
 cask "wifiman"
+# Administration tool for MikroTik RouterOS
 cask "winbox"
+# Network protocol analyzer
 cask "wireshark-app"
-cask "xquartz"
+# Video communication and virtual meeting platform
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259
 mas "AmorphousDiskMark", id: 1168254295
 mas "AmorphousMemoryMark", id: 1495719766
 mas "Discovery", id: 1381004916
-mas "GarageBand", id: 682658836
-mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
-mas "Microsoft PowerPoint", id: 462062816
 mas "Numbers", id: 409203825
+mas "Numbers", id: 361304891
 mas "OpenSpeedTest-Server", id: 1579499874
 mas "Pages", id: 409201541
 mas "Shareful", id: 1522267256
@@ -193,18 +365,19 @@ mas "Speedtest", id: 1153157709
 mas "Tencent Lemon Lite", id: 1449962996
 mas "Velja", id: 1607635845
 mas "WeChat", id: 836500024
-mas "Xcode", id: 497799835
 vscode "acoreyj.restart-ts-eslint-server"
 vscode "adguard.adblock"
 vscode "antfu.smart-clicks"
+vscode "anthropic.claude-code"
 vscode "bashmish.es6-string-css"
 vscode "bierner.comment-tagged-templates"
 vscode "biomejs.biome"
 vscode "bradlc.vscode-tailwindcss"
-vscode "christian-kohler.path-intellisense"
 vscode "clinyong.vscode-css-modules"
+vscode "codeium.codeium"
 vscode "dbaeumer.vscode-eslint"
-vscode "dgeibi.alias-tool"
+vscode "denoland.vscode-deno"
+vscode "dnlytras.nord-wave"
 vscode "docker.docker"
 vscode "donjayamanne.githistory"
 vscode "dprint.dprint"
@@ -212,25 +385,21 @@ vscode "dustypomerleau.rust-syntax"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "fabiospampinato.vscode-diff"
-vscode "github.copilot"
-vscode "github.copilot-chat"
+vscode "fanaticpythoner.better-todo-tree"
 vscode "github.remotehub"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
 vscode "graphql.vscode-graphql"
 vscode "graphql.vscode-graphql-syntax"
-vscode "gruntfuggly.todo-tree"
 vscode "henoc.svgeditor"
 vscode "hoodiecollin.es6-string-typescript"
 vscode "icrawl.discord-vscode"
 vscode "inferrinizzard.prettier-sql-vscode"
 vscode "jeoht.es6-string-markdown"
 vscode "jock.svg"
-vscode "lkrms.inifmt"
 vscode "lokalise.i18n-ally"
 vscode "meganrogge.template-string-converter"
-vscode "mintlify.document"
 vscode "mk12.better-git-line-blame"
 vscode "mrmlnc.vscode-json5"
 vscode "ms-azuretools.vscode-containers"
@@ -249,11 +418,12 @@ vscode "ms-vscode.remote-explorer"
 vscode "ms-vscode.remote-repositories"
 vscode "ms-vscode.vscode-github-issue-notebooks"
 vscode "ms-vscode.vscode-js-profile-flame"
-vscode "ms-vscode.vscode-typescript-next"
 vscode "ms-vsliveshare.vsliveshare"
 vscode "mxsdev.typescript-explorer"
 vscode "naturalethic.es6-string-yaml"
+vscode "openai.chatgpt"
 vscode "orta.vscode-jest"
+vscode "oxc.oxc-vscode"
 vscode "peakchen90.open-html-in-browser"
 vscode "pkief.material-icon-theme"
 vscode "prisma.prisma"
@@ -265,7 +435,6 @@ vscode "redhat.vscode-yaml"
 vscode "rust-lang.rust-analyzer"
 vscode "ryu1kn.partial-diff"
 vscode "shd101wyy.markdown-preview-enhanced"
-vscode "streetsidesoftware.code-spell-checker"
 vscode "styled-components.vscode-styled-components"
 vscode "sukkaw.sukka-flavored-theme"
 vscode "syler.sass-indented"
@@ -274,8 +443,8 @@ vscode "thog.vscode-asl"
 vscode "tlent.jest-snapshot-language-support"
 vscode "tobermory.es6-string-html"
 vscode "unifiedjs.vscode-mdx"
-vscode "unifiedjs.vscode-remark"
 vscode "usernamehw.errorlens"
+vscode "vibe-island.terminal-focus"
 vscode "viijay-kr.react-ts-css"
 vscode "vunguyentuan.vscode-css-variables"
 vscode "wakatime.vscode-wakatime"
@@ -285,4 +454,7 @@ vscode "yzhang.markdown-all-in-one"
 vscode "zjcompt.es6-string-javascript"
 go "github.com/go-delve/delve/cmd/dlv"
 go "golang.org/x/tools/gopls"
+go "github.com/goretk/redress"
 go "honnef.co/go/tools/cmd/staticcheck"
+cargo "cargo-make"
+npm "corepack"
