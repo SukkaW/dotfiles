@@ -1,18 +1,19 @@
 tap "badabing2005/pixelflasher"
-tap "cloudflare/cloudflare"
-tap "dr-emann/tap"
+tap "cloudflare/cloudflare", trusted: { formulae: ["curl"] }
+tap "dr-emann/tap", "https://github.com/Dr-Emann/homebrew-tap"
 tap "hashicorp/tap"
 tap "jesseduffield/lazydocker"
-tap "jesseduffield/lazygit"
+tap "jesseduffield/lazygit", trusted: { formulae: ["lazygit"] }
 tap "lucasgelfond/zerobrew"
-tap "playcover/playcover"
+tap "playcover/playcover", "https://github.com/PlayCover/homebrew-playcover", trusted: { casks: ["playcover-nightly"] }
 tap "pouriyajamshidi/tap"
 tap "teamookla/speedtest"
-tap "valkyrie00/bbrew"
 # Search tool like grep, but optimized for programmers
 brew "ack"
 # Zstandard is a real-time compression algorithm
 brew "zstd"
+# TIFF library and utilities
+brew "libtiff"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
 # ICC compatible color management system
@@ -27,6 +28,14 @@ brew "automake"
 brew "axel"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Software library to render fonts
+brew "freetype"
+# Core application library for C
+brew "glib"
+# OpenType text shaping engine
+brew "harfbuzz"
+# Remove large files or passwords from Git history like git-filter-branch
+brew "bfg"
 # Implementation of the DNS protocols
 brew "bind"
 # Cross-platform HTTP benchmarking tool
@@ -35,12 +44,12 @@ brew "bombardier"
 brew "btop"
 # Extract files from Microsoft cabinet files
 brew "cabextract"
-# Core application library for C
-brew "glib"
 # CD/DVD/Blu-ray premastering and recording software
 brew "cdrtools"
 # Statistics utility to count lines of code
 brew "cloc"
+# Cross-platform make
+brew "cmake"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
 # Synchronize your DNS to multiple providers from a simple DSL
@@ -69,8 +78,6 @@ brew "gh"
 brew "git"
 # Enable transparent encryption/decryption of files in a git repo
 brew "git-crypt"
-# Quickly rewrite git repository history
-brew "git-filter-repo"
 # Git extension for versioning large files
 brew "git-lfs"
 # Compute various size metrics for a Git repository
@@ -85,8 +92,6 @@ brew "libusb"
 brew "go"
 # Library for manipulating JPEG-2000 images
 brew "jasper"
-# OpenType text shaping engine
-brew "harfbuzz"
 # Generic library support script
 brew "libtool"
 # Graph visualization software from AT&T and Bell Labs
@@ -155,6 +160,8 @@ brew "qrcp"
 brew "ripgrep"
 # Safe, concurrent, practical language
 brew "rust"
+# Display and control your Android device
+brew "scrcpy"
 # SMART hard drive monitoring
 brew "smartmontools"
 # State of the art linter for the Go programming language
@@ -177,6 +184,8 @@ brew "wget2"
 brew "whois"
 # Library to create, extract, and modify Windows Imaging files
 brew "wimlib"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Utility to export your existing Cloudflare resources as Terraform resources
@@ -193,8 +202,6 @@ brew "lucasgelfond/zerobrew/zerobrew", trusted: true
 brew "pouriyajamshidi/tap/tcping", trusted: true
 # Ookla Speedtest
 brew "teamookla/speedtest/speedtest", trusted: true
-# Modern TUI for managing Homebrew packages and casks on macOS and Linux
-brew "valkyrie00/bbrew/bbrew", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -213,10 +220,10 @@ cask "asset-catalog-tinkerer"
 cask "backuploupe"
 # Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
-# Send any size file between devices
-cask "blip"
 # Web browser focusing on privacy
 cask "brave-browser@nightly"
+# Bittorrent client
+cask "c0re100-qbittorrent"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Terminal-based AI coding assistant
@@ -227,12 +234,16 @@ cask "codex-app"
 cask "crystalfetch"
 # Server and cloud storage browser
 cask "cyberduck"
+# Database manager
+cask "dataflare"
 # Virtual monitor for screen sharing
 cask "deskpad"
 # Voice and text chat software
 cask "discord"
 # Client for emby media server
 cask "emby"
+# Collaborative team software
+cask "figma"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono"
@@ -272,8 +283,6 @@ cask "latest"
 cask "localsend"
 # GameStream client
 cask "moonlight"
-# Open-source download manager
-cask "motrix"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Document editor
@@ -321,6 +330,8 @@ cask "suspicious-package"
 # Messaging app with a focus on speed and security
 cask "telegram"
 # JDK from the Eclipse Foundation (Adoptium)
+cask "temurin"
+# JDK from the Eclipse Foundation (Adoptium)
 cask "temurin@21"
 # Cloud video conferencing
 cask "tencent-meeting"
@@ -352,6 +363,7 @@ mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259
 mas "AmorphousDiskMark", id: 1168254295
 mas "AmorphousMemoryMark", id: 1495719766
+mas "AndroMeld", id: 6762439757
 mas "Discovery", id: 1381004916
 mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
@@ -386,6 +398,7 @@ vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "fabiospampinato.vscode-diff"
 vscode "fanaticpythoner.better-todo-tree"
+vscode "garmin.monkey-c"
 vscode "github.remotehub"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
@@ -428,6 +441,7 @@ vscode "peakchen90.open-html-in-browser"
 vscode "pkief.material-icon-theme"
 vscode "prisma.prisma"
 vscode "qwtel.sqlite-viewer"
+vscode "randomfractalsinc.vscode-data-preview"
 vscode "razio.es6-string-jsx"
 vscode "rbuckton.deoptexplorer-vscode"
 vscode "redhat.vscode-xml"
@@ -452,9 +466,12 @@ vscode "yijie.vscode-comment-queries"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yzhang.markdown-all-in-one"
 vscode "zjcompt.es6-string-javascript"
+go "github.com/mandiant/GoReSym"
 go "github.com/go-delve/delve/cmd/dlv"
 go "golang.org/x/tools/gopls"
 go "github.com/goretk/redress"
 go "honnef.co/go/tools/cmd/staticcheck"
 cargo "cargo-make"
+cargo "cargo-watch"
+cargo "systemfd"
 npm "corepack"
