@@ -201,28 +201,27 @@ export GOPATH="$HOME/go"
 
 export BAT_THEME="Monokai Extended Bright"
 
+# `path` is zsh's array view of `PATH`, kept in sync by a built-in typeset -T linkage.
+# The (I) subscript flag returns the index of the last matching element (0 if absent),
+# and e forces an exact string compare rather than a pattern match.
+sukka_path_prepend() {
+    (( ${path[(Ie)$1]} )) || { path=("$1" $path); export PATH; }
+}
+
 # PATH should be set before fnm (fnm prepend path automatically)
-# append low priority path
-export PATH="$PATH:$HOME/.antigravity/antigravity/bin"
-# prepend /usr/local
-# avoid duplicated /usr/local/bin and /usr/local/sbin in PATH
-if (( ! $PATH[(I)/usr/local/sbin] )); then
-    export PATH="/usr/local/sbin:$PATH"
-fi
-if (( ! $PATH[(I)/usr/local/bin] )); then
-    export PATH="/usr/local/bin:$PATH"
-fi
-# ~/bin and ~/.local/bin
-export PATH="${HOME}/.local/bin:${HOME}/bin:$PATH"
-# homebrew
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/bin:${__SUKKA_HOMEBREW__PREFIX}/sbin:$PATH"
+sukka_path_prepend "/usr/local/sbin"
+sukka_path_prepend "/usr/local/bin"
+sukka_path_prepend "${HOME}/bin"
+sukka_path_prepend "${HOME}/.local/bin"
+sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/sbin"
+sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/bin"
 # prefer homebrew version over macOS built-in util
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin:$PATH"
-export PATH="${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin:$PATH"
+sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin"
+sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin"
 # go
-export PATH="$GOPATH/bin:$PATH"
+sukka_path_prepend "$GOPATH/bin"
 # rust
-export PATH="${HOME}/.cargo/bin:$PATH"
+sukka_path_prepend "${HOME}/.cargo/bin"
 
 # fnm
 if (( $+commands[fnm] )); then
@@ -232,7 +231,7 @@ elif (( $__SUKKA_IS_LINUX )); then
   FNM_PATH="${HOME}/.local/share/fnm"
   if [[ -d "$FNM_PATH" ]]; then
     # fnm is installed through the shell script
-    export PATH="$FNM_PATH:$PATH"
+    sukka_path_prepend "$FNM_PATH"
     eval "$(fnm env --use-on-cd --resolve-engines --version-file-strategy=recursive --shell zsh)"
   fi
 fi
@@ -241,8 +240,10 @@ fi
 zsh_fnm
 
 # prepend pnpm path afterward fnm init, so that pnpm-globally-installed corepack override fnm-built-in corepack
-# pnpm_home/bin (pnpm 11) in front of pnpm_home (pnpm 10)
-export PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
+# pnpm_home/bin (pnpm 11)
+sukka_path_prepend "$PNPM_HOME/bin"
+# pnpm_home (pnpm 10)
+sukka_path_prepend "$PNPM_HOME"
 
 # open-cli
 # only on non-macOS + open-cli exists
@@ -295,19 +296,9 @@ alias lg="lazygit"
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
-alias taze="taze --concurrency 24"
+alias taze="taze --concurrency 24 --maturity-period 0 --retry 4 --retry-factor 2 --retry-max-timeout 6000 --retry-min-timeout 600"
 alias ncdu="ncdu -t 8"
-
-# VSCode built-in CLI binding is so fucking slow, and this alias is so fucking fast
-function code() {
-    # if first arg starts with "-", passthru all arguments to "command code"
-    if [[ "$1" == "-"* ]]; then
-        command code "$@"
-    else
-      # passes the rest of args (if any) to --args command of "open"
-      open $1 -a 'Visual Studio Code' --args "${(@)argv[2,-1]}" --new-window
-    fi
-}
+alias serve="miniserve --pretty-urls --default-sorting-method=date --enable-tar --enable-tar-gz --index index.html "
 
 # Git Delete Local Merged
 # git-delete-local-merged() {
@@ -632,7 +623,9 @@ fi
 # ## Lazyload pyenv
 # if (( $+commands[pyenv] )) &>/dev/null; then
 #     _sukka_lazyload_command_pyenv() {
-#         export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}" # pyenv init --path
+#         # pyenv init --path
+#         sukka_path_prepend "${PYENV_ROOT}/shims"
+#         sukka_path_prepend "${PYENV_ROOT}/bin"
 #         eval "$(command pyenv init -)"
 #     }
 #     sukka_lazyload_add_command pyenv
@@ -735,7 +728,7 @@ if (( $+commands[conda] )) &>/dev/null; then
         if [[ -f "/usr/local/anaconda3/etc/profile.d/conda.sh" ]]; then
         . "/usr/local/anaconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/usr/local/anaconda3/bin:$PATH"
+            sukka_path_prepend "/usr/local/anaconda3/bin"
         fi
     fi
     unset __conda_setup
@@ -744,6 +737,11 @@ if (( $+commands[conda] )) &>/dev/null; then
 
     unfunction __sukka_load_conda
   }
+fi
+
+# direnv initialization
+if (( $+commands[direnv] )) &>/dev/null; then
+  eval "$(direnv hook zsh)"
 fi
 
 # github copilot cli
@@ -875,7 +873,7 @@ mtu() {
     (( ! $+1 )) && echo "[MTU] Specifying host is a must" && return
 
     echo "[MTU] Getting the best MTU value for $1..."
-
+    # lan_ip=$(osascript -e "IPv4 address of (system info)")
     primary_interface=$(sukka_primary_interface)
     echo "[MTU] Primary interface: ${primary_interface}"
 
@@ -1204,3 +1202,41 @@ add-zsh-hook precmd __fd18et_save_last_successed
 add-zsh-hook zshexit __fd18et_save_last_successed
 
 bindkey '^[^M' self-insert-unmeta
+
+# zerobrew
+export ZEROBREW_DIR="${HOME}/.zerobrew"
+export ZEROBREW_BIN="${HOME}/.zerobrew/bin"
+export ZEROBREW_ROOT=/opt/zerobrew
+export ZEROBREW_PREFIX=/opt/zerobrew/prefix
+export PKG_CONFIG_PATH="$ZEROBREW_PREFIX/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+
+# SSL/TLS certificates (only if ca-certificates is installed)
+if [ -f "$ZEROBREW_PREFIX/opt/ca-certificates/share/ca-certificates/cacert.pem" ]; then
+  export CURL_CA_BUNDLE="$ZEROBREW_PREFIX/opt/ca-certificates/share/ca-certificates/cacert.pem"
+  export SSL_CERT_FILE="$ZEROBREW_PREFIX/opt/ca-certificates/share/ca-certificates/cacert.pem"
+elif [ -f "$ZEROBREW_PREFIX/etc/ca-certificates/cacert.pem" ]; then
+  export CURL_CA_BUNDLE="$ZEROBREW_PREFIX/etc/ca-certificates/cacert.pem"
+  export SSL_CERT_FILE="$ZEROBREW_PREFIX/etc/ca-certificates/cacert.pem"
+elif [ -f "$ZEROBREW_PREFIX/share/ca-certificates/cacert.pem" ]; then
+  export CURL_CA_BUNDLE="$ZEROBREW_PREFIX/share/ca-certificates/cacert.pem"
+  export SSL_CERT_FILE="$ZEROBREW_PREFIX/share/ca-certificates/cacert.pem"
+fi
+
+if [ -d "$ZEROBREW_PREFIX/etc/ca-certificates" ]; then
+  export SSL_CERT_DIR="$ZEROBREW_PREFIX/etc/ca-certificates"
+elif [ -d "$ZEROBREW_PREFIX/share/ca-certificates" ]; then
+  export SSL_CERT_DIR="$ZEROBREW_PREFIX/share/ca-certificates"
+fi
+
+sukka_path_prepend "$ZEROBREW_BIN"
+sukka_path_prepend "$ZEROBREW_PREFIX/bin"
+
+# Cloudflare Gogogo
+export FNM_NODE_DIST_MIRROR="https://download.lucaairport.qzz.io/https/nodejs.org/dist/"
+
+export HOMEBREW_API_DOMAIN="https://download.lucaairport.qzz.io/https/formulae.brew.sh/api"
+export HOMEBREW_ARTIFACT_DOMAIN="https://homebrew.lucaairport.qzz.io/_homebrew"
+export HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK=1
+
+export DL_PROXY="https://download.lucaairport.qzz.io/?proxy="
+source "${HOME}/.config/op/plugins.sh"
