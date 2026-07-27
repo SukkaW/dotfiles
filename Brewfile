@@ -52,6 +52,8 @@ brew "cloc"
 brew "cmake"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Load/unload environment variables based on $PWD
+brew "direnv"
 # Synchronize your DNS to multiple providers from a simple DSL
 brew "dnscontrol"
 # View disk space usage and delete unwanted data, fast
@@ -216,20 +218,20 @@ cask "apparency"
 cask "appcleaner"
 # Browse/extract images from .car files
 cask "asset-catalog-tinkerer"
-# Alternative GUI for Time Machine
-cask "backuploupe"
 # Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
 # Web browser focusing on privacy
 cask "brave-browser@nightly"
 # Bittorrent client
 cask "c0re100-qbittorrent"
+# OpenAI's official ChatGPT desktop app
+cask "chatgpt"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Terminal-based AI coding assistant
 cask "claude-code@latest"
-# OpenAI's Codex desktop app for managing coding agents
-cask "codex-app"
+# Menu bar usage monitor for Codex and Claude
+cask "codexbar"
 # UI for creating Windows installer ISO from UUPDump
 cask "crystalfetch"
 # Server and cloud storage browser
@@ -364,6 +366,7 @@ mas "AdGuard for Safari", id: 1440147259
 mas "AmorphousDiskMark", id: 1168254295
 mas "AmorphousMemoryMark", id: 1495719766
 mas "AndroMeld", id: 6762439757
+mas "BeagleIM", id: 1445349494
 mas "Discovery", id: 1381004916
 mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
@@ -453,6 +456,7 @@ vscode "styled-components.vscode-styled-components"
 vscode "sukkaw.sukka-flavored-theme"
 vscode "syler.sass-indented"
 vscode "tamasfe.even-better-toml"
+vscode "tekumara.typos-vscode"
 vscode "thog.vscode-asl"
 vscode "tlent.jest-snapshot-language-support"
 vscode "tobermory.es6-string-html"
