@@ -5,6 +5,7 @@ tap "hashicorp/tap"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit", trusted: { formulae: ["lazygit"] }
 tap "lucasgelfond/zerobrew"
+tap "owo-network/brew"
 tap "playcover/playcover", "https://github.com/PlayCover/homebrew-playcover", trusted: { casks: ["playcover-nightly"] }
 tap "pouriyajamshidi/tap"
 tap "teamookla/speedtest"
@@ -56,8 +57,6 @@ brew "curl"
 brew "direnv"
 # Synchronize your DNS to multiple providers from a simple DSL
 brew "dnscontrol"
-# View disk space usage and delete unwanted data, fast
-brew "dua-cli"
 # More intuitive version of du in rust
 brew "dust"
 # Perl lib for reading and writing EXIF metadata
@@ -92,16 +91,12 @@ brew "gnu-sed"
 brew "libusb"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
-# Library for manipulating JPEG-2000 images
-brew "jasper"
-# Generic library support script
-brew "libtool"
-# Graph visualization software from AT&T and Bell Labs
-brew "graphviz"
 # Improved top (interactive process viewer)
 brew "htop"
 # Display an interface's bandwidth usage
 brew "iftop"
+# Generic library support script
+brew "libtool"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # CLI for Infisical
@@ -110,6 +105,8 @@ brew "infisical"
 brew "iperf"
 # Update of iperf: measures TCP, UDP, and SCTP bandwidth
 brew "iperf3"
+# Library for manipulating JPEG-2000 images
+brew "jasper"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Simple terminal UI for git commands
@@ -200,6 +197,8 @@ brew "hashicorp/tap/terraform", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 # Fast package manager alternative to Homebrew, written in Rust
 brew "lucasgelfond/zerobrew/zerobrew", trusted: true
+# Track and compete on AI coding-assistant token usage
+brew "owo-network/brew/tokens", trusted: true
 # Ping TCP ports. Inspired by Linux's ping utility. Written in Go
 brew "pouriyajamshidi/tap/tcping", trusted: true
 # Ookla Speedtest
@@ -333,8 +332,6 @@ cask "suspicious-package"
 cask "telegram"
 # JDK from the Eclipse Foundation (Adoptium)
 cask "temurin"
-# JDK from the Eclipse Foundation (Adoptium)
-cask "temurin@21"
 # Cloud video conferencing
 cask "tencent-meeting"
 # SSH client
@@ -370,8 +367,8 @@ mas "BeagleIM", id: 1445349494
 mas "Discovery", id: 1381004916
 mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
-mas "Numbers", id: 409203825
 mas "Numbers", id: 361304891
+mas "Numbers", id: 409203825
 mas "OpenSpeedTest-Server", id: 1579499874
 mas "Pages", id: 409201541
 mas "Shareful", id: 1522267256
@@ -460,6 +457,7 @@ vscode "tekumara.typos-vscode"
 vscode "thog.vscode-asl"
 vscode "tlent.jest-snapshot-language-support"
 vscode "tobermory.es6-string-html"
+vscode "typescriptteam.native-preview"
 vscode "unifiedjs.vscode-mdx"
 vscode "usernamehw.errorlens"
 vscode "vibe-island.terminal-focus"
