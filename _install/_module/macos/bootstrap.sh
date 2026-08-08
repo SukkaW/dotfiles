@@ -565,6 +565,8 @@ sudo tmutil addexclusion -p "/Applications/Microsoft Outlook.app"
 sudo tmutil addexclusion -p "/Applications/Microsoft Excel.app"
 sudo tmutil addexclusion -p "/Applications/Microsoft Word.app"
 sudo tmutil addexclusion -p "/Applications/Microsoft PowerPoint.app"
+sudo tmutil addexclusion -p "/Applications/ChatGPT.app"
+sudo tmutil addexclusion -p "/Applications/Claude.app"
 
 sudo tmutil addexclusion -p "${HOME}/Project/"
 sudo tmutil addexclusion -p "${HOME}/Works/"
