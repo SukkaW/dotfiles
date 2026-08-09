@@ -21,6 +21,21 @@ Still boring. Try again. This time should be better.
 curl -o- https://raw.githubusercontent.com/SukkaW/dotfiles/master/_install/macos.zsh | zsh
 ```
 
+To inspect preferences stored on the current Mac and generate reviewable
+`defaults write` candidates that are not already in the bootstrap script:
+
+```bash
+./_install/_module/macos/export-defaults.py \
+  --exclude-file ./_install/_module/macos/bootstrap.sh \
+  > /tmp/macos-defaults-candidates.sh
+```
+
+The exporter uses a conservative list of macOS preference domains and skips
+complex, private-looking, and transient values. Pass domain names explicitly
+to inspect other applications. Review the output before copying selected lines
+into `_install/_module/macos/bootstrap.sh`; macOS does not record whether an
+explicit preference was changed by you or written automatically by an app.
+
 ### WSL Ubuntu Setup
 
 ```bash
