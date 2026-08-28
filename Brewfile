@@ -41,6 +41,8 @@ brew "bfg"
 brew "bind"
 # Cross-platform HTTP benchmarking tool
 brew "bombardier"
+# Collection of portable C++ source libraries
+brew "boost"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Extract files from Microsoft cabinet files
@@ -99,8 +101,6 @@ brew "iftop"
 brew "libtool"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
-# CLI for Infisical
-brew "infisical"
 # Tool to measure maximum TCP and UDP bandwidth
 brew "iperf"
 # Update of iperf: measures TCP, UDP, and SCTP bandwidth
@@ -113,6 +113,8 @@ brew "jq"
 brew "lazygit"
 # Conversion library
 brew "libiconv"
+# Rime Input Method Engine
+brew "librime"
 # Mac App Store command-line interface
 brew "mas"
 # Scalable distributed version control system
@@ -231,10 +233,10 @@ cask "claude"
 cask "claude-code@latest"
 # Menu bar usage monitor for Codex and Claude
 cask "codexbar"
+# Manage SDKs and download device definitions for Garmin Connect IQ development
+cask "connectiq-sdk-manager"
 # UI for creating Windows installer ISO from UUPDump
 cask "crystalfetch"
-# Server and cloud storage browser
-cask "cyberduck"
 # Database manager
 cask "dataflare"
 # Virtual monitor for screen sharing
@@ -243,15 +245,11 @@ cask "deskpad"
 cask "discord"
 # Client for emby media server
 cask "emby"
-# Collaborative team software
-cask "figma"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-noto-sans-cjk"
-# Folder comparison and synchronization software
-cask "freefilesync"
 # Update maps and software, sync with Garmin Connect and register your device
 cask "garmin-express"
 # Cross-platform Git credential storage for multiple hosting providers
@@ -284,6 +282,8 @@ cask "latest"
 cask "localsend"
 # GameStream client
 cask "moonlight"
+# Cloud storage service platform
+cask "nutstore"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Document editor
@@ -324,6 +324,8 @@ cask "setapp"
 cask "sf-symbols"
 # Snip or pin screenshots
 cask "snipaste"
+# Rime input method engine
+cask "squirrel-app"
 # Network toolbox
 cask "surge"
 # Application for inspecting installer packages
@@ -340,8 +342,6 @@ cask "termius"
 cask "thaw"
 # Time Machine log viewer & status inspector
 cask "thetimemachinemechanic"
-# Configurable document editor that supports Markdown
-cask "typora"
 # PKG software package uninstall tool
 cask "uninstallpkg"
 # NetEase UU remote desktop access and control tool
@@ -367,8 +367,8 @@ mas "BeagleIM", id: 1445349494
 mas "Discovery", id: 1381004916
 mas "Keynote", id: 409183694
 mas "Microsoft Outlook", id: 985367838
-mas "Numbers", id: 361304891
 mas "Numbers", id: 409203825
+mas "Numbers", id: 361304891
 mas "OpenSpeedTest-Server", id: 1579499874
 mas "Pages", id: 409201541
 mas "Shareful", id: 1522267256
@@ -378,7 +378,6 @@ mas "Tencent Lemon Lite", id: 1449962996
 mas "Velja", id: 1607635845
 mas "WeChat", id: 836500024
 vscode "acoreyj.restart-ts-eslint-server"
-vscode "adguard.adblock"
 vscode "antfu.smart-clicks"
 vscode "anthropic.claude-code"
 vscode "bashmish.es6-string-css"
