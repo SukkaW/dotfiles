@@ -211,13 +211,14 @@ sukka_path_prepend() {
 # PATH should be set before fnm (fnm prepend path automatically)
 sukka_path_prepend "/usr/local/sbin"
 sukka_path_prepend "/usr/local/bin"
-sukka_path_prepend "${HOME}/bin"
-sukka_path_prepend "${HOME}/.local/bin"
 sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/sbin"
 sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/bin"
 # prefer homebrew version over macOS built-in util
 sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/opt/whois/bin"
 sukka_path_prepend "${__SUKKA_HOMEBREW__PREFIX}/opt/curl/bin"
+# prefer my own util over homebrew installed bin
+sukka_path_prepend "${HOME}/bin"
+sukka_path_prepend "${HOME}/.local/bin"
 # go
 sukka_path_prepend "$GOPATH/bin"
 # rust
@@ -296,7 +297,7 @@ alias lg="lazygit"
 alias git-undo="git reset --soft HEAD^"
 alias tree="tree -aC"
 
-alias taze="taze --concurrency 24 --maturity-period 0 --retry 4 --retry-factor 2 --retry-max-timeout 6000 --retry-min-timeout 600"
+alias taze="taze --concurrency 36 --maturity-period 0 --retry 4 --retry-factor 2 --retry-max-timeout 4000 --retry-min-timeout 400 --request-timeout 10000 --fast-npm-meta-api-endpoint https://npm.skk.moe "
 alias ncdu="ncdu -t 8"
 alias serve="miniserve --pretty-urls --default-sorting-method=date --enable-tar --enable-tar-gz --index index.html "
 
@@ -650,16 +651,20 @@ fi
 
 # pnpm
 if (( $+commands[pnpm] )) &>/dev/null; then
-  _pnpm_completion () {
-    local reply
-    local si=$IFS
+  _pnpm_completion() {
+    local output
+    local -a reply
 
-    IFS=$'\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" SHELL=zsh pnpm completion-server -- "${words[@]}"))
-    IFS=$si
+    # Resolve pnpm on every completion so Corepack follows the current project.
+    output=$(COMP_CWORD=$((CURRENT-1)) COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" SHELL=zsh pnpm completion-server -- "${words[@]}") || return
+    [[ -n $output ]] || return 1
 
-    if [ "$reply" = "__tabtab_complete_files__" ]; then
+    # pnpm 10/11 can request native file completion; pnpm 12 returns values.
+    if [[ $output == '__tabtab_complete_files__' ]]; then
       _files
     else
+      # Split only on newlines, preserving spaces and escaped colons for _describe.
+      reply=("${(@f)output}")
       _describe 'values' reply
     fi
   }
@@ -905,9 +910,9 @@ traceskk() {
 tmpfile() {
   for filepath in "$@"
   do
-    echo $(curl -F "reqtype=fileupload" --progress-bar -F "time=1h" -F "fileToUpload=@$filepath" https://litterbox.catbox.moe/resources/internals/api.php)
+    # echo $(curl -F "reqtype=fileupload" --progress-bar -F "time=1h" -F "fileToUpload=@$filepath" https://litterbox.catbox.moe/resources/internals/api.php)
     # echo $(curl --progress-bar -F "file=@$filepath" https://tmpfiles.org/api/v1/upload) # server error when uploading some files
-    # echo $(curl --progress-bar -F "file=@$filepath" https://temp.sh/upload)
+    echo $(curl --progress-bar -F "file=@$filepath" https://temp.sh/upload)
   done
 }
 alias pastefile="tmpfile"
@@ -1235,8 +1240,9 @@ sukka_path_prepend "$ZEROBREW_PREFIX/bin"
 export FNM_NODE_DIST_MIRROR="https://download.lucaairport.qzz.io/https/nodejs.org/dist/"
 
 export HOMEBREW_API_DOMAIN="https://download.lucaairport.qzz.io/https/formulae.brew.sh/api"
-export HOMEBREW_ARTIFACT_DOMAIN="https://homebrew.lucaairport.qzz.io/_homebrew"
+export HOMEBREW_ARTIFACT_DOMAIN="https://ciallo.cdn.skk.moe/_homebrew"
 export HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK=1
 
 export DL_PROXY="https://download.lucaairport.qzz.io/?proxy="
+
 source "${HOME}/.config/op/plugins.sh"
