@@ -240,6 +240,7 @@ sudo tmutil addexclusion -p "/nix/var/"
 
 sudo tmutil addexclusion -p "/opt/X11/var/cache/"
 sudo tmutil addexclusion -p "/opt/homebrew/var/cache/"
+sudo tmutil addexclusion -p "/opt/homebrew/var/log/"
 
 sudo tmutil addexclusion -p "${HOME}/.android"
 sudo tmutil addexclusion -p "${HOME}/.arcbox/logs"
@@ -268,11 +269,14 @@ sudo tmutil addexclusion -p "${HOME}/.codex/.tmp"
 sudo tmutil addexclusion -p "${HOME}/.codex/tmp"
 sudo tmutil addexclusion -p "${HOME}/.codex/cache"
 sudo tmutil addexclusion -p "${HOME}/.codex/plugins/cache"
+sudo tmutil addexclusion -p "${HOME}/.codex/packages/"
+sudo tmutil addexclusion -p "${HOME}/.codex/archived_sessions/"
 sudo tmutil addexclusion -p "${HOME}/.colima"
 sudo tmutil addexclusion -p "${HOME}/.composer"
+sudo tmutil addexclusion -p "${HOME}/.config/opencode/node_modules/"
+sudo tmutil addexclusion -p "${HOME}/.config/tokens/cache/"
 sudo tmutil addexclusion -p "${HOME}/.copilot/pkg"
 sudo tmutil addexclusion -p "${HOME}/.copilot/logs"
-sudo tmutil addexclusion -p "${HOME}/.claude/projects/"
 sudo tmutil addexclusion -p "${HOME}/.claude/file-history/"
 sudo tmutil addexclusion -p "${HOME}/.claude/plugins/cache/"
 sudo tmutil addexclusion -p "${HOME}/.claude/cache/"
@@ -289,6 +293,7 @@ sudo tmutil addexclusion -p "${HOME}/.ollama"
 sudo tmutil addexclusion -p "${HOME}/.kerl"
 sudo tmutil addexclusion -p "${HOME}/.local"
 sudo tmutil addexclusion -p "${HOME}/.m2"
+sudo tmutil addexclusion -p "${HOME}/.mintlify/"
 sudo tmutil addexclusion -p "${HOME}/.gem"
 sudo tmutil addexclusion -p "${HOME}/.rubies"
 sudo tmutil addexclusion -p "${HOME}/.rustup"
@@ -352,6 +357,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/WebStorage
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/History/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globalStorage/github.copilot-chat/logContextRecordings/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/workspaceStorage/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/agent-host/sdk-cache/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Antigravity/CachedData/"
 
@@ -383,6 +389,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Claude/Code Cac
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/Express/UniversalMaps/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/Express/Firmware/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/Maps/"
+sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Garmin/ConnectIQ/Sdks/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Preferences/Maxon/"
 
@@ -440,6 +447,10 @@ ELECTRON_APPS=(
   "${HOME}/Library/Application Support/electron-app"
   "${HOME}/Library/Containers/com.tinyspeck.slackmacgap/Data/Library/Application Support/Slack"
   "${HOME}/Library/Application Support/Microsoft/Teams"
+  "${HOME}/Library/Application Support/Claude-3p"
+  "${HOME}/Library/Application Support/Claude-3p/Partitions/launch-preview-cowork-shared"
+  "${HOME}/Library/Application Support/Manus"
+  "${HOME}/Library/Application Support/Manus/Partitions/manus-browser-dev-v1"
 )
 
 ELECTRON_CACHE_PATHS=(
@@ -449,6 +460,7 @@ ELECTRON_CACHE_PATHS=(
   "DawnCache/"
   "DawnWebGPUCache/"
   "DawnGraphiteCache/"
+  "GraphiteDawnCache/"
 )
 
 # Loop through electron apps and cache paths
@@ -499,6 +511,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/6N38VWS5BX.ru.keep
 
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/logs"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Messages/"
+sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/UBF8T346G9.Office/SolutionPackages/"
 sudo tmutil addexclusion -p "${HOME}/Library/Group Containers/group.com.ubnt.unifinetwork/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Developer/CoreSimulator/Caches"
@@ -514,6 +527,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.microsoft.errorrepor
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/.wxapplet"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Documents/app_data/log/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.xinWeChat/Data/Documents/app_data/xplugin/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResource/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Data/DynamicResourcePackage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.tencent.meeting/Data/Library/Global/Logs/"
@@ -529,7 +543,8 @@ sudo tmutil addexclusion -p "${HOME}/Library/Mail/V10/MailData/RemoteContentURLC
 sudo tmutil addexclusion -p "${HOME}/Library/Parallels/Downloads/"
 
 # Infuse Library DB
-sudo tmutil addexclusion -p "${HOME}/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.firecore.infuse/Data/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.firecore.infuse/Data/Library/Preferences/InternalPrefs/FullSizeTh/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Preferences/.wrangler/logs/"
 
@@ -573,6 +588,7 @@ sudo tmutil addexclusion -p "/Applications/Claude.app"
 sudo tmutil addexclusion -p "${HOME}/Project/"
 sudo tmutil addexclusion -p "${HOME}/Works/"
 sudo tmutil addexclusion -p "${HOME}/Tools/"
+sudo tmutil addexclusion -p "${HOME}/Documents/Manus/"
 
 sudo tmutil addexclusion -p "/System/Library/Caches/"
 # necessary to ignore recursively checking the same directories again
