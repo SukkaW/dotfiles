@@ -520,6 +520,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Developer/DeveloperDiskImages"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.diagnosticextensions.osx.systemprofile/Data/tmp/TemporaryItems/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.docker.docker"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.apple.Safari/Data/Library/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Caches"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Documents/storage/Logs/"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.netease.163music/Data/Documents/storage/UALogs/"
