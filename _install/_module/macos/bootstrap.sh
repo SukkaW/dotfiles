@@ -358,7 +358,6 @@ sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/Histo
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/globalStorage/github.copilot-chat/logContextRecordings/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/User/workspaceStorage/"
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Code/agent-host/sdk-cache/"
-
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Antigravity/CachedData/"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Application Support/Microsoft/Teams/Service Worker/CacheStorage"
@@ -546,6 +545,7 @@ sudo tmutil addexclusion -p "${HOME}/Library/Parallels/Downloads/"
 # Infuse Library DB
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.firecore.infuse/Data/Library/Preferences/InternalPrefs/com.firecore.media.meta.db"
 sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.firecore.infuse/Data/Library/Preferences/InternalPrefs/FullSizeTh/"
+sudo tmutil addexclusion -p "${HOME}/Library/Containers/com.firecore.infuse/Data/Library/Application Support/adapty.sdk"
 
 sudo tmutil addexclusion -p "${HOME}/Library/Preferences/.wrangler/logs/"
 
@@ -598,7 +598,7 @@ sudo tmutil addexclusion -p "/System/Volumes/"
 ###############################################################################
 # Custom NTP Server                                                           #
 ###############################################################################
-sudo systemsetup -setnetworktimeserver time.windows.com
+sudo systemsetup -setnetworktimeserver time.xtracloud.net
 sudo systemsetup -setusingnetworktime on
 
 # cat <<'EOF' > /etc/ntp.conf
