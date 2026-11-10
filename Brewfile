@@ -1,12 +1,10 @@
 tap "badabing2005/pixelflasher"
 tap "cloudflare/cloudflare", trusted: { formulae: ["curl"] }
 tap "dr-emann/tap", "https://github.com/Dr-Emann/homebrew-tap"
-tap "hashicorp/tap"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit", trusted: { formulae: ["lazygit"] }
 tap "lucasgelfond/zerobrew"
 tap "owo-network/brew"
-tap "playcover/playcover", "https://github.com/PlayCover/homebrew-playcover", trusted: { casks: ["playcover-nightly"] }
 tap "pouriyajamshidi/tap"
 tap "teamookla/speedtest"
 # Search tool like grep, but optimized for programmers
@@ -153,12 +151,16 @@ brew "payload-dumper-go"
 brew "pigz"
 # Parallel, indexed, xz compressor
 brew "pixz"
+# Protocol buffers (Google's data interchange format)
+brew "protobuf"
 # Generic machine emulator and virtualizer
 brew "qemu"
 # Transfer files to and from your computer by scanning a QR code
 brew "qrcp"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# CLI proxy to minimize LLM token consumption
+brew "rtk"
 # Safe, concurrent, practical language
 brew "rust"
 # Display and control your Android device
@@ -173,10 +175,10 @@ brew "telnet"
 brew "thefuck"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Command-line client for WebSockets
 brew "websocat"
-# Generate WireGuard profile from Cloudflare Warp account
-brew "wgcf"
 # Internet file retriever
 brew "wget"
 # Successor of GNU Wget, a file and recursive website downloader
@@ -189,12 +191,8 @@ brew "wimlib"
 brew "yq"
 # UNIX shell (command interpreter)
 brew "zsh"
-# Utility to export your existing Cloudflare resources as Terraform resources
-brew "cloudflare/cloudflare/cf-terraforming", trusted: true
 # A command-line interface for compressing and decompressing files using macos transparent compression
 brew "dr-emann/tap/applesauce", trusted: true
-# Terraform
-brew "hashicorp/tap/terraform", trusted: true
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 # Fast package manager alternative to Homebrew, written in Rust
@@ -209,8 +207,6 @@ brew "teamookla/speedtest/speedtest", trusted: true
 cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
-# Chromium-based web browser
-cask "alex313031-thorium"
 # Android SDK component
 cask "android-platform-tools"
 # Inspect application bundles
@@ -223,16 +219,14 @@ cask "asset-catalog-tinkerer"
 cask "balenaetcher"
 # Web browser focusing on privacy
 cask "brave-browser@nightly"
-# Bittorrent client
-cask "c0re100-qbittorrent"
 # OpenAI's official ChatGPT desktop app
 cask "chatgpt"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Terminal-based AI coding assistant
 cask "claude-code@latest"
-# Menu bar usage monitor for Codex and Claude
-cask "codexbar"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
 # Manage SDKs and download device definitions for Garmin Connect IQ development
 cask "connectiq-sdk-manager"
 # UI for creating Windows installer ISO from UUPDump
@@ -245,6 +239,8 @@ cask "deskpad"
 cask "discord"
 # Client for emby media server
 cask "emby"
+# Network drive and browser for cloud storage
+cask "expandrive"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono"
@@ -274,12 +270,12 @@ cask "keka"
 cask "kekaexternalhelper"
 # Tool to show what is persistently installed on the computer
 cask "knockknock"
-# Project management software
-cask "lark"
 # Utility that shows the latest app updates
 cask "latest"
 # Open-source cross-platform alternative to AirDrop
 cask "localsend"
+# AI agent for automating local computer workflows
+cask "manus"
 # GameStream client
 cask "moonlight"
 # Cloud storage service platform
@@ -292,8 +288,6 @@ cask "onlyoffice"
 cask "openlogi"
 # Android file transfer
 cask "openmtp"
-# Replacement for Docker Desktop
-cask "orbstack"
 # WebKit based web browser
 cask "orion"
 # Desktop virtualization software
@@ -302,8 +296,6 @@ cask "parallels"
 cask "badabing2005/pixelflasher/pixelflasher", trusted: true
 # Minecraft launcher
 cask "prismlauncher"
-# Quick Look generator for Markdown files
-cask "qlmarkdown"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "quicklook-video"
 # Imaging utility to install operating systems to a microSD card
@@ -330,14 +322,14 @@ cask "squirrel-app"
 cask "surge"
 # Application for inspecting installer packages
 cask "suspicious-package"
+# SSH client with live server status, SFTP and an MCP server for AI agents
+cask "owo-network/brew/tamio", trusted: true
 # Messaging app with a focus on speed and security
 cask "telegram"
 # JDK from the Eclipse Foundation (Adoptium)
 cask "temurin"
 # Cloud video conferencing
 cask "tencent-meeting"
-# SSH client
-cask "termius"
 # Menu bar manager
 cask "thaw"
 # Time Machine log viewer & status inspector
@@ -356,6 +348,8 @@ cask "wifiman"
 cask "winbox"
 # Network protocol analyzer
 cask "wireshark-app"
+# Install and switch between multiple versions of Xcode
+cask "xcodes-app"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
@@ -385,9 +379,7 @@ vscode "bierner.comment-tagged-templates"
 vscode "biomejs.biome"
 vscode "bradlc.vscode-tailwindcss"
 vscode "clinyong.vscode-css-modules"
-vscode "codeium.codeium"
 vscode "dbaeumer.vscode-eslint"
-vscode "denoland.vscode-deno"
 vscode "dnlytras.nord-wave"
 vscode "docker.docker"
 vscode "donjayamanne.githistory"
@@ -411,6 +403,7 @@ vscode "inferrinizzard.prettier-sql-vscode"
 vscode "jeoht.es6-string-markdown"
 vscode "jock.svg"
 vscode "lokalise.i18n-ally"
+vscode "mechatroner.rainbow-csv"
 vscode "meganrogge.template-string-converter"
 vscode "mk12.better-git-line-blame"
 vscode "mrmlnc.vscode-json5"
@@ -434,9 +427,11 @@ vscode "ms-vsliveshare.vsliveshare"
 vscode "mxsdev.typescript-explorer"
 vscode "naturalethic.es6-string-yaml"
 vscode "openai.chatgpt"
+vscode "openai.codex-audio"
 vscode "orta.vscode-jest"
 vscode "oxc.oxc-vscode"
 vscode "peakchen90.open-html-in-browser"
+vscode "phoenisx.cssvar"
 vscode "pkief.material-icon-theme"
 vscode "prisma.prisma"
 vscode "qwtel.sqlite-viewer"
@@ -450,6 +445,7 @@ vscode "ryu1kn.partial-diff"
 vscode "shd101wyy.markdown-preview-enhanced"
 vscode "styled-components.vscode-styled-components"
 vscode "sukkaw.sukka-flavored-theme"
+vscode "surgenetworks.surge-language-support"
 vscode "syler.sass-indented"
 vscode "tamasfe.even-better-toml"
 vscode "tekumara.typos-vscode"
@@ -474,5 +470,6 @@ go "github.com/goretk/redress"
 go "honnef.co/go/tools/cmd/staticcheck"
 cargo "cargo-make"
 cargo "cargo-watch"
+cargo "cf-warp-wireguard-gen"
 cargo "systemfd"
 npm "corepack"
