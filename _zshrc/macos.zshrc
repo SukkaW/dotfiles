@@ -113,6 +113,21 @@ export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 export HOMEBREW_DOWNLOAD_CONCURRENCY=36
 export HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS="true"
 
+# BEGIN Fuck Homebrew config #
+# Force Homebrew to use stable releases only
+export HOMEBREW_UPDATE_TO_TAG=1
+# Force Homebrew to use our forked version
+export HOMEBREW_BREW_GIT_REMOTE="https://download.lucaairport.qzz.io/https/github.com/SukkaLab/sukka-flavored-brew"
+# Force Homebrew to use our custom API domain for formulae
+export HOMEBREW_API_DOMAIN="https://download.lucaairport.qzz.io/https/formulae.brew.sh/api"
+# Force Homebrew to use our custom artifact domain
+export HOMEBREW_ARTIFACT_DOMAIN="https://ciallo.cdn.skk.moe/_homebrew"
+export HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK=1
+# Force Homebrew to use our custom cask cache domain
+export HOMEBREW_CASK_CACHE_DOMAIN="https://ciallo.cdn.skk.moe/_homebrew_cask"
+export HOMEBREW_CASK_CACHE_DOMAIN_NO_FALLBACK=1
+# END Fuck Homebrew config #
+
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -1238,10 +1253,6 @@ sukka_path_prepend "$ZEROBREW_PREFIX/bin"
 
 # Cloudflare Gogogo
 export FNM_NODE_DIST_MIRROR="https://download.lucaairport.qzz.io/https/nodejs.org/dist/"
-
-export HOMEBREW_API_DOMAIN="https://download.lucaairport.qzz.io/https/formulae.brew.sh/api"
-export HOMEBREW_ARTIFACT_DOMAIN="https://ciallo.cdn.skk.moe/_homebrew"
-export HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK=1
 
 export DL_PROXY="https://download.lucaairport.qzz.io/?proxy="
 
